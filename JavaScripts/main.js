@@ -1,5 +1,4 @@
 "use strict";
-var mainData;
 const titleDisplay = document.getElementById("title");
 const startUI = document.getElementById("start-ui");
 const startTime = document.getElementById("start-time");
@@ -111,22 +110,6 @@ function GenerateGibberishData() {
         times.push(new Timespan(start, end, ""));
     }
     mainData = new TimeTrackerData("Test Data", times);
-}
-function SaveData() {
-    localStorage.setItem(dataStorageKey, mainData.Serialize());
-}
-function LoadData() {
-    let stringData = localStorage.getItem(dataStorageKey);
-    if (stringData != null) {
-        let parsedJSON = JSON.parse(stringData);
-        let timestamps = [];
-        for (let i = 0; i < parsedJSON.timestamps.length; i++) {
-            let element = parsedJSON.timestamps[i];
-            element = JSON.stringify(element);
-            timestamps.push(Timespan.FromJSON(element));
-        }
-        mainData = new TimeTrackerData(parsedJSON.title, timestamps);
-    }
 }
 LoadData();
 RenderCurrentCalendar();
