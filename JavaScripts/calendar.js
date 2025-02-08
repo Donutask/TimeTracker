@@ -21,18 +21,18 @@ function renderCalendar(month, year) {
         calendarDates.appendChild(blank);
     }
     const today = new Date();
-    let minutes = [daysInMonth];
+    let minuteTotals = [daysInMonth];
     let monthTotal = 0;
     if (mainData != null)
         for (let j = 0; j < mainData.timespans.length; j++) {
             const element = mainData.timespans[j];
             const start = element.start;
             if (start.getFullYear() == year && start.getMonth() == month) {
-                if (isNaN(minutes[start.getDate()])) {
-                    minutes[start.getDate()] = 0;
+                if (isNaN(minuteTotals[start.getDate()])) {
+                    minuteTotals[start.getDate()] = 0;
                 }
                 let m = element.GetMinutes();
-                minutes[start.getDate()] += m;
+                minuteTotals[start.getDate()] += m;
                 monthTotal += m;
             }
         }
@@ -45,7 +45,7 @@ function renderCalendar(month, year) {
             month === today.getMonth()) {
             day.classList.add('current-date');
         }
-        let m = minutes[i];
+        let m = minuteTotals[i];
         if (!isNaN(m) && m > 0)
             day.innerHTML += `<span class=timespan>${formatHoursMinutes(m)}</span>`;
         calendarDates.appendChild(day);
@@ -67,6 +67,20 @@ nextMonthBtn.addEventListener('click', () => {
         currentYear++;
     }
     renderCalendar(currentMonth, currentYear);
+});
+calendarDates.addEventListener('click', (e) => {
+    if (e.target.textContent !== '') {
+        let date = Number.parseInt(e.target.innerHTML);
+        let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
+        if (timespans != null) {
+            let text = "";
+            for (let i = 0; i < timespans.length; i++) {
+                const element = timespans[i];
+                text += element.Format() + "\n";
+            }
+            alert(text);
+        }
+    }
 });
 function RenderCurrentCalendar() {
     renderCalendar(currentMonth, currentYear);

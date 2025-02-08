@@ -28,6 +28,23 @@ class TimeTrackerData {
         this.timespans.push(timespan);
     }
 
+    //Array of Timespan for given day. Null if none exist.
+    GetAllSpansForDate(year: number, month: number, date: number): Timespan[] | null {
+        let array = [];
+        for (let i = 0; i < this.timespans.length; i++) {
+            const element = this.timespans[i];
+            if (element.start.getFullYear() == year && element.start.getMonth() == month && element.start.getDate() == date) {
+                array.push(element);
+            }
+        }
+
+        if (array == null || array.length <= 0) {
+            return null;
+        } else {
+            return array;
+        }
+    }
+
     //Turns data into JSON
     Serialize(): string {
         let json = `{"title":"${this.title}", "timestamps":[`;

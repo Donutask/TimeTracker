@@ -36,7 +36,7 @@ function renderCalendar(month: number, year: number) {
     const today = new Date();
 
     //Calculate total time for each day
-    let minutes: number[] = [daysInMonth];
+    let minuteTotals: number[] = [daysInMonth];
     let monthTotal: number = 0;
     //Add the data in
     if (mainData != null)
@@ -46,11 +46,11 @@ function renderCalendar(month: number, year: number) {
             const start = element.start;
 
             if (start.getFullYear() == year && start.getMonth() == month) {
-                if (isNaN(minutes[start.getDate()])) {
-                    minutes[start.getDate()] = 0;
+                if (isNaN(minuteTotals[start.getDate()])) {
+                    minuteTotals[start.getDate()] = 0;
                 }
                 let m = element.GetMinutes();
-                minutes[start.getDate()] += m;
+                minuteTotals[start.getDate()] += m;
                 monthTotal += m;
             }
         }
@@ -70,7 +70,7 @@ function renderCalendar(month: number, year: number) {
             day.classList.add('current-date');
         }
 
-        let m = minutes[i];
+        let m = minuteTotals[i];
         if (!isNaN(m) && m > 0)
             day.innerHTML += `<span class=timespan>${formatHoursMinutes(m)}</span>`;
 
@@ -81,6 +81,7 @@ function renderCalendar(month: number, year: number) {
     monthTotalDisplay!.innerHTML = `Total for ${months[month]}: <b>${formatHoursMinutes(monthTotal)}</b>`;
 }
 
+//Go back a month
 prevMonthBtn!.addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) {
@@ -89,7 +90,7 @@ prevMonthBtn!.addEventListener('click', () => {
     }
     renderCalendar(currentMonth, currentYear);
 });
-
+//Go forward a month
 nextMonthBtn!.addEventListener('click', () => {
     currentMonth++;
     if (currentMonth > 11) {
@@ -97,6 +98,24 @@ nextMonthBtn!.addEventListener('click', () => {
         currentYear++;
     }
     renderCalendar(currentMonth, currentYear);
+});
+
+//Click on a date to get info for all logged timespans on that date
+//So much for TypeScript types lol
+calendarDates!.addEventListener('click', (e: any) => {
+    if (e.target.textContent !== '') {
+        let date = Number.parseInt(e.target.innerHTML);
+        let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
+
+        if (timespans != null) {
+            let text = "";
+            for (let i = 0; i < timespans.length; i++) {
+                const element = timespans[i];
+                text += element.Format() + "\n";
+            }
+            alert(text);
+        }
+    }
 });
 
 function RenderCurrentCalendar() {

@@ -1,12 +1,21 @@
 "use strict";
 class Timespan {
-    GetMinutes() {
-        return dateDiffInMinutes(this.start, this.end);
-    }
     constructor(start, end, note) {
         this.start = start;
         this.end = end;
         this.note = note;
+    }
+    GetMinutes() {
+        return dateDiffInMinutes(this.start, this.end);
+    }
+    Format() {
+        let formatted = `${formatAMPM(this.start)} - ${formatAMPM(this.end)} (${formatHoursMinutes(this.GetMinutes())})`;
+        if (this.note != null && this.note.length > 0) {
+            return formatted + ` [${this.note}]`;
+        }
+        else {
+            return formatted;
+        }
     }
     Serialise() {
         return `{"start":${this.start.getTime()},"end":${this.end.getTime()}}`;
