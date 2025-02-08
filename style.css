@@ -23,6 +23,7 @@ body {
 #start-time {
     font-size: 3em;
     line-height: 0px;
+    margin: 40px;
 }
 
 #elapsed-time-label {
@@ -81,22 +82,60 @@ button {
     padding-right: 50px;
     height: 50px;
     font-size: 2em;
-    background-color: whitesmoke;
+    background-color: white;
     border-radius: 15px;
     margin-top: 20px;
 }
 
 #data-heading {
     margin-bottom: 10px;
+    margin-top: 40px;
+    line-height: 0px;
+}
+
+
+#no-details-availible {
+    font-style: italic;
+}
+
+#detailed-day-data-heading {
+    line-height: 0px;
+}
+
+#detailed-day-data {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+    margin-bottom: 25px;
+    border-spacing: 0px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#detailed-day-data tr:nth-child(odd) {
+    background-color: white;
+}
+
+#detailed-day-data tr:nth-child(even) {
+    background-color: rgb(249, 249, 250);
+}
+
+#detailed-day-data-head {
+    background-color: #eaeef3 !important;
+}
+
+#month-total {
+    line-height: 0px;
 }
 
 /* Footer */
 .footer {
-    position: absolute;
-    width: 100%;
-    bottom: 10px;
-    overflow: hidden;
-    height: 20px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
 }
 
 .link {
@@ -253,5 +292,18 @@ button {
 
     #change-start-time-button {
         color: white;
+    }
+
+    #detailed-day-data tr:nth-child(odd) {
+        /* background-color: #434447; */
+        background-color: hsl(225, 3%, 15%)
+    }
+
+    #detailed-day-data tr:nth-child(even) {
+        background-color: hsl(225, 3%, 13%)
+    }
+
+    #detailed-day-data-head {
+        background-color: #00000047 !important;
     }
 }

@@ -43,6 +43,7 @@
         </div>
 
         <h2 id="data-heading">Data</h2>
+        <p id="month-total"></p>
         <div class="calendar">
             <div class="calendar-header">
                 <button id="prev-month">‹</button>
@@ -64,15 +65,34 @@
                 </div>
             </div>
         </div>
-        <p id="month-total"></p>
+        <div id="detailed-day-data-container">
+            <p id="no-details-availible">Click a day to view details.</p>
+            <h3 id="detailed-day-data-heading"></h3>
+            <table id="detailed-day-data">
+                <thead>
+                    <tr id="detailed-day-data-head">
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody id="day-details-body">
+
+                </tbody>
+            </table>
+        </div>
+
         <div id="data-management">
             <button onclick="Export()">Export</button>
             <button onclick="Import()">Import</button>
         </div>
+
         <footer class="footer">
             <a class="link" href="https://donutask.com">Created by Donutask</a>
         </footer>
     </div>
+
+
     <!-- Import all scripts -->
     <script>var exports = {};</script>
     <script src="JavaScripts/dateUtils.js"></script>

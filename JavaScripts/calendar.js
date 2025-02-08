@@ -4,6 +4,10 @@ const monthYear = document.getElementById('month-year');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
 const monthTotalDisplay = document.getElementById('month-total');
+const dayDetailsTable = document.getElementById("detailed-day-data");
+const dayDetailsBody = document.getElementById("day-details-body");
+const dayDetailsHeading = document.getElementById("detailed-day-data-heading");
+const noDetailsMessage = document.getElementById("no-details-availible");
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
@@ -71,17 +75,37 @@ nextMonthBtn.addEventListener('click', () => {
 calendarDates.addEventListener('click', (e) => {
     if (e.target.textContent !== '') {
         let date = Number.parseInt(e.target.innerHTML);
-        let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
-        if (timespans != null) {
-            let text = "";
-            for (let i = 0; i < timespans.length; i++) {
-                const element = timespans[i];
-                text += element.Format() + "\n";
-            }
-            alert(text);
-        }
+        ShowDayDetails(date);
     }
 });
+function ShowDayDetails(date) {
+    let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
+    if (timespans != null) {
+        dayDetailsTable.style.display = "table";
+        noDetailsMessage.style.display = "none";
+        dayDetailsHeading.innerHTML = `Details for ${date} ${months[currentMonth]}`;
+        dayDetailsBody.innerHTML = "";
+        for (let i = 0; i < timespans.length; i++) {
+            const timespan = timespans[i];
+            const rowElement = document.createElement('tr');
+            const fromElement = document.createElement('td');
+            fromElement.innerHTML = formatAMPM(timespan.start);
+            rowElement.appendChild(fromElement);
+            const toElement = document.createElement('td');
+            toElement.innerHTML = formatAMPM(timespan.end);
+            rowElement.appendChild(toElement);
+            const durationElement = document.createElement('td');
+            durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
+            rowElement.appendChild(durationElement);
+            dayDetailsBody.appendChild(rowElement);
+        }
+    }
+    else {
+        dayDetailsTable.style.display = "none";
+        noDetailsMessage.style.display = "block";
+        dayDetailsHeading.innerHTML = "";
+    }
+}
 function RenderCurrentCalendar() {
     renderCalendar(currentMonth, currentYear);
 }
