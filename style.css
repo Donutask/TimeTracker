@@ -27,7 +27,7 @@ body {
 
 #elapsed-time-label {
     line-height: 0px;
-    color: rgba(255, 255, 255, 0.9);
+    opacity: 90%;
 }
 
 #elapsed-time {
@@ -45,7 +45,7 @@ button {
 
 #rename-title {
     background-color: rgba(0, 0, 0, 0);
-    color: white;
+    color: black;
     border: none;
     outline: none;
 }
@@ -147,12 +147,16 @@ footer {
 }
 
 .calendar-date:hover {
-    background-color: #f1f1f1;
+    background-color: hsl(213, 27%, 85%);
     color: black;
 }
 
 .current-date {
-    background-color: blue;
+    background-color: hsl(207, 100%, 74%);
+}
+
+.current-date:hover {
+    background-color: hsl(207, 100%, 60%);
 }
 
 .timespan {
@@ -180,7 +184,7 @@ footer {
     }
 
     .calendar-weekdays {
-        background-color: hsl(247, 10%, 10%);
+        background-color: hsl(247, 10%, 13%);
     }
 
     #prev-month,
@@ -188,4 +192,20 @@ footer {
         color: white;
     }
 
+    #rename-title {
+        color: white;
+    }
+
+    .calendar-date:hover {
+        background-color: #f1f1f1;
+        color: black;
+    }
+
+    .current-date {
+        background-color: hsl(207, 100%, 40%);
+    }
+
+    .current-date:hover {
+        background-color: hsl(207, 100%, 50%);
+    }
 }
