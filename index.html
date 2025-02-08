@@ -25,9 +25,19 @@
             <div id="stop-ui" hidden>
                 <p id="elapsed-time-label">Elapsed Time:</p>
                 <p id="elapsed-time">1 hr, 3 min</p>
-                <p id="started-time">Started at 1:23PM</p>
+                <div id="started-time-container" hidden="false">
+                    <p id="started-time">Started at 1:23PM</p>
+                    <button id="change-start-time-button" onclick="BeginChangeStartedTime()">Change</button>
+                </div>
+                <div id="change-start-time-container" hidden>
+                    <label>Change Start Time: <input id="change-start-time" type="datetime-local"></label><input
+                        type="submit" onclick="SubmitStartTimeChange()"><button
+                        onclick="CancelStartTimeChange()">Cancel</button>
+                </div>
                 <button onclick="StopTimer()" class="timer-action-button">Stop</button>
             </div>
+
+
         </div>
 
         <h2 id="data-heading">Data</h2>

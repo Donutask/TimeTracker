@@ -35,8 +35,33 @@ body {
     line-height: 0px;
 }
 
+#started-time-container {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+#started-time-container:hidden {
+    display: none;
+}
+
 #started-time {
     line-height: 0px;
+    width: fit-content;
+    display: inline-block;
+    margin: 0px;
+}
+
+#change-start-time-button {
+    display: inline;
+    text-decoration: underline;
+    background: none;
+    color: white;
+    border: none;
+}
+
+#change-start-time-button:hover {
+    color: rgb(0, 149, 255);
 }
 
 button {

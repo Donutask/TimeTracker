@@ -6,6 +6,9 @@ const startButton = document.getElementById("start-button");
 const stopUI = document.getElementById("stop-ui");
 const elapsedTime = document.getElementById("elapsed-time");
 const startedTime = document.getElementById("started-time");
+const startedTimeContainer = document.getElementById("started-time-container");
+const changeStartedTimeContainer = document.getElementById("change-start-time-container");
+const changeStartedTimeInput = document.getElementById("change-start-time");
 const startDateStorageKey = "startDate";
 const dataStorageKey = "timeTrackerData";
 let currentInterval;
@@ -90,6 +93,25 @@ function GetStartDate() {
             return new Date(ticks);
         }
     }
+}
+function BeginChangeStartedTime() {
+    startedTimeContainer.style.display = "none";
+    changeStartedTimeContainer.style.display = "block";
+    let startDate = GetStartDate();
+    if (startDate != null) {
+        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+        changeStartedTimeInput.value = startDate.toISOString().slice(0, 16);
+    }
+}
+function SubmitStartTimeChange() {
+    let date = new Date(changeStartedTimeInput.value);
+    localStorage.setItem("startDate", date.getTime().toString());
+    ShowCorrectUI();
+    CancelStartTimeChange();
+}
+function CancelStartTimeChange() {
+    startedTimeContainer.style.display = "block";
+    changeStartedTimeContainer.style.display = "none";
 }
 function RenameTracker() {
     if (mainData == null) {

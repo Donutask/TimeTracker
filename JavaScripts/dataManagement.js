@@ -29,7 +29,7 @@ function Export() {
     }
     fileURL = window.URL.createObjectURL(data);
     let link = document.createElement('a');
-    link.setAttribute('download', 'info.txt');
+    link.setAttribute('download', 'time-tracker-export.txt');
     link.href = fileURL;
     document.body.appendChild(link);
     window.requestAnimationFrame(function () {

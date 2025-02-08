@@ -7,6 +7,10 @@ const stopUI = document.getElementById("stop-ui");
 const elapsedTime = document.getElementById("elapsed-time");
 const startedTime = document.getElementById("started-time");
 
+const startedTimeContainer = document.getElementById("started-time-container");
+const changeStartedTimeContainer = document.getElementById("change-start-time-container");
+const changeStartedTimeInput: HTMLInputElement = document.getElementById("change-start-time") as HTMLInputElement;
+
 const startDateStorageKey = "startDate";
 const dataStorageKey = "timeTrackerData";
 let currentInterval: number;
@@ -110,6 +114,33 @@ function GetStartDate(): Date | null {
             return new Date(ticks);
         }
     }
+}
+
+//Change when the timer was started (because you forgot or something)
+function BeginChangeStartedTime() {
+    startedTimeContainer!.style.display = "none";
+    changeStartedTimeContainer!.style.display = "block";
+
+    let startDate = GetStartDate();
+    if (startDate != null) {
+        //https://stackoverflow.com/a/61082536
+        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+        changeStartedTimeInput.value = startDate.toISOString().slice(0, 16);
+    }
+}
+
+function SubmitStartTimeChange() {
+    let date = new Date(changeStartedTimeInput.value);
+    localStorage.setItem("startDate", date.getTime().toString());
+
+    ShowCorrectUI();
+
+    CancelStartTimeChange();
+}
+
+function CancelStartTimeChange() {
+    startedTimeContainer!.style.display = "block";
+    changeStartedTimeContainer!.style.display = "none";
 }
 
 function RenameTracker() {
