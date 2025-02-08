@@ -70,6 +70,9 @@ function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
         localStorage.setItem("startDate", "");
+        if (mainData == null) {
+            mainData = new TimeTrackerData("", []);
+        }
         mainData.Add(new Timespan(startDate, new Date(), ""));
         SaveData();
         RenderCurrentCalendar();

@@ -89,6 +89,11 @@ function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
         localStorage.setItem("startDate", "");
+        //ensure it exists
+        if (mainData == null) {
+            mainData = new TimeTrackerData("", []);
+        }
+        //save it
         mainData.Add(new Timespan(startDate, new Date(), ""));
         SaveData();
 
