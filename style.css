@@ -90,7 +90,7 @@ footer {
 
 /* Calendar */
 .calendar {
-    /* width: 350px; */
+    min-width: 400px;
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-left: auto;
@@ -165,10 +165,27 @@ footer {
     font-size: 0.75em;
 }
 
+
+/* Responsiveness */
 @media (max-width: 400px) {
     .calendar {
-        width: 100%;
+        min-width: 0;
         margin: 0 10px;
+    }
+
+    .calendar-weekdays div {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .calendar-dates div {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .timer-action-button {
+        padding-left: min(20vw, 50px);
+        padding-right: min(20vw, 50px);
     }
 }
 
