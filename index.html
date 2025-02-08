@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Tracker</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="128x128" href="icon-apple.png">
+    <link rel="icon" sizes="192x192" href="icon-android.png">
 </head>
 
 <body>
@@ -15,18 +17,18 @@
                 <h1 id="title">Time Tracker</h1>
             </button>
         </header>
-        <noscript>This page requires JavaScript to run.</noscript>
+        <noscript>This page requires JavaScript to work.</noscript>
 
         <div id="main-container">
             <div id="start-ui" hidden>
-                <p id="start-time">1:23 PM</p>
+                <p id="start-time"></p>
                 <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
             </div>
             <div id="stop-ui" hidden>
                 <p id="elapsed-time-label">Elapsed Time:</p>
-                <p id="elapsed-time">1 hr, 3 min</p>
+                <p id="elapsed-time"></p>
                 <div id="started-time-container" hidden="false">
-                    <p id="started-time">Started at 1:23PM</p>
+                    <p id="started-time"></p>
                     <button id="change-start-time-button" onclick="BeginChangeStartedTime()">Change</button>
                 </div>
                 <div id="change-start-time-container" hidden>
