@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="center-column-container">
+        <header>
+            <button id="rename-title" onclick="RenameTracker()">
+                <h1 id="title">Time Tracker</h1>
+            </button>
+        </header>
+        <noscript>This page requires JavaScript to run.</noscript>
+
+        <div id="main-container">
+            <div id="start-ui" hidden>
+                <p id="start-time">1:23 PM</p>
+                <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
+            </div>
+            <div id="stop-ui" hidden>
+                <p id="elapsed-time-label">Elapsed Time:</p>
+                <p id="elapsed-time">1 hr, 3 min</p>
+                <p id="started-time">Started at 1:23PM</p>
+                <button onclick="StopTimer()" class="timer-action-button">Stop</button>
+            </div>
+        </div>
+
+        <h2 id="data-heading">Data</h2>
+        <div class="calendar">
+            <div class="calendar-header">
+                <button id="prev-month">‹</button>
+                <div id="month-year"></div>
+                <button id="next-month">›</button>
+            </div>
+            <div class="calendar-body">
+                <div class="calendar-weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="calendar-dates">
+                    <!-- Dates will be populated here -->
+                </div>
+            </div>
+        </div>
+        <p id="month-total"></p>
+
+        <!-- <div id="data-container">
+            <h2>Data</h2>
+            <h3>Feburary</h3>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Month</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Timespans</th>
+                        <th scope="col">Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th rowspan="99">Feburary</th>
+                        <td colspan="2">&nbsp;</td>
+                        <td>58min</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" rowspan="3">Fri. 7</th>
+                        <td colspan="1">&nbsp;</td>
+                        <td>58min</td>
+                    </tr>
+                    <tr>
+                        <td>10:00AM - 10:20AM</td>
+                        <td>20min</td>
+                    </tr>
+                    <tr>
+                        <td>11:01AM - 11:39AM</td>
+                        <td>38min</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" rowspan="2">Sat. 8</th>
+                        <td colspan="1">&nbsp;</td>
+                        <td>30min</td>
+                    </tr>
+                    <tr>
+                        <td>9:00AM - 9:30AM</td>
+                        <td>30min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
+        <footer>
+            <a class="link" href="https://donutask.com">Created by Donutask</a>
+        </footer>
+    </div>
+    <!-- Import all scripts -->
+    <script>var exports = {};</script>
+    <script src="/JavaScripts/dateUtils.js"></script>
+    <script src="/JavaScripts/timespan.js"></script>
+    <script src="/JavaScripts/historicalData.js"></script>
+    <script src="/JavaScripts/calendar.js"></script>
+    <script src="/JavaScripts/main.js"></script>
+</body>
+
+</html>
