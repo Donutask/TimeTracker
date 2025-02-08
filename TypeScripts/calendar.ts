@@ -1,4 +1,4 @@
-//https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
+//Credit to this turotial: https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
 
 const calendarDates = document.querySelector('.calendar-dates');
 const monthYear = document.getElementById('month-year');
@@ -6,14 +6,11 @@ const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
 const monthTotalDisplay = document.getElementById('month-total');
 
-let currentDate = new Date();
+const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 
-const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 function renderCalendar(month: number, year: number) {
     if (calendarDates == null || monthYear == null) {
@@ -101,12 +98,6 @@ nextMonthBtn!.addEventListener('click', () => {
     }
     renderCalendar(currentMonth, currentYear);
 });
-
-// calendarDates!.addEventListener('click', (e) => {
-//     if (e != null && e.target != null e.target.textContent !== '') {
-//     alert(`You clicked on ${e.target.textContent} ${months[currentMonth]} ${currentYear}`);
-// }
-// });
 
 function RenderCurrentCalendar() {
     renderCalendar(currentMonth, currentYear);

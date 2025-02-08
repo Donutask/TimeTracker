@@ -80,8 +80,6 @@ function StartTimer() {
     let d = new Date();
     localStorage.setItem("startDate", d.getTime().toString());
 
-    console.log("Started timer!");
-
     ShowCorrectUI();
 }
 

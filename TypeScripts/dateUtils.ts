@@ -27,6 +27,7 @@ function randomDate(start: Date, end: Date) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
+//Will show hours and minutes, or just minutes if less than an hour
 function formatHoursMinutes(totalMinutes: number): string {
     if (totalMinutes > 60) {
         let hours = Math.floor(totalMinutes / 60);
@@ -38,8 +39,3 @@ function formatHoursMinutes(totalMinutes: number): string {
         return `${Math.floor(totalMinutes)}min`;
     }
 }
-
-// Date.prototype.addHours = function(h:number) {
-//     this.setTime(this.getTime() + (h*60*60*1000));
-//     return this;
-//   }
