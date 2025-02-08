@@ -28,6 +28,14 @@ class TimeTrackerData {
         this.timespans.push(timespan);
     }
 
+    //Remove specified timespan from list
+    Remove(timespan: Timespan) {
+        const index = this.timespans.indexOf(timespan);
+        if (index > -1) {
+            this.timespans.splice(index, 1);
+        }
+    }
+
     //Array of Timespan for given day. Null if none exist.
     GetAllSpansForDate(year: number, month: number, date: number): Timespan[] | null {
         let array = [];

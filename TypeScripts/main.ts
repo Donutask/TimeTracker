@@ -1,4 +1,4 @@
-const titleDisplay = document.getElementById("title");
+const titleDisplay = document.getElementById("title") as HTMLTitleElement;
 const startUI = document.getElementById("start-ui");
 const startTime = document.getElementById("start-time");
 const startButton = document.getElementById("start-button");
@@ -19,10 +19,6 @@ function UpdateStartUI() {
     clearInterval(currentInterval);
     UpdateCurrentTimeDisplay();
     currentInterval = setInterval(UpdateCurrentTimeDisplay, 1000);
-
-    if (mainData != null) {
-        titleDisplay!.innerHTML = mainData.title;
-    }
 }
 
 function UpdateCurrentTimeDisplay() {
@@ -57,9 +53,7 @@ function ElapsedTimeDisplay() {
 }
 
 function ShowCorrectUI() {
-    //Title
-    if (mainData != null)
-        titleDisplay!.innerHTML = mainData.title;
+    ShowTitle();
 
     if (GetStartDate() == null) {
         //Start
@@ -76,6 +70,15 @@ function ShowCorrectUI() {
     }
 }
 
+function ShowTitle() {
+    //Title
+    if (mainData != null && mainData.title != null && mainData.title.length > 0) {
+        titleDisplay.innerHTML = mainData.title;
+    } else {
+        titleDisplay.innerHTML = "Time Tracker";
+    }
+}
+
 //Clicking the start button should
 //store the start time
 function StartTimer() {
@@ -88,16 +91,21 @@ function StartTimer() {
 function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
-        localStorage.setItem("startDate", "");
-        //ensure it exists
-        if (mainData == null) {
-            mainData = new TimeTrackerData("", []);
-        }
-        //save it
-        mainData.Add(new Timespan(startDate, new Date(), ""));
-        SaveData();
+        let elapsedMinutes = dateDiffInMinutes(startDate, new Date());
+        console.log(elapsedMinutes);
 
-        RenderCurrentCalendar();
+        if (elapsedMinutes >= 1) {
+            //ensure it exists
+            if (mainData == null) {
+                mainData = new TimeTrackerData("", []);
+            }
+            //save it
+            mainData.Add(new Timespan(startDate, new Date(), ""));
+            SaveData();
+
+            UpdateCalendarAndDetails();
+        }
+        localStorage.setItem("startDate", "");
     } else {
         console.error("Start date is null");
     }
@@ -156,7 +164,7 @@ function RenameTracker() {
 
     if (response != null && response.length > 0) {
         mainData.title = response;
-        titleDisplay!.innerHTML = response;
+        ShowTitle();
         SaveData();
     }
 }

@@ -1,10 +1,10 @@
 //Credit to this turotial: https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
 
-const calendarDates = document.querySelector('.calendar-dates');
-const monthYear = document.getElementById('month-year');
-const prevMonthBtn = document.getElementById('prev-month');
-const nextMonthBtn = document.getElementById('next-month');
-const monthTotalDisplay = document.getElementById('month-total');
+const calendarDates = document.querySelector('.calendar-dates') as HTMLDivElement;
+const monthYear = document.getElementById('month-year') as HTMLDivElement;
+const prevMonthBtn = document.getElementById('prev-month') as HTMLButtonElement;
+const nextMonthBtn = document.getElementById('next-month') as HTMLButtonElement;
+const monthTotalDisplay = document.getElementById('month-total') as HTMLParagraphElement;
 
 const dayDetailsTable = document.getElementById("detailed-day-data") as HTMLTableElement;
 const dayDetailsBody = document.getElementById("day-details-body") as HTMLTableSectionElement;
@@ -84,11 +84,11 @@ function renderCalendar(month: number, year: number) {
         calendarDates.appendChild(day);
     }
 
-    monthTotalDisplay!.innerHTML = `Total for ${months[month]}: <b>${formatHoursMinutes(monthTotal)}</b>`;
+    monthTotalDisplay.innerHTML = `Total for ${months[month]}: <b>${formatHoursMinutes(monthTotal)}</b>`;
 }
 
 //Go back a month
-prevMonthBtn!.addEventListener('click', () => {
+prevMonthBtn.addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) {
         currentMonth = 11;
@@ -97,7 +97,7 @@ prevMonthBtn!.addEventListener('click', () => {
     renderCalendar(currentMonth, currentYear);
 });
 //Go forward a month
-nextMonthBtn!.addEventListener('click', () => {
+nextMonthBtn.addEventListener('click', () => {
     currentMonth++;
     if (currentMonth > 11) {
         currentMonth = 0;
@@ -108,14 +108,18 @@ nextMonthBtn!.addEventListener('click', () => {
 
 //Click on a date to get info for all logged timespans on that date
 //So much for TypeScript types lol
-calendarDates!.addEventListener('click', (e: any) => {
+calendarDates.addEventListener('click', (e: any) => {
     if (e.target.textContent !== '') {
         let date = Number.parseInt(e.target.innerHTML);
         ShowDayDetails(date);
     }
 });
 
+
+let showingDetailsForDay: number | null;
 function ShowDayDetails(date: number) {
+    showingDetailsForDay = date;
+
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
 
     if (timespans != null) {
@@ -142,12 +146,33 @@ function ShowDayDetails(date: number) {
             durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
 
+            const managementActionsElement = document.createElement('td');
+            const deleteElement = document.createElement("button");
+            deleteElement.className = "delete-button";
+            deleteElement.addEventListener("click", function () {
+                if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
+                    mainData.Remove(timespan);
+                    UpdateCalendarAndDetails();
+                    SaveData();
+                }
+            });
+            managementActionsElement.appendChild(deleteElement);
+            rowElement.appendChild(managementActionsElement);
+
             dayDetailsBody.appendChild(rowElement);
         }
     } else {
         dayDetailsTable.style.display = "none";
         noDetailsMessage.style.display = "block";
         dayDetailsHeading.innerHTML = "";
+    }
+}
+
+function UpdateCalendarAndDetails() {
+    RenderCurrentCalendar();
+
+    if (showingDetailsForDay != null) {
+        ShowDayDetails(showingDetailsForDay);
     }
 }
 

@@ -18,6 +18,12 @@ class TimeTrackerData {
         }
         this.timespans.push(timespan);
     }
+    Remove(timespan) {
+        const index = this.timespans.indexOf(timespan);
+        if (index > -1) {
+            this.timespans.splice(index, 1);
+        }
+    }
     GetAllSpansForDate(year, month, date) {
         let array = [];
         for (let i = 0; i < this.timespans.length; i++) {

@@ -124,6 +124,21 @@ button {
     background-color: #eaeef3 !important;
 }
 
+.delete-button {
+    width: 20px;
+    height: 20px;
+    background: none;
+    border: none;
+    background-image: url("Icons/x-circle-fill.svg");
+    background-size: contain;
+    background-position: center;
+}
+
+.delete-button:hover {
+    rotate: 15deg;
+    background-size: 22px;
+}
+
 #month-total {
     line-height: 0px;
 }
@@ -305,5 +320,9 @@ button {
 
     #detailed-day-data-head {
         background-color: #00000047 !important;
+    }
+
+    .delete-button {
+        filter: invert(100%);
     }
 }

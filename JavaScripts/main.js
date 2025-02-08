@@ -16,9 +16,6 @@ function UpdateStartUI() {
     clearInterval(currentInterval);
     UpdateCurrentTimeDisplay();
     currentInterval = setInterval(UpdateCurrentTimeDisplay, 1000);
-    if (mainData != null) {
-        titleDisplay.innerHTML = mainData.title;
-    }
 }
 function UpdateCurrentTimeDisplay() {
     let d = new Date();
@@ -48,8 +45,7 @@ function ElapsedTimeDisplay() {
     }
 }
 function ShowCorrectUI() {
-    if (mainData != null)
-        titleDisplay.innerHTML = mainData.title;
+    ShowTitle();
     if (GetStartDate() == null) {
         startUI.hidden = false;
         stopUI.hidden = true;
@@ -61,6 +57,14 @@ function ShowCorrectUI() {
         UpdateStopUI();
     }
 }
+function ShowTitle() {
+    if (mainData != null && mainData.title != null && mainData.title.length > 0) {
+        titleDisplay.innerHTML = mainData.title;
+    }
+    else {
+        titleDisplay.innerHTML = "Time Tracker";
+    }
+}
 function StartTimer() {
     let d = new Date();
     localStorage.setItem("startDate", d.getTime().toString());
@@ -69,13 +73,17 @@ function StartTimer() {
 function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
-        localStorage.setItem("startDate", "");
-        if (mainData == null) {
-            mainData = new TimeTrackerData("", []);
+        let elapsedMinutes = dateDiffInMinutes(startDate, new Date());
+        console.log(elapsedMinutes);
+        if (elapsedMinutes >= 1) {
+            if (mainData == null) {
+                mainData = new TimeTrackerData("", []);
+            }
+            mainData.Add(new Timespan(startDate, new Date(), ""));
+            SaveData();
+            UpdateCalendarAndDetails();
         }
-        mainData.Add(new Timespan(startDate, new Date(), ""));
-        SaveData();
-        RenderCurrentCalendar();
+        localStorage.setItem("startDate", "");
     }
     else {
         console.error("Start date is null");
@@ -123,7 +131,7 @@ function RenameTracker() {
     let response = prompt("Rename", mainData.title);
     if (response != null && response.length > 0) {
         mainData.title = response;
-        titleDisplay.innerHTML = response;
+        ShowTitle();
         SaveData();
     }
 }

@@ -78,7 +78,9 @@ calendarDates.addEventListener('click', (e) => {
         ShowDayDetails(date);
     }
 });
+let showingDetailsForDay;
 function ShowDayDetails(date) {
+    showingDetailsForDay = date;
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
     if (timespans != null) {
         dayDetailsTable.style.display = "table";
@@ -97,6 +99,18 @@ function ShowDayDetails(date) {
             const durationElement = document.createElement('td');
             durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
+            const managementActionsElement = document.createElement('td');
+            const deleteElement = document.createElement("button");
+            deleteElement.className = "delete-button";
+            deleteElement.addEventListener("click", function () {
+                if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
+                    mainData.Remove(timespan);
+                    UpdateCalendarAndDetails();
+                    SaveData();
+                }
+            });
+            managementActionsElement.appendChild(deleteElement);
+            rowElement.appendChild(managementActionsElement);
             dayDetailsBody.appendChild(rowElement);
         }
     }
@@ -104,6 +118,12 @@ function ShowDayDetails(date) {
         dayDetailsTable.style.display = "none";
         noDetailsMessage.style.display = "block";
         dayDetailsHeading.innerHTML = "";
+    }
+}
+function UpdateCalendarAndDetails() {
+    RenderCurrentCalendar();
+    if (showingDetailsForDay != null) {
+        ShowDayDetails(showingDetailsForDay);
     }
 }
 function RenderCurrentCalendar() {
