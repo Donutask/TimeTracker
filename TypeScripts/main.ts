@@ -152,7 +152,6 @@ function LoadData() {
         for (let i = 0; i < parsedJSON.timestamps.length; i++) {
             let element = parsedJSON.timestamps[i];
             element = JSON.stringify(element);
-            console.log(element);
             timestamps.push(Timespan.FromJSON(element));
         }
 

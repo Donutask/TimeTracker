@@ -62,7 +62,6 @@ function ShowCorrectUI() {
 function StartTimer() {
     let d = new Date();
     localStorage.setItem("startDate", d.getTime().toString());
-    console.log("Started timer!");
     ShowCorrectUI();
 }
 function StopTimer() {
@@ -124,7 +123,6 @@ function LoadData() {
         for (let i = 0; i < parsedJSON.timestamps.length; i++) {
             let element = parsedJSON.timestamps[i];
             element = JSON.stringify(element);
-            console.log(element);
             timestamps.push(Timespan.FromJSON(element));
         }
         mainData = new TimeTrackerData(parsedJSON.title, timestamps);
