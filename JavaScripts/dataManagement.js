@@ -47,8 +47,12 @@ function LoadSlot(slotIndex) {
         ShowCorrectUI();
         UpdateCurrentSlotOption();
     }
-    else {
+    else if (saveSlots.length <= 1) {
         CreateNewSlot();
+    }
+    else {
+        mainData = new TimeTrackerData("", []);
+        SaveAndUpdate();
     }
 }
 function CreateNewSlot() {

@@ -61,8 +61,11 @@ function LoadSlot(slotIndex: number) {
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateCurrentSlotOption();
-    }else{
+    } else if (saveSlots.length <= 1) {
         CreateNewSlot();
+    } else {
+        mainData = new TimeTrackerData("", []);
+        SaveAndUpdate();
     }
 }
 
@@ -79,7 +82,7 @@ function CreateNewSlot() {
 
 //Deletes and loads 0th slot
 function DeleteCurrentSave() {
-    if(saveSlots.length <= 1){
+    if (saveSlots.length <= 1) {
         alert("Cannot delete. Must have at least one slot.");
         return;
     }
