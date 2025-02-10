@@ -12,8 +12,8 @@ const changeStartedTimeInput = document.getElementById("change-start-time");
 const setStopTimeButton = document.getElementById("stop-at");
 const setStopTimeContainer = document.getElementById("change-stop-time-container");
 const setStopTimeInput = document.getElementById("change-stop-time");
-const startDateStorageKey = "startDate";
-const dataStorageKey = "timeTrackerData";
+const slotChooserDropdown = document.getElementById("select-save-slot");
+const slotChooserParent = document.getElementById("save-slot-group");
 let currentInterval;
 let stopTime;
 function UpdateStartUI() {
@@ -105,7 +105,7 @@ function StopTimer() {
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
             }
-            mainData.Add(new Timespan(startDate, endDate, ""));
+            mainData.Add(new Timespan(startDate, endDate));
             SaveData();
             UpdateCalendarAndDetails();
         }
@@ -177,15 +177,60 @@ function RenameTracker() {
         SaveData();
     }
 }
-function GenerateGibberishData() {
-    let times = [];
-    for (let i = 0; i < 100; i++) {
-        let start = randomDate(new Date(2025, 0, 1), new Date());
-        let end = new Date(start.getTime() + (Math.random() * 60 * 60 * 1000));
-        times.push(new Timespan(start, end, ""));
+function CreateSaveSlotChooserDropdown() {
+    slotChooserParent.innerHTML = "";
+    for (let i = 0; i < saveSlots.length; i++) {
+        const saveSlot = saveSlots[i];
+        let label = "Slot " + i;
+        if (saveSlot != null) {
+            let parsedJSON = JSON.parse(saveSlot);
+            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+                label = parsedJSON.title;
+            }
+        }
+        const option = document.createElement("option");
+        option.innerHTML = label;
+        option.title = label;
+        option.value = i.toString();
+        if (currentSlot == i) {
+            option.selected = true;
+        }
+        slotChooserParent.appendChild(option);
     }
-    mainData = new TimeTrackerData("Test Data", times);
 }
-LoadData();
-RenderCurrentCalendar();
-ShowCorrectUI();
+function SaveSlotChosen() {
+    const v = slotChooserDropdown.value;
+    if (v == "create") {
+        CreateNewSlot();
+    }
+    else if (v == "delete") {
+        if (confirm("Delete current save slot?")) {
+            DeleteCurrentSave();
+        }
+    }
+    else {
+        const n = Number.parseInt(v);
+        if (!isNaN(n)) {
+            LoadSlot(n);
+        }
+    }
+}
+function UpdateCurrentSlotOption() {
+    const children = slotChooserParent.childNodes;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.value == currentSlot.toString()) {
+            child.innerHTML = "Change";
+            child.selected = true;
+            child.disabled = true;
+        }
+        else {
+            child.innerHTML = child.title;
+            child.selected = false;
+            child.disabled = false;
+        }
+    }
+}
+InitialLoad();
+CreateSaveSlotChooserDropdown();
+UpdateCurrentSlotOption();

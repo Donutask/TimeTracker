@@ -19,9 +19,6 @@ function formatAMPM(date) {
     let strTime = hours + ':' + minuteString + ' ' + ampm;
     return strTime;
 }
-function randomDate(start, end) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
 function formatHoursMinutes(totalMinutes) {
     if (Number.isNaN(totalMinutes)) {
         return "?";

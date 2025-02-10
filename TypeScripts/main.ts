@@ -1,3 +1,4 @@
+//Refrences to HTML elements
 const titleDisplay = document.getElementById("title") as HTMLTitleElement;
 const startUI = document.getElementById("start-ui") as HTMLElement;
 const startTime = document.getElementById("start-time") as HTMLElement;
@@ -15,10 +16,12 @@ const setStopTimeButton = document.getElementById("stop-at") as HTMLElement;
 const setStopTimeContainer = document.getElementById("change-stop-time-container") as HTMLElement;
 const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-time") as HTMLInputElement;
 
-const startDateStorageKey = "startDate";
-const dataStorageKey = "timeTrackerData";
+const slotChooserDropdown = document.getElementById("select-save-slot") as HTMLSelectElement;
+const slotChooserParent = document.getElementById("save-slot-group") as HTMLElement;
+
 let currentInterval: number;
 let stopTime: Date | null;
+// let startDate: Date | null;
 
 function UpdateStartUI() {
     clearInterval(currentInterval);
@@ -130,7 +133,7 @@ function StopTimer() {
                 mainData = new TimeTrackerData("", []);
             }
             //save it
-            mainData.Add(new Timespan(startDate, endDate, ""));
+            mainData.Add(new Timespan(startDate, endDate));
             SaveData();
 
             UpdateCalendarAndDetails();
@@ -218,18 +221,72 @@ function RenameTracker() {
     }
 }
 
-function GenerateGibberishData() {
-    let times: Timespan[] = [];
+//Resets and makes select options for dropdown to choose which save slot to use.
+function CreateSaveSlotChooserDropdown() {
+    slotChooserParent.innerHTML = "";
 
-    for (let i = 0; i < 100; i++) {
-        let start = randomDate(new Date(2025, 0, 1), new Date());
-        let end = new Date(start.getTime() + (Math.random() * 60 * 60 * 1000));
-        times.push(new Timespan(start, end, ""))
+    for (let i = 0; i < saveSlots.length; i++) {
+        const saveSlot = saveSlots[i];
+
+        let label = "Slot " + i;
+        //Custom name by reading JSON title property, if it exists
+        if (saveSlot != null) {
+            let parsedJSON = JSON.parse(saveSlot);
+            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+                label = parsedJSON.title;
+            }
+        }
+
+        //Create HTML element
+        const option = document.createElement("option") as HTMLOptionElement;
+        option.innerHTML = label;
+        option.title = label;
+        option.value = i.toString();
+
+        if (currentSlot == i) {
+            option.selected = true;
+        }
+        slotChooserParent.appendChild(option);
     }
-
-    mainData = new TimeTrackerData("Test Data", times);
 }
 
-LoadData();
-RenderCurrentCalendar();
-ShowCorrectUI();
+function SaveSlotChosen() {
+    const v = slotChooserDropdown.value;
+
+    if (v == "create") {
+        CreateNewSlot();
+    } else if (v == "delete") {
+        if (confirm("Delete current save slot?")) {
+            DeleteCurrentSave();
+        }
+    }
+    //Load selected slot index
+    else {
+        const n = Number.parseInt(v);
+        if (!isNaN(n)) {
+            LoadSlot(n);
+        }
+    }
+}
+
+//Show the option to select the currently selected save slot as "Change", to avoid duplicating the title in the dropdown
+function UpdateCurrentSlotOption() {
+    const children = slotChooserParent.childNodes;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLOptionElement;
+
+        if (child.value == currentSlot.toString()) {
+            child.innerHTML = "Change";
+            child.selected = true;
+            child.disabled = true;
+        } else {
+            child.innerHTML = child.title;
+            child.selected = false;
+            child.disabled = false;
+        }
+    }
+}
+
+InitialLoad();
+CreateSaveSlotChooserDropdown();
+UpdateCurrentSlotOption();

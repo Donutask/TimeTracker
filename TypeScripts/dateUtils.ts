@@ -23,11 +23,6 @@ function formatAMPM(date: Date): string {
     return strTime;
 }
 
-// https://stackoverflow.com/a/9035732
-function randomDate(start: Date, end: Date) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
-
 //Will show hours and minutes, or just minutes if less than an hour
 function formatHoursMinutes(totalMinutes: number): string {
     //In case something goes very wrong

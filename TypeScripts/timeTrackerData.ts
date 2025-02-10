@@ -1,10 +1,12 @@
 class TimeTrackerData {
     title: string;
+    startDate: Date | null;
     timespans: Timespan[];
 
     constructor(title: string, timespans: Timespan[]) {
         this.title = title;
         this.timespans = timespans;
+        this.startDate = null;
     }
 
     //Adds all timespans
@@ -55,7 +57,14 @@ class TimeTrackerData {
 
     //Turns data into JSON
     Serialize(): string {
-        let json = `{"title":"${this.title}", "timestamps":[`;
+        let dateString;
+        if (this.startDate == null) {
+            dateString = "";
+        } else {
+            dateString = this.startDate.getTime().toString();
+        }
+
+        let json = `{"title":"${this.title}", "startDate":"${dateString}", "timestamps":[`;
 
         //Only process timestamps if they exist
         if (this.timespans != null && this.timespans.length > 0) {

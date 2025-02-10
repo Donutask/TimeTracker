@@ -1,9 +1,9 @@
 "use strict";
 class Timespan {
-    constructor(start, end, note) {
+    constructor(start, end) {
         this.start = start;
         this.end = end;
-        this.note = note;
+        this.note = "";
     }
     GetMinutes() {
         return dateDiffInMinutes(this.start, this.end);
@@ -24,6 +24,6 @@ class Timespan {
         let parsed = JSON.parse(json);
         let start = new Date(parsed.start);
         let end = new Date(parsed.end);
-        return new Timespan(start, end, "");
+        return new Timespan(start, end);
     }
 }

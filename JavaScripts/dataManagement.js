@@ -1,12 +1,73 @@
 "use strict";
 var mainData;
-function SaveData() {
-    localStorage.setItem(dataStorageKey, mainData.Serialize());
+let currentSlot = 0;
+let saveSlots = [];
+const startDateStorageKey = "startDate";
+const saveSlotStorageKey = "currentSaveSlot";
+const dataStorageKey = "timeTrackerData";
+function InitialLoad() {
+    LoadSlots();
+    let loadSlotIndex = 0;
+    const storedSlot = localStorage.getItem(saveSlotStorageKey);
+    if (storedSlot != null) {
+        const storedSlotNumber = Number.parseInt(storedSlot);
+        if (!isNaN(storedSlotNumber)) {
+            loadSlotIndex = storedSlotNumber;
+        }
+    }
+    LoadSlot(loadSlotIndex);
 }
-function LoadData() {
-    let stringData = localStorage.getItem(dataStorageKey);
-    if (stringData != null)
+function LoadSlots() {
+    saveSlots = new Array(localStorage.length - 2);
+    const noSuffix = localStorage.getItem(dataStorageKey);
+    if (noSuffix != null) {
+        saveSlots[0] = noSuffix;
+        localStorage.setItem(dataStorageKey + "0", noSuffix);
+        localStorage.removeItem(dataStorageKey);
+    }
+    for (let i = 0; i < localStorage.length; i++) {
+        const item = localStorage.getItem(dataStorageKey + i);
+        if (item != null && item.length > 1) {
+            saveSlots[i] = item;
+        }
+    }
+}
+function SaveData() {
+    const serialised = mainData.Serialize();
+    saveSlots[currentSlot] = serialised;
+    localStorage.setItem(dataStorageKey + currentSlot, serialised);
+    localStorage.setItem(saveSlotStorageKey, currentSlot.toString());
+}
+function LoadSlot(slotIndex) {
+    currentSlot = slotIndex;
+    let stringData = saveSlots[slotIndex];
+    if (stringData != null) {
         Load(stringData);
+        UpdateCalendarAndDetails();
+        ShowCorrectUI();
+        UpdateCurrentSlotOption();
+    }
+    else {
+        CreateNewSlot();
+    }
+}
+function CreateNewSlot() {
+    mainData = new TimeTrackerData("", []);
+    currentSlot = saveSlots.length;
+    SaveAndUpdate();
+    LoadSlots();
+    CreateSaveSlotChooserDropdown();
+    console.log("Made slot");
+}
+function DeleteCurrentSave() {
+    if (saveSlots.length <= 1) {
+        alert("Cannot delete. Must have at least one slot.");
+        return;
+    }
+    localStorage.removeItem(dataStorageKey + currentSlot);
+    LoadSlots();
+    LoadSlot(0);
+    CreateSaveSlotChooserDropdown();
 }
 function Load(stringData) {
     if (stringData != null) {
@@ -42,17 +103,18 @@ function Import() {
     let text = prompt("Paste Exported Data");
     if (text != null && text.length > 0) {
         Load(text);
-        ShowCorrectUI();
-        UpdateCalendarAndDetails();
-        SaveData();
+        SaveAndUpdate();
         alert("Success!");
     }
 }
 function Clear() {
     if (confirm("This will delete all data. Are you sure?")) {
         mainData = new TimeTrackerData("", []);
-        SaveData();
-        ShowCorrectUI();
-        UpdateCalendarAndDetails();
+        SaveAndUpdate();
     }
+}
+function SaveAndUpdate() {
+    SaveData();
+    ShowCorrectUI();
+    UpdateCalendarAndDetails();
 }

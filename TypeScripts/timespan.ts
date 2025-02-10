@@ -1,13 +1,13 @@
+//Has a start and end Date. Can use to calculate duration between those dates.
 class Timespan {
     start: Date;
     end: Date;
-    note: string;
+    note: string; //not used
 
-
-    constructor(start: Date, end: Date, note: string) {
+    constructor(start: Date, end: Date) {
         this.start = start;
         this.end = end;
-        this.note = note;
+        this.note = "";
     }
 
     //Minutes
@@ -26,15 +26,17 @@ class Timespan {
         }
     }
 
+    //Returns JSON encoding of object
     Serialise(): string {
         return `{"start":${this.start.getTime()},"end":${this.end.getTime()}}`
     }
 
+    //Deserialises JSON string to Timespan object
     static FromJSON(json: string): Timespan {
         let parsed = JSON.parse(json);
         let start = new Date(parsed.start);
         let end = new Date(parsed.end);
 
-        return new Timespan(start, end, "");
+        return new Timespan(start, end);
     }
 }

@@ -3,6 +3,7 @@ class TimeTrackerData {
     constructor(title, timespans) {
         this.title = title;
         this.timespans = timespans;
+        this.startDate = null;
     }
     GetTotalMinutes() {
         let totalMinutes = 0;
@@ -40,7 +41,14 @@ class TimeTrackerData {
         }
     }
     Serialize() {
-        let json = `{"title":"${this.title}", "timestamps":[`;
+        let dateString;
+        if (this.startDate == null) {
+            dateString = "";
+        }
+        else {
+            dateString = this.startDate.getTime().toString();
+        }
+        let json = `{"title":"${this.title}", "startDate":"${dateString}", "timestamps":[`;
         if (this.timespans != null && this.timespans.length > 0) {
             for (let i = 0; i < this.timespans.length; i++) {
                 const element = this.timespans[i];

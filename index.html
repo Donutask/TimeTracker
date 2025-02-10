@@ -20,6 +20,12 @@
             <button id="rename-title" onclick="RenameTracker()">
                 <h1 id="title">Time Tracker</h1>
             </button>
+            <select name="select save slot" id="select-save-slot" oninput="SaveSlotChosen()">
+                <optgroup label="Save Slots" id="save-slot-group">
+                </optgroup>
+                <option value="create">Create</option>
+                <option value="delete">Delete</option>
+            </select>
         </header>
         <noscript>This page requires JavaScript to work.</noscript>
 
