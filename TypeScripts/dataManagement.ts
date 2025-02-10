@@ -59,8 +59,16 @@ function Import() {
     if (text != null && text.length > 0) {
         Load(text);
         ShowCorrectUI();
-        RenderCurrentCalendar();
+        UpdateCalendarAndDetails();
         SaveData();
         alert("Success!");
+    }
+}
+function Clear() {
+    if (confirm("This will delete all data. Are you sure?")) {
+        mainData = new TimeTrackerData("", []);
+        SaveData();
+        ShowCorrectUI();
+        UpdateCalendarAndDetails();
     }
 }

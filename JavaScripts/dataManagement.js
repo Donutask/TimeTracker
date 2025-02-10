@@ -48,3 +48,11 @@ function Import() {
         alert("Success!");
     }
 }
+function Clear() {
+    if (confirm("This will delete all data. Are you sure?")) {
+        mainData = new TimeTrackerData("", []);
+        SaveData();
+        ShowCorrectUI();
+        RenderCurrentCalendar();
+    }
+}

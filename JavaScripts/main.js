@@ -9,9 +9,13 @@ const startedTime = document.getElementById("started-time");
 const startedTimeContainer = document.getElementById("started-time-container");
 const changeStartedTimeContainer = document.getElementById("change-start-time-container");
 const changeStartedTimeInput = document.getElementById("change-start-time");
+const setStopTimeButton = document.getElementById("stop-at");
+const setStopTimeContainer = document.getElementById("change-stop-time-container");
+const setStopTimeInput = document.getElementById("change-stop-time");
 const startDateStorageKey = "startDate";
 const dataStorageKey = "timeTrackerData";
 let currentInterval;
+let stopTime;
 function UpdateStartUI() {
     clearInterval(currentInterval);
     UpdateCurrentTimeDisplay();
@@ -48,12 +52,12 @@ function ShowCorrectUI() {
     ShowTitle();
     if (GetStartDate() == null) {
         startUI.hidden = false;
-        stopUI.hidden = true;
+        stopUI.style.display = "none";
         UpdateStartUI();
     }
     else {
         startUI.hidden = true;
-        stopUI.hidden = false;
+        stopUI.style.display = "flex";
         UpdateStopUI();
     }
 }
@@ -73,13 +77,19 @@ function StartTimer() {
 function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
-        let elapsedMinutes = dateDiffInMinutes(startDate, new Date());
-        console.log(elapsedMinutes);
+        let endDate;
+        if (stopTime == null) {
+            endDate = new Date();
+        }
+        else {
+            endDate = stopTime;
+        }
+        let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
         if (elapsedMinutes >= 1) {
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
             }
-            mainData.Add(new Timespan(startDate, new Date(), ""));
+            mainData.Add(new Timespan(startDate, endDate, ""));
             SaveData();
             UpdateCalendarAndDetails();
         }
@@ -106,13 +116,7 @@ function GetStartDate() {
     }
 }
 function BeginChangeStartedTime() {
-    startedTimeContainer.style.display = "none";
-    changeStartedTimeContainer.style.display = "block";
-    let startDate = GetStartDate();
-    if (startDate != null) {
-        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
-        changeStartedTimeInput.value = startDate.toISOString().slice(0, 16);
-    }
+    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, GetStartDate());
 }
 function SubmitStartTimeChange() {
     let date = new Date(changeStartedTimeInput.value);
@@ -123,6 +127,26 @@ function SubmitStartTimeChange() {
 function CancelStartTimeChange() {
     startedTimeContainer.style.display = "block";
     changeStartedTimeContainer.style.display = "none";
+}
+function BeginSetStopTime() {
+    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
+    stopTime = new Date();
+}
+function CancelSetStopTime() {
+    setStopTimeButton.hidden = false;
+    setStopTimeContainer.hidden = true;
+    stopTime = null;
+}
+function StopTimeChanged() {
+    stopTime = new Date(setStopTimeInput.value);
+}
+function BeginTimeChanger(openUI, changeUI, timeInput, date) {
+    openUI.style.display = "none";
+    changeUI.style.display = "block";
+    if (date != null) {
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        timeInput.value = date.toISOString().slice(0, 16);
+    }
 }
 function RenameTracker() {
     if (mainData == null) {

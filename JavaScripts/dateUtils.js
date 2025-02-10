@@ -23,6 +23,18 @@ function randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 function formatHoursMinutes(totalMinutes) {
+    if (Number.isNaN(totalMinutes)) {
+        return "?";
+    }
+    if (!Number.isFinite(totalMinutes)) {
+        return "Forever";
+    }
+    if (totalMinutes > 60 * 99) {
+        let days = Math.floor(totalMinutes / (60 * 24));
+        let hours = Math.floor((totalMinutes / 60) % 24);
+        let minutes = totalMinutes % 60;
+        return `${days}d ${hours}h ${Math.floor(minutes)}m`;
+    }
     if (totalMinutes > 60) {
         let hours = Math.floor(totalMinutes / 60);
         let minutes = totalMinutes % 60;

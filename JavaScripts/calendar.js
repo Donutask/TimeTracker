@@ -100,8 +100,14 @@ function ShowDayDetails(date) {
             durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
             const managementActionsElement = document.createElement('td');
+            const editElement = document.createElement("button");
+            editElement.className = "management-button edit-button";
+            editElement.addEventListener("click", function () {
+                alert("Not implemented.");
+            });
+            managementActionsElement.appendChild(editElement);
             const deleteElement = document.createElement("button");
-            deleteElement.className = "delete-button";
+            deleteElement.className = "management-button delete-button";
             deleteElement.addEventListener("click", function () {
                 if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
                     mainData.Remove(timespan);

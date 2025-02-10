@@ -29,14 +29,21 @@
                 <p id="elapsed-time"></p>
                 <div id="started-time-container" hidden="false">
                     <p id="started-time"></p>
-                    <button id="change-start-time-button" onclick="BeginChangeStartedTime()">Change</button>
+                    <button class="subtle-button" id="change-start-time-button"
+                        onclick="BeginChangeStartedTime()">Change</button>
                 </div>
                 <div id="change-start-time-container" hidden>
-                    <label>Change Start Time: <input id="change-start-time" type="datetime-local"></label><input
-                        type="submit" onclick="SubmitStartTimeChange()"><button
-                        onclick="CancelStartTimeChange()">Cancel</button>
+                    <label>Change Start Time: <input id="change-start-time" type="datetime-local"></label>
+                    <input type="submit" onclick="SubmitStartTimeChange()">
+                    <button onclick="CancelStartTimeChange()">Cancel</button>
                 </div>
                 <button onclick="StopTimer()" class="timer-action-button">Stop</button>
+                <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
+                <div id="change-stop-time-container" hidden>
+                    <label>Choose Stop Time: <input id="change-stop-time" type="datetime-local"
+                            oninput="StopTimeChanged()"></label>
+                    <button onclick="CancelSetStopTime()">Cancel</button>
+                </div>
             </div>
 
 
@@ -86,6 +93,7 @@
         <div id="data-management">
             <button onclick="Export()">Export</button>
             <button onclick="Import()">Import</button>
+            <button onclick="Clear()">Delete All</button>
         </div>
 
         <footer class="footer">

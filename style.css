@@ -20,6 +20,12 @@ body {
 }
 
 
+#stop-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #start-time {
     font-size: 3em;
     line-height: 0px;
@@ -53,7 +59,12 @@ body {
     margin: 0px;
 }
 
-#change-start-time-button {
+
+button {
+    cursor: pointer;
+}
+
+.subtle-button {
     display: inline;
     text-decoration: underline;
     background: none;
@@ -61,13 +72,14 @@ body {
     border: none;
 }
 
-#change-start-time-button:hover {
+.subtle-button:hover {
     color: rgb(0, 149, 255);
 }
 
-button {
-    cursor: pointer;
+#stop-at {
+    display: block;
 }
+
 
 #rename-title {
     background-color: rgba(0, 0, 0, 0);
@@ -124,17 +136,24 @@ button {
     background-color: #eaeef3 !important;
 }
 
-.delete-button {
+.management-button {
     width: 20px;
     height: 20px;
     background: none;
     border: none;
-    background-image: url("Icons/x-circle-fill.svg");
     background-size: contain;
     background-position: center;
 }
 
-.delete-button:hover {
+.delete-button {
+    background-image: url("Icons/trash-fill.svg");
+}
+
+.edit-button {
+    background-image: url("Icons/pencil-fill.svg");
+}
+
+.management-button:hover {
     rotate: 15deg;
     background-size: 22px;
 }
@@ -305,7 +324,7 @@ button {
         background-color: hsl(207, 100%, 50%);
     }
 
-    #change-start-time-button {
+    .subtle-button {
         color: white;
     }
 
@@ -322,7 +341,7 @@ button {
         background-color: #00000047 !important;
     }
 
-    .delete-button {
+    .management-button {
         filter: invert(100%);
     }
 }

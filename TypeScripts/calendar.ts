@@ -134,21 +134,31 @@ function ShowDayDetails(date: number) {
             const timespan = timespans[i];
 
             const rowElement = document.createElement('tr');
+            //Start time
             const fromElement = document.createElement('td');
             fromElement.innerHTML = formatAMPM(timespan.start);
             rowElement.appendChild(fromElement);
-
+            //End time
             const toElement = document.createElement('td');
             toElement.innerHTML = formatAMPM(timespan.end);
             rowElement.appendChild(toElement);
-
+            //Total Hours, Minutes
             const durationElement = document.createElement('td');
             durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
 
             const managementActionsElement = document.createElement('td');
+            //Change times
+            const editElement = document.createElement("button");
+            editElement.className = "management-button edit-button";
+            editElement.addEventListener("click", function () {
+                alert("Not implemented.");
+            });
+            managementActionsElement.appendChild(editElement);
+
+            //Delete
             const deleteElement = document.createElement("button");
-            deleteElement.className = "delete-button";
+            deleteElement.className = "management-button delete-button";
             deleteElement.addEventListener("click", function () {
                 if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
                     mainData.Remove(timespan);

@@ -1,19 +1,24 @@
 const titleDisplay = document.getElementById("title") as HTMLTitleElement;
-const startUI = document.getElementById("start-ui");
-const startTime = document.getElementById("start-time");
-const startButton = document.getElementById("start-button");
+const startUI = document.getElementById("start-ui") as HTMLElement;
+const startTime = document.getElementById("start-time") as HTMLElement;
+const startButton = document.getElementById("start-button") as HTMLElement;
 
-const stopUI = document.getElementById("stop-ui");
-const elapsedTime = document.getElementById("elapsed-time");
-const startedTime = document.getElementById("started-time");
+const stopUI = document.getElementById("stop-ui") as HTMLElement;
+const elapsedTime = document.getElementById("elapsed-time") as HTMLElement;
+const startedTime = document.getElementById("started-time") as HTMLElement;
 
-const startedTimeContainer = document.getElementById("started-time-container");
-const changeStartedTimeContainer = document.getElementById("change-start-time-container");
+const startedTimeContainer = document.getElementById("started-time-container") as HTMLElement;
+const changeStartedTimeContainer = document.getElementById("change-start-time-container") as HTMLElement;
 const changeStartedTimeInput: HTMLInputElement = document.getElementById("change-start-time") as HTMLInputElement;
+
+const setStopTimeButton = document.getElementById("stop-at") as HTMLElement;
+const setStopTimeContainer = document.getElementById("change-stop-time-container") as HTMLElement;
+const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-time") as HTMLInputElement;
 
 const startDateStorageKey = "startDate";
 const dataStorageKey = "timeTrackerData";
 let currentInterval: number;
+let stopTime: Date | null;
 
 function UpdateStartUI() {
     clearInterval(currentInterval);
@@ -23,7 +28,7 @@ function UpdateStartUI() {
 
 function UpdateCurrentTimeDisplay() {
     let d = new Date();
-    startTime!.innerHTML = formatAMPM(d);
+    startTime.innerHTML = formatAMPM(d);
 }
 
 function UpdateStopUI() {
@@ -32,9 +37,9 @@ function UpdateStopUI() {
 
     if (startDate != null) {
         if (startDate.getDate() == currentDate.getDate()) {
-            startedTime!.innerHTML = "Started at " + formatAMPM(startDate);
+            startedTime.innerHTML = "Started at " + formatAMPM(startDate);
         } else {
-            startedTime!.innerHTML = "Started at " + formatAMPM(startDate) + " on " + startDate.toDateString();
+            startedTime.innerHTML = "Started at " + formatAMPM(startDate) + " on " + startDate.toDateString();
         }
 
         clearInterval(currentInterval);
@@ -48,7 +53,7 @@ function ElapsedTimeDisplay() {
     const currentDate = new Date();
     if (startDate != null) {
         const totalMinutes = dateDiffInMinutes(startDate, currentDate);
-        elapsedTime!.innerHTML = formatHoursMinutes(totalMinutes);
+        elapsedTime.innerHTML = formatHoursMinutes(totalMinutes);
     }
 }
 
@@ -57,14 +62,14 @@ function ShowCorrectUI() {
 
     if (GetStartDate() == null) {
         //Start
-        startUI!.hidden = false;
-        stopUI!.hidden = true;
+        startUI.hidden = false;
+        stopUI.style.display = "none";
 
         UpdateStartUI();
     } else {
         //Stop
-        startUI!.hidden = true;
-        stopUI!.hidden = false;
+        startUI.hidden = true;
+        stopUI.style.display = "flex";
 
         UpdateStopUI();
     }
@@ -91,8 +96,14 @@ function StartTimer() {
 function StopTimer() {
     let startDate = GetStartDate();
     if (startDate != null) {
-        let elapsedMinutes = dateDiffInMinutes(startDate, new Date());
-        console.log(elapsedMinutes);
+        let endDate: Date;
+        if (stopTime == null) {
+            endDate = new Date();
+        } else {
+            endDate = stopTime;
+        }
+
+        let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
 
         if (elapsedMinutes >= 1) {
             //ensure it exists
@@ -100,7 +111,7 @@ function StopTimer() {
                 mainData = new TimeTrackerData("", []);
             }
             //save it
-            mainData.Add(new Timespan(startDate, new Date(), ""));
+            mainData.Add(new Timespan(startDate, endDate, ""));
             SaveData();
 
             UpdateCalendarAndDetails();
@@ -129,17 +140,10 @@ function GetStartDate(): Date | null {
     }
 }
 
+
 //Change when the timer was started (because you forgot or something)
 function BeginChangeStartedTime() {
-    startedTimeContainer!.style.display = "none";
-    changeStartedTimeContainer!.style.display = "block";
-
-    let startDate = GetStartDate();
-    if (startDate != null) {
-        //https://stackoverflow.com/a/61082536
-        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
-        changeStartedTimeInput.value = startDate.toISOString().slice(0, 16);
-    }
+    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, GetStartDate());
 }
 
 function SubmitStartTimeChange() {
@@ -152,8 +156,32 @@ function SubmitStartTimeChange() {
 }
 
 function CancelStartTimeChange() {
-    startedTimeContainer!.style.display = "block";
-    changeStartedTimeContainer!.style.display = "none";
+    startedTimeContainer.style.display = "block";
+    changeStartedTimeContainer.style.display = "none";
+}
+
+function BeginSetStopTime() {
+    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
+    stopTime = new Date();
+}
+function CancelSetStopTime() {
+    setStopTimeButton.hidden = false;
+    setStopTimeContainer.hidden = true;
+    stopTime = null;
+}
+function StopTimeChanged() {
+    stopTime = new Date(setStopTimeInput.value);
+}
+
+function BeginTimeChanger(openUI: HTMLElement, changeUI: HTMLElement, timeInput: HTMLInputElement, date: Date | null) {
+    openUI.style.display = "none";
+    changeUI.style.display = "block";
+
+    if (date != null) {
+        //https://stackoverflow.com/a/61082536
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        timeInput.value = date.toISOString().slice(0, 16);
+    }
 }
 
 function RenameTracker() {
