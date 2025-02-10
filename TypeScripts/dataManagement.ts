@@ -1,3 +1,4 @@
+//This script manages saving, loading, importing, and exporting
 var mainData: TimeTrackerData;
 
 function SaveData() {
