@@ -36,8 +36,12 @@ function formatHoursMinutes(totalMinutes: number): string {
     if (!Number.isFinite(totalMinutes)) {
         return "Forever";
     }
+
+    //Round it to hopefully avoid off-by-one errors
+    totalMinutes = Math.round(totalMinutes);
+
     //Days
-    if (totalMinutes > 60 * 99) {
+    if (totalMinutes >= 60 * 99) {
         let days = Math.floor(totalMinutes / (60 * 24));
         let hours = Math.floor((totalMinutes / 60) % 24);
         let minutes = totalMinutes % 60;
@@ -45,11 +49,11 @@ function formatHoursMinutes(totalMinutes: number): string {
         return `${days}d ${hours}h ${Math.floor(minutes)}m`;
     }
     //Hours
-    if (totalMinutes > 60) {
+    if (totalMinutes >= 60) {
         let hours = Math.floor(totalMinutes / 60);
         let minutes = totalMinutes % 60;
 
-        return `${hours}hr ${Math.floor(minutes)}min`;
+        return `${hours}hr ${minutes}min`;
 
     }
     //Minutes

@@ -43,7 +43,7 @@ function Import() {
     if (text != null && text.length > 0) {
         Load(text);
         ShowCorrectUI();
-        RenderCurrentCalendar();
+        UpdateCalendarAndDetails();
         SaveData();
         alert("Success!");
     }
@@ -53,6 +53,6 @@ function Clear() {
         mainData = new TimeTrackerData("", []);
         SaveData();
         ShowCorrectUI();
-        RenderCurrentCalendar();
+        UpdateCalendarAndDetails();
     }
 }
