@@ -73,8 +73,15 @@ nextMonthBtn.addEventListener('click', () => {
     renderCalendar(currentMonth, currentYear);
 });
 calendarDates.addEventListener('click', (e) => {
-    if (e.target.textContent !== '') {
-        let date = Number.parseInt(e.target.innerHTML);
+    let content;
+    if (e.target.className == "timespan") {
+        content = e.target.parentNode.innerHTML;
+    }
+    else {
+        content = e.target.innerHTML;
+    }
+    if (content != null) {
+        let date = Number.parseInt(content);
         ShowDayDetails(date);
     }
 });

@@ -109,13 +109,22 @@ nextMonthBtn.addEventListener('click', () => {
 //Click on a date to get info for all logged timespans on that date
 //So much for TypeScript types lol
 calendarDates.addEventListener('click', (e: any) => {
-    if (e.target.textContent !== '') {
-        let date = Number.parseInt(e.target.innerHTML);
+    let content: string;
+    if (e.target.className == "timespan") {
+        content = e.target.parentNode.innerHTML;
+    } else {
+        content = e.target.innerHTML;
+    }
+
+    if (content != null) {
+        let date = Number.parseInt(content);
         ShowDayDetails(date);
     }
 });
 
 
+//Creates a table that displays
+// Start | End | Duration | Edit (buttons for deleting the timeslot, or changing the times)
 let showingDetailsForDay: number | null;
 function ShowDayDetails(date: number) {
     showingDetailsForDay = date;

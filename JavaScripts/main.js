@@ -42,7 +42,13 @@ function UpdateStopUI() {
 }
 function ElapsedTimeDisplay() {
     const startDate = GetStartDate();
-    const currentDate = new Date();
+    let currentDate;
+    if (stopTime == null) {
+        currentDate = new Date();
+    }
+    else {
+        currentDate = stopTime;
+    }
     if (startDate != null) {
         const totalMinutes = dateDiffInMinutes(startDate, currentDate);
         elapsedTime.innerHTML = formatHoursMinutes(totalMinutes);
@@ -76,13 +82,23 @@ function StartTimer() {
 }
 function StopTimer() {
     let startDate = GetStartDate();
+    let now = new Date();
     if (startDate != null) {
         let endDate;
         if (stopTime == null) {
-            endDate = new Date();
+            endDate = now;
         }
         else {
             endDate = stopTime;
+            if (dateDiffInHours(startDate, endDate) < 0) {
+                alert("Error: End time is before start time.");
+                return;
+            }
+            if (dateDiffInHours(startDate, endDate) >= 24) {
+                if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
+                    return;
+                }
+            }
         }
         let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
         if (elapsedMinutes >= 1) {
@@ -133,12 +149,14 @@ function BeginSetStopTime() {
     stopTime = new Date();
 }
 function CancelSetStopTime() {
-    setStopTimeButton.hidden = false;
-    setStopTimeContainer.hidden = true;
+    setStopTimeButton.style.display = "block";
+    setStopTimeContainer.style.display = "none";
     stopTime = null;
+    ElapsedTimeDisplay();
 }
 function StopTimeChanged() {
     stopTime = new Date(setStopTimeInput.value);
+    ElapsedTimeDisplay();
 }
 function BeginTimeChanger(openUI, changeUI, timeInput, date) {
     openUI.style.display = "none";

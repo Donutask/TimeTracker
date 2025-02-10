@@ -16,6 +16,17 @@
             <button id="rename-title" onclick="RenameTracker()">
                 <h1 id="title">Time Tracker</h1>
             </button>
+            <!-- Future Feature: Multiple save slots, which you can change at any time. -->
+            <!-- <select name="select save slot" id="select-save-slot">
+                <option value="">Change</option>
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+                <option value="hamster">Hamster</option>
+                <option value="parrot">Parrot</option>
+                <option value="spider">Spider</option>
+                <option value="goldfish">Goldfish</option>
+                <option value="create-new-tracker"><b>Create</b></option>
+            </select> -->
         </header>
         <noscript>This page requires JavaScript to work.</noscript>
 
@@ -91,16 +102,15 @@
         </div>
 
         <div id="data-management">
-            <button onclick="Export()">Export</button>
-            <button onclick="Import()">Import</button>
-            <button onclick="Clear()">Delete All</button>
+            <button class="file-management-button" onclick="Export()">Export</button>
+            <button class="file-management-button" onclick="Import()">Import</button>
+            <button class="file-management-button" id="delete-file" onclick="Clear()">Delete All</button>
         </div>
 
         <footer class="footer">
             <a class="link" href="https://donutask.com">Created by Donutask</a>
         </footer>
     </div>
-
 
     <!-- Import all scripts -->
     <script>var exports = {};</script>

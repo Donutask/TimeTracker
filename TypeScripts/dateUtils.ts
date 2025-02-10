@@ -11,6 +11,7 @@ function dateDiffInMinutes(startDate: Date, endDate: Date): number {
 }
 //https://stackoverflow.com/a/8888498
 function formatAMPM(date: Date): string {
+    
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let ampm = hours >= 12 ? 'pm' : 'am';

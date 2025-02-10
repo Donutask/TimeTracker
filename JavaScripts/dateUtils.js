@@ -30,7 +30,7 @@ function formatHoursMinutes(totalMinutes) {
         return "Forever";
     }
     totalMinutes = Math.round(totalMinutes);
-    if (totalMinutes > 60 * 99) {
+    if (totalMinutes >= 60 * 99) {
         let days = Math.floor(totalMinutes / (60 * 24));
         let hours = Math.floor((totalMinutes / 60) % 24);
         let minutes = totalMinutes % 60;
