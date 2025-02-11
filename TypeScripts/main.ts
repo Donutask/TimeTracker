@@ -18,6 +18,7 @@ const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-
 
 const slotChooserDropdown = document.getElementById("select-save-slot") as HTMLSelectElement;
 const slotChooserParent = document.getElementById("save-slot-group") as HTMLElement;
+const deleteSlotOption = document.getElementById("delete-save-slot") as HTMLOptionElement;
 
 let currentInterval: number;
 let stopTime: Date | null;
@@ -227,14 +228,15 @@ function CreateSaveSlotChooserDropdown() {
 
     for (let i = 0; i < saveSlots.length; i++) {
         const saveSlot = saveSlots[i];
+        if (saveSlot == null || saveSlot.length <= 0) {
+            continue;
+        }
 
         let label = "Slot " + i;
         //Custom name by reading JSON title property, if it exists
-        if (saveSlot != null) {
-            let parsedJSON = JSON.parse(saveSlot);
-            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-                label = parsedJSON.title;
-            }
+        let parsedJSON = JSON.parse(saveSlot);
+        if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+            label = parsedJSON.title;
         }
 
         //Create HTML element
@@ -248,6 +250,12 @@ function CreateSaveSlotChooserDropdown() {
         }
         slotChooserParent.appendChild(option);
     }
+
+    if (saveSlots.length > 0) {
+        deleteSlotOption.disabled = true;
+    } else {
+        deleteSlotOption.disabled = false;
+    }
 }
 
 function SaveSlotChosen() {
@@ -256,9 +264,13 @@ function SaveSlotChosen() {
     if (v == "create") {
         CreateNewSlot();
     } else if (v == "delete") {
-        if (confirm("Delete current save slot?")) {
-            DeleteCurrentSave();
-        }
+        //deleting slot breaks it all
+        if (saveSlots.length <= 1) {
+            alert("Cannot delete. Must have at least one slot.");
+        } else
+            if (confirm("Delete current save slot?")) {
+                DeleteCurrentSave();
+            }
     }
     //Load selected slot index
     else {

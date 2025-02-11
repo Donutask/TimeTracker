@@ -14,6 +14,7 @@ const setStopTimeContainer = document.getElementById("change-stop-time-container
 const setStopTimeInput = document.getElementById("change-stop-time");
 const slotChooserDropdown = document.getElementById("select-save-slot");
 const slotChooserParent = document.getElementById("save-slot-group");
+const deleteSlotOption = document.getElementById("delete-save-slot");
 let currentInterval;
 let stopTime;
 function UpdateStartUI() {
@@ -181,12 +182,13 @@ function CreateSaveSlotChooserDropdown() {
     slotChooserParent.innerHTML = "";
     for (let i = 0; i < saveSlots.length; i++) {
         const saveSlot = saveSlots[i];
+        if (saveSlot == null || saveSlot.length <= 0) {
+            continue;
+        }
         let label = "Slot " + i;
-        if (saveSlot != null) {
-            let parsedJSON = JSON.parse(saveSlot);
-            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-                label = parsedJSON.title;
-            }
+        let parsedJSON = JSON.parse(saveSlot);
+        if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+            label = parsedJSON.title;
         }
         const option = document.createElement("option");
         option.innerHTML = label;
@@ -197,6 +199,12 @@ function CreateSaveSlotChooserDropdown() {
         }
         slotChooserParent.appendChild(option);
     }
+    if (saveSlots.length > 0) {
+        deleteSlotOption.disabled = true;
+    }
+    else {
+        deleteSlotOption.disabled = false;
+    }
 }
 function SaveSlotChosen() {
     const v = slotChooserDropdown.value;
@@ -204,7 +212,10 @@ function SaveSlotChosen() {
         CreateNewSlot();
     }
     else if (v == "delete") {
-        if (confirm("Delete current save slot?")) {
+        if (saveSlots.length <= 1) {
+            alert("Cannot delete. Must have at least one slot.");
+        }
+        else if (confirm("Delete current save slot?")) {
             DeleteCurrentSave();
         }
     }

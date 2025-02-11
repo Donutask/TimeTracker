@@ -23,8 +23,12 @@ function InitialLoad() {
 }
 
 function LoadSlots() {
+    let arrayLength = 1;
+    if (localStorage.length > 2) {
+        arrayLength = localStorage.length - 2;
+    }
     // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
-    saveSlots = new Array(localStorage.length - 2);
+    saveSlots = new Array(arrayLength);
 
     //Legacy behaviour (they had no numbers before)
     const noSuffix = localStorage.getItem(dataStorageKey);
@@ -34,13 +38,25 @@ function LoadSlots() {
         localStorage.removeItem(dataStorageKey);
     }
 
+    let validSaveSlots = 0;
     //if item with key exists, add save slot
     for (let i = 0; i < localStorage.length; i++) {
         const item = localStorage.getItem(dataStorageKey + i);
 
         if (item != null && item.length > 1) {
             saveSlots[i] = item;
+            validSaveSlots++;
+        } else {
+            saveSlots[i] = "";
         }
+    }
+
+    //Ensure a slot exists by creating empty data if null
+    if (validSaveSlots <= 0) {
+        mainData = new TimeTrackerData("", []);
+        saveSlots[0] =mainData.Serialize();
+        currentSlot = 0;
+        SaveData();
     }
 }
 
@@ -61,11 +77,8 @@ function LoadSlot(slotIndex: number) {
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateCurrentSlotOption();
-    } else if (saveSlots.length <= 1) {
-        CreateNewSlot();
     } else {
-        mainData = new TimeTrackerData("", []);
-        SaveAndUpdate();
+        console.error("No data for slot " +slotIndex);
     }
 }
 
@@ -82,10 +95,7 @@ function CreateNewSlot() {
 
 //Deletes and loads 0th slot
 function DeleteCurrentSave() {
-    if (saveSlots.length <= 1) {
-        alert("Cannot delete. Must have at least one slot.");
-        return;
-    }
+
 
     localStorage.removeItem(dataStorageKey + currentSlot);
     LoadSlots();

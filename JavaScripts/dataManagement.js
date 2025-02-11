@@ -18,18 +18,33 @@ function InitialLoad() {
     LoadSlot(loadSlotIndex);
 }
 function LoadSlots() {
-    saveSlots = new Array(localStorage.length - 2);
+    let arrayLength = 1;
+    if (localStorage.length > 2) {
+        arrayLength = localStorage.length - 2;
+    }
+    saveSlots = new Array(arrayLength);
     const noSuffix = localStorage.getItem(dataStorageKey);
     if (noSuffix != null) {
         saveSlots[0] = noSuffix;
         localStorage.setItem(dataStorageKey + "0", noSuffix);
         localStorage.removeItem(dataStorageKey);
     }
+    let validSaveSlots = 0;
     for (let i = 0; i < localStorage.length; i++) {
         const item = localStorage.getItem(dataStorageKey + i);
         if (item != null && item.length > 1) {
             saveSlots[i] = item;
+            validSaveSlots++;
         }
+        else {
+            saveSlots[i] = "";
+        }
+    }
+    if (validSaveSlots <= 0) {
+        mainData = new TimeTrackerData("", []);
+        saveSlots[0] = mainData.Serialize();
+        currentSlot = 0;
+        SaveData();
     }
 }
 function SaveData() {
@@ -47,12 +62,8 @@ function LoadSlot(slotIndex) {
         ShowCorrectUI();
         UpdateCurrentSlotOption();
     }
-    else if (saveSlots.length <= 1) {
-        CreateNewSlot();
-    }
     else {
-        mainData = new TimeTrackerData("", []);
-        SaveAndUpdate();
+        console.error("No data for slot " + slotIndex);
     }
 }
 function CreateNewSlot() {
@@ -64,10 +75,6 @@ function CreateNewSlot() {
     console.log("Made slot");
 }
 function DeleteCurrentSave() {
-    if (saveSlots.length <= 1) {
-        alert("Cannot delete. Must have at least one slot.");
-        return;
-    }
     localStorage.removeItem(dataStorageKey + currentSlot);
     LoadSlots();
     LoadSlot(0);

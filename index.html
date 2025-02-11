@@ -24,7 +24,7 @@
                 <optgroup label="Save Slots" id="save-slot-group">
                 </optgroup>
                 <option value="create">Create</option>
-                <option value="delete">Delete</option>
+                <option id="delete-save-slot" value="delete">Delete</option>
             </select>
         </header>
         <noscript>This page requires JavaScript to work.</noscript>
@@ -101,7 +101,6 @@
         <div id="data-management">
             <button class="file-management-button" onclick="Export()">Export</button>
             <button class="file-management-button" onclick="Import()">Import</button>
-            <button class="file-management-button" id="delete-file" onclick="Clear()">Delete All</button>
         </div>
 
         <footer class="footer">
