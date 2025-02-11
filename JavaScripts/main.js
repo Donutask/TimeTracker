@@ -15,26 +15,26 @@ const setStopTimeInput = document.getElementById("change-stop-time");
 const slotChooserDropdown = document.getElementById("select-save-slot");
 const slotChooserParent = document.getElementById("save-slot-group");
 const deleteSlotOption = document.getElementById("delete-save-slot");
+const createSlotOption = document.getElementById("create-save-slot");
 let currentInterval;
 let stopTime;
+let startDate;
 function UpdateStartUI() {
     clearInterval(currentInterval);
     UpdateCurrentTimeDisplay();
     currentInterval = setInterval(UpdateCurrentTimeDisplay, 1000);
 }
 function UpdateCurrentTimeDisplay() {
-    let d = new Date();
-    startTime.innerHTML = formatAMPM(d);
+    startTime.innerHTML = DateTime.formatAMPM(DateTime.Now());
 }
 function UpdateStopUI() {
-    const startDate = GetStartDate();
-    const currentDate = new Date();
+    const currentDate = DateTime.Now();
     if (startDate != null) {
-        if (startDate.getDate() == currentDate.getDate()) {
-            startedTime.innerHTML = "Started at " + formatAMPM(startDate);
+        if (DateTime.IsSameDate(startDate, currentDate)) {
+            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate);
         }
         else {
-            startedTime.innerHTML = "Started at " + formatAMPM(startDate) + " on " + startDate.toDateString();
+            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate) + " on " + startDate.ToDateString();
         }
         clearInterval(currentInterval);
         ElapsedTimeDisplay();
@@ -42,22 +42,21 @@ function UpdateStopUI() {
     }
 }
 function ElapsedTimeDisplay() {
-    const startDate = GetStartDate();
     let currentDate;
     if (stopTime == null) {
-        currentDate = new Date();
+        currentDate = DateTime.Now();
     }
     else {
         currentDate = stopTime;
     }
-    if (startDate != null) {
-        const totalMinutes = dateDiffInMinutes(startDate, currentDate);
-        elapsedTime.innerHTML = formatHoursMinutes(totalMinutes);
+    if (!DateTime.IsNull(startDate)) {
+        const totalMinutes = DateTime.DifferenceInMinutes(startDate, currentDate);
+        elapsedTime.innerHTML = DateTime.formatHoursMinutes(totalMinutes);
     }
 }
 function ShowCorrectUI() {
     ShowTitle();
-    if (GetStartDate() == null) {
+    if (DateTime.IsNull(startDate)) {
         startUI.hidden = false;
         stopUI.style.display = "none";
         UpdateStartUI();
@@ -77,31 +76,31 @@ function ShowTitle() {
     }
 }
 function StartTimer() {
-    let d = new Date();
-    localStorage.setItem("startDate", d.getTime().toString());
+    let d = DateTime.Now();
+    startDate = d;
+    localStorage.setItem("startDate", d.ToString());
     ShowCorrectUI();
 }
 function StopTimer() {
-    let startDate = GetStartDate();
-    let now = new Date();
-    if (startDate != null) {
+    let now = DateTime.Now();
+    if (!DateTime.IsNull(startDate)) {
         let endDate;
         if (stopTime == null) {
             endDate = now;
         }
         else {
             endDate = stopTime;
-            if (dateDiffInHours(startDate, endDate) < 0) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) < 0) {
                 alert("Error: End time is before start time.");
                 return;
             }
-            if (dateDiffInHours(startDate, endDate) >= 24) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) >= 24) {
                 if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
                     return;
                 }
             }
         }
-        let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
+        let elapsedMinutes = DateTime.DifferenceInMinutes(startDate, endDate);
         if (Math.round(elapsedMinutes) >= 1) {
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
@@ -110,6 +109,7 @@ function StopTimer() {
             SaveData();
             UpdateCalendarAndDetails();
         }
+        startDate = DateTime.NullDate();
         localStorage.setItem("startDate", "");
     }
     else {
@@ -117,27 +117,27 @@ function StopTimer() {
     }
     ShowCorrectUI();
 }
-function GetStartDate() {
+function LoadStartDate() {
     let dateString = localStorage.getItem(startDateStorageKey);
-    if (dateString == null || dateString == "") {
-        return null;
+    if (dateString != null) {
+        startDate = DateTime.FromString(dateString);
     }
     else {
-        let ticks = Number.parseInt(dateString);
-        if (Number.isNaN(ticks)) {
-            return null;
-        }
-        else {
-            return new Date(ticks);
-        }
+        startDate == DateTime.NullDate();
     }
 }
 function BeginChangeStartedTime() {
-    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, GetStartDate());
+    if (DateTime.IsNull(startDate)) {
+        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, null);
+    }
+    else {
+        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate.ToJsDate());
+    }
 }
 function SubmitStartTimeChange() {
     let date = new Date(changeStartedTimeInput.value);
-    localStorage.setItem("startDate", date.getTime().toString());
+    startDate = DateTime.FromJsDate(date);
+    localStorage.setItem("startDate", startDate.ToString());
     ShowCorrectUI();
     CancelStartTimeChange();
 }
@@ -147,7 +147,7 @@ function CancelStartTimeChange() {
 }
 function BeginSetStopTime() {
     BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
-    stopTime = new Date();
+    stopTime = DateTime.Now();
 }
 function CancelSetStopTime() {
     setStopTimeButton.style.display = "block";
@@ -156,7 +156,7 @@ function CancelSetStopTime() {
     ElapsedTimeDisplay();
 }
 function StopTimeChanged() {
-    stopTime = new Date(setStopTimeInput.value);
+    stopTime = DateTime.FromJsDate(new Date(setStopTimeInput.value));
     ElapsedTimeDisplay();
 }
 function BeginTimeChanger(openUI, changeUI, timeInput, date) {
@@ -223,6 +223,8 @@ function SaveSlotChosen() {
         else if (confirm("Delete current save slot?")) {
             DeleteCurrentSave();
         }
+        deleteSlotOption.selected = false;
+        createSlotOption.selected = false;
     }
     else {
         const n = Number.parseInt(v);
@@ -247,6 +249,7 @@ function UpdateCurrentSlotOption() {
         }
     }
 }
+LoadStartDate();
 InitialLoad();
 CreateSaveSlotChooserDropdown();
 UpdateCurrentSlotOption();

@@ -19,10 +19,11 @@ const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-
 const slotChooserDropdown = document.getElementById("select-save-slot") as HTMLSelectElement;
 const slotChooserParent = document.getElementById("save-slot-group") as HTMLElement;
 const deleteSlotOption = document.getElementById("delete-save-slot") as HTMLOptionElement;
+const createSlotOption = document.getElementById("create-save-slot") as HTMLOptionElement;
 
 let currentInterval: number;
-let stopTime: Date | null;
-// let startDate: Date | null;
+let stopTime: DateTime | null;
+let startDate: DateTime ;
 
 function UpdateStartUI() {
     clearInterval(currentInterval);
@@ -31,19 +32,17 @@ function UpdateStartUI() {
 }
 
 function UpdateCurrentTimeDisplay() {
-    let d = new Date();
-    startTime.innerHTML = formatAMPM(d);
+    startTime.innerHTML = DateTime.formatAMPM(DateTime.Now());
 }
 
 function UpdateStopUI() {
-    const startDate = GetStartDate();
-    const currentDate = new Date();
+    const currentDate = DateTime.Now();
 
     if (startDate != null) {
-        if (startDate.getDate() == currentDate.getDate()) {
-            startedTime.innerHTML = "Started at " + formatAMPM(startDate);
+        if (DateTime.IsSameDate(startDate, currentDate)) {
+            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate);
         } else {
-            startedTime.innerHTML = "Started at " + formatAMPM(startDate) + " on " + startDate.toDateString();
+            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate) + " on " + startDate.ToDateString();
         }
 
         clearInterval(currentInterval);
@@ -53,24 +52,23 @@ function UpdateStopUI() {
 }
 
 function ElapsedTimeDisplay() {
-    const startDate = GetStartDate();
-    let currentDate: Date;
+    let currentDate: DateTime;
     if (stopTime == null) {
-        currentDate = new Date();
+        currentDate = DateTime.Now();
     } else {
         currentDate = stopTime;
     }
 
-    if (startDate != null) {
-        const totalMinutes = dateDiffInMinutes(startDate, currentDate);
-        elapsedTime.innerHTML = formatHoursMinutes(totalMinutes);
+    if (!DateTime.IsNull( startDate)) {
+        const totalMinutes = DateTime.DifferenceInMinutes(startDate, currentDate);
+        elapsedTime.innerHTML = DateTime.formatHoursMinutes(totalMinutes);
     }
 }
 
 function ShowCorrectUI() {
     ShowTitle();
 
-    if (GetStartDate() == null) {
+    if (DateTime.IsNull( startDate )) {
         //Start
         startUI.hidden = false;
         stopUI.style.display = "none";
@@ -97,29 +95,29 @@ function ShowTitle() {
 //Clicking the start button should
 //store the start time
 function StartTimer() {
-    let d = new Date();
-    localStorage.setItem("startDate", d.getTime().toString());
+    let d = DateTime.Now();
+    startDate = d;
+    localStorage.setItem("startDate", d.ToString());
 
     ShowCorrectUI();
 }
 
 function StopTimer() {
-    let startDate = GetStartDate();
-    let now = new Date();
+    let now = DateTime.Now();
 
-    if (startDate != null) {
+    if (!DateTime.IsNull(startDate )) {
 
-        let endDate: Date;
+        let endDate: DateTime;
         if (stopTime == null) {
             endDate = now;
         } else {
             endDate = stopTime;
 
-            if (dateDiffInHours(startDate, endDate) < 0) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) < 0) {
                 alert("Error: End time is before start time.");
                 return;
             }
-            if (dateDiffInHours(startDate, endDate) >= 24) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) >= 24) {
                 if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
                     return;
                 }
@@ -127,7 +125,7 @@ function StopTimer() {
         }
 
         //Time must have actually passed
-        let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
+        let elapsedMinutes = DateTime.DifferenceInMinutes(startDate, endDate);
         if (Math.round(elapsedMinutes) >= 1) {
             //ensure it exists
             if (mainData == null) {
@@ -139,6 +137,8 @@ function StopTimer() {
 
             UpdateCalendarAndDetails();
         }
+
+        startDate = DateTime.NullDate();
         localStorage.setItem("startDate", "");
     } else {
         console.error("Start date is null");
@@ -148,30 +148,29 @@ function StopTimer() {
 }
 
 //Loads the date the timer was started. Null if doesn't exist.
-function GetStartDate(): Date | null {
+function LoadStartDate() {
     let dateString = localStorage.getItem(startDateStorageKey);
-
-    if (dateString == null || dateString == "") {
-        return null;
-    } else {
-        let ticks = Number.parseInt(dateString);
-        if (Number.isNaN(ticks)) {
-            return null;
-        } else {
-            return new Date(ticks);
-        }
+    if(dateString != null){
+    startDate =    DateTime.FromString(dateString);
+    }else{
+        startDate==DateTime.NullDate();
     }
 }
 
 
 //Change when the timer was started (because you forgot or something)
 function BeginChangeStartedTime() {
-    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, GetStartDate());
+    if (DateTime.IsNull(startDate ) ) {
+        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, null);
+    } else {
+        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate.ToJsDate());
+    }
 }
 
 function SubmitStartTimeChange() {
     let date = new Date(changeStartedTimeInput.value);
-    localStorage.setItem("startDate", date.getTime().toString());
+    startDate = DateTime.FromJsDate(date);
+    localStorage.setItem("startDate", startDate.ToString());
 
     ShowCorrectUI();
 
@@ -185,7 +184,7 @@ function CancelStartTimeChange() {
 
 function BeginSetStopTime() {
     BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
-    stopTime = new Date();
+    stopTime = DateTime.Now();
 }
 function CancelSetStopTime() {
     setStopTimeButton.style.display = "block"
@@ -194,7 +193,7 @@ function CancelSetStopTime() {
     ElapsedTimeDisplay();
 }
 function StopTimeChanged() {
-    stopTime = new Date(setStopTimeInput.value);
+    stopTime = DateTime.FromJsDate(new Date(setStopTimeInput.value));
     ElapsedTimeDisplay();
 }
 
@@ -277,6 +276,9 @@ function SaveSlotChosen() {
         } else if (confirm("Delete current save slot?")) {
             DeleteCurrentSave();
         }
+        //putting the delete option in a drop down was kinda silly
+        deleteSlotOption.selected = false;
+        createSlotOption.selected = false;
     }
     //Load selected slot index
     else {
@@ -306,6 +308,7 @@ function UpdateCurrentSlotOption() {
 }
 
 //When page loads:
+LoadStartDate();
 InitialLoad();
 CreateSaveSlotChooserDropdown();
 UpdateCurrentSlotOption();

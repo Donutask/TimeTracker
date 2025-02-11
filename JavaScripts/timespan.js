@@ -6,24 +6,15 @@ class Timespan {
         this.note = "";
     }
     GetMinutes() {
-        return dateDiffInMinutes(this.start, this.end);
-    }
-    Format() {
-        let formatted = `${formatAMPM(this.start)} - ${formatAMPM(this.end)} (${formatHoursMinutes(this.GetMinutes())})`;
-        if (this.note != null && this.note.length > 0) {
-            return formatted + ` [${this.note}]`;
-        }
-        else {
-            return formatted;
-        }
+        return DateTime.DifferenceInMinutes(this.start, this.end);
     }
     Serialise() {
-        return `{"start":${this.start.getTime()},"end":${this.end.getTime()}}`;
+        return `{"start":"${this.start.ToString()}","end":"${this.end.ToString()}"}`;
     }
     static FromJSON(json) {
         let parsed = JSON.parse(json);
-        let start = new Date(parsed.start);
-        let end = new Date(parsed.end);
+        let start = DateTime.FromString(parsed.start);
+        let end = DateTime.FromString(parsed.end);
         return new Timespan(start, end);
     }
 }

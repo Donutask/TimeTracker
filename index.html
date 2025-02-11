@@ -23,7 +23,7 @@
             <select name="select save slot" id="select-save-slot" oninput="SaveSlotChosen()">
                 <optgroup label="Save Slots" id="save-slot-group">
                 </optgroup>
-                <option value="create">Create</option>
+                <option id="create-save-slot" value="create">Create</option>
                 <option id="delete-save-slot" value="delete">Delete</option>
             </select>
         </header>
@@ -111,7 +111,7 @@
 
     <!-- Import all scripts -->
     <script>var exports = {};</script>
-    <script src="JavaScripts/dateUtils.js"></script>
+    <script src="JavaScripts/dateTime.js"></script>
     <script src="JavaScripts/timespan.js"></script>
     <script src="JavaScripts/timeTrackerData.js"></script>
     <script src="JavaScripts/dataManagement.js"></script>

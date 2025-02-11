@@ -29,7 +29,7 @@ class TimeTrackerData {
         let array = [];
         for (let i = 0; i < this.timespans.length; i++) {
             const element = this.timespans[i];
-            if (element.start.getFullYear() == year && element.start.getMonth() == month && element.start.getDate() == date) {
+            if (element.start.year == year && element.start.month == month && element.start.day == date) {
                 array.push(element);
             }
         }

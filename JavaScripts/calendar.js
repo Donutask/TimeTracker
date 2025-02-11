@@ -45,12 +45,12 @@ function renderCalendar(month, year) {
         for (let j = 0; j < mainData.timespans.length; j++) {
             const element = mainData.timespans[j];
             const start = element.start;
-            if (start.getFullYear() == year && start.getMonth() == month) {
-                if (isNaN(minuteTotals[start.getDate()])) {
-                    minuteTotals[start.getDate()] = 0;
+            if (start.year == year && start.month == month) {
+                if (isNaN(minuteTotals[start.day])) {
+                    minuteTotals[start.day] = 0;
                 }
                 let m = element.GetMinutes();
-                minuteTotals[start.getDate()] += m;
+                minuteTotals[start.day] += m;
                 monthTotal += m;
             }
         }
@@ -65,10 +65,10 @@ function renderCalendar(month, year) {
         }
         let m = minuteTotals[i];
         if (!isNaN(m) && m > 0)
-            day.innerHTML += `<span class=timespan>${formatHoursMinutes(m)}</span>`;
+            day.innerHTML += `<span class=timespan>${DateTime.formatHoursMinutes(m)}</span>`;
         calendarDates.appendChild(day);
     }
-    monthTotalDisplay.innerHTML = `Total for ${months[month]}: <b>${formatHoursMinutes(monthTotal)}</b>`;
+    monthTotalDisplay.innerHTML = `Total for ${months[month]}: <b>${DateTime.formatHoursMinutes(monthTotal)}</b>`;
 }
 prevMonthBtn.addEventListener('click', () => {
     currentMonth--;
@@ -112,13 +112,13 @@ function ShowDayDetails(date) {
             const timespan = timespans[i];
             const rowElement = document.createElement('tr');
             const fromElement = document.createElement('td');
-            fromElement.innerHTML = formatAMPM(timespan.start);
+            fromElement.innerHTML = DateTime.formatAMPM(timespan.start);
             rowElement.appendChild(fromElement);
             const toElement = document.createElement('td');
-            toElement.innerHTML = formatAMPM(timespan.end);
+            toElement.innerHTML = DateTime.formatAMPM(timespan.end);
             rowElement.appendChild(toElement);
             const durationElement = document.createElement('td');
-            durationElement.innerHTML = formatHoursMinutes(timespan.GetMinutes());
+            durationElement.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
             const managementActionsElement = document.createElement('td');
             const editElement = document.createElement("button");
