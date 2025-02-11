@@ -200,10 +200,10 @@ function CreateSaveSlotChooserDropdown() {
         slotChooserParent.appendChild(option);
     }
     if (saveSlots.length > 0) {
-        deleteSlotOption.disabled = true;
+        deleteSlotOption.disabled = false;
     }
     else {
-        deleteSlotOption.disabled = false;
+        deleteSlotOption.disabled = true;
     }
 }
 function SaveSlotChosen() {

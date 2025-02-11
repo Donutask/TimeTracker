@@ -254,9 +254,9 @@ function CreateSaveSlotChooserDropdown() {
 
     //Can only delete if you have more than 1 slot
     if (saveSlots.length > 0) {
-        deleteSlotOption.disabled = true;
-    } else {
         deleteSlotOption.disabled = false;
+    } else {
+        deleteSlotOption.disabled = true;
     }
 }
 
