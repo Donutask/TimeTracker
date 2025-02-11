@@ -136,6 +136,10 @@ button {
     font-style: italic;
 }
 
+#no-data {
+    font-style: italic;
+}
+
 #detailed-day-data-heading {
     line-height: 0px;
 }

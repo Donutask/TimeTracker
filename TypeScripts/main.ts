@@ -235,9 +235,13 @@ function CreateSaveSlotChooserDropdown() {
 
         let label = "Slot " + i;
         //Custom name by reading JSON title property, if it exists
-        let parsedJSON = JSON.parse(saveSlot);
-        if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-            label = parsedJSON.title;
+        try {
+            let parsedJSON = JSON.parse(saveSlot);
+            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+                label = parsedJSON.title;
+            }
+        } catch (error) {
+            console.error(error);
         }
 
         //Create HTML element
@@ -265,7 +269,7 @@ function SaveSlotChosen() {
 
     if (v == "create") {
         CreateNewSlot();
-    } 
+    }
     //Delete after confirmation
     else if (v == "delete") {
         if (saveSlots.length <= 1) {

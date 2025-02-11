@@ -186,9 +186,14 @@ function CreateSaveSlotChooserDropdown() {
             continue;
         }
         let label = "Slot " + i;
-        let parsedJSON = JSON.parse(saveSlot);
-        if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-            label = parsedJSON.title;
+        try {
+            let parsedJSON = JSON.parse(saveSlot);
+            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
+                label = parsedJSON.title;
+            }
+        }
+        catch (error) {
+            console.error(error);
         }
         const option = document.createElement("option");
         option.innerHTML = label;

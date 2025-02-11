@@ -1,4 +1,5 @@
 "use strict";
+const calendarParent = document.getElementById("calendar");
 const calendarDates = document.querySelector('.calendar-dates');
 const monthYear = document.getElementById('month-year');
 const prevMonthBtn = document.getElementById('prev-month');
@@ -8,6 +9,7 @@ const dayDetailsTable = document.getElementById("detailed-day-data");
 const dayDetailsBody = document.getElementById("day-details-body");
 const dayDetailsHeading = document.getElementById("detailed-day-data-heading");
 const noDetailsMessage = document.getElementById("no-details-availible");
+const noDataMessage = document.getElementById("no-data");
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
@@ -15,6 +17,18 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 function renderCalendar(month, year) {
     if (calendarDates == null || monthYear == null) {
         return;
+    }
+    if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
+        noDataMessage.hidden = false;
+        calendarParent.hidden = true;
+        monthTotalDisplay.innerHTML = "";
+        noDetailsMessage.style.display = "none";
+        return;
+    }
+    else {
+        noDataMessage.hidden = true;
+        calendarParent.hidden = false;
+        noDetailsMessage.style.display = "block";
     }
     calendarDates.innerHTML = '';
     monthYear.textContent = `${months[month]} ${year}`;
@@ -129,8 +143,12 @@ function ShowDayDetails(date) {
     }
     else {
         dayDetailsTable.style.display = "none";
-        noDetailsMessage.style.display = "block";
         dayDetailsHeading.innerHTML = "";
+        if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
+        }
+        else {
+            noDetailsMessage.style.display = "block";
+        }
     }
 }
 function UpdateCalendarAndDetails() {

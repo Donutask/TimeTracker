@@ -1,5 +1,7 @@
 //Credit to this turotial: https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
 
+const calendarParent = document.getElementById("calendar") as HTMLElement;
+
 const calendarDates = document.querySelector('.calendar-dates') as HTMLDivElement;
 const monthYear = document.getElementById('month-year') as HTMLDivElement;
 const prevMonthBtn = document.getElementById('prev-month') as HTMLButtonElement;
@@ -11,6 +13,7 @@ const dayDetailsBody = document.getElementById("day-details-body") as HTMLTableS
 const dayDetailsHeading = document.getElementById("detailed-day-data-heading") as HTMLHeadingElement;
 const noDetailsMessage = document.getElementById("no-details-availible") as HTMLParagraphElement;
 
+const noDataMessage = document.getElementById("no-data") as HTMLParagraphElement;
 
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
@@ -21,6 +24,18 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 function renderCalendar(month: number, year: number) {
     if (calendarDates == null || monthYear == null) {
         return;
+    }
+    //A fresh file has no data, so don't bother rendering anything
+    if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
+        noDataMessage.hidden = false;
+        calendarParent.hidden = true;
+        monthTotalDisplay.innerHTML = "";
+        noDetailsMessage.style.display = "none";
+        return;
+    } else {
+        noDataMessage.hidden = true;
+        calendarParent.hidden = false;
+        noDetailsMessage.style.display = "block";
     }
 
     calendarDates.innerHTML = '';
@@ -182,8 +197,12 @@ function ShowDayDetails(date: number) {
         }
     } else {
         dayDetailsTable.style.display = "none";
-        noDetailsMessage.style.display = "block";
         dayDetailsHeading.innerHTML = "";
+        //show this message, only if there are days you could have clicked on
+        if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
+        } else {
+            noDetailsMessage.style.display = "block";
+        }
     }
 }
 

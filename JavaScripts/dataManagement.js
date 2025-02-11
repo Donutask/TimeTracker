@@ -82,7 +82,15 @@ function DeleteCurrentSave() {
 }
 function Load(stringData) {
     if (stringData != null && stringData.length > 0) {
-        let parsedJSON = JSON.parse(stringData);
+        let parsedJSON;
+        try {
+            parsedJSON = JSON.parse(stringData);
+        }
+        catch (e) {
+            console.error(e);
+            mainData = new TimeTrackerData("", []);
+            return;
+        }
         let timestamps = [];
         for (let i = 0; i < parsedJSON.timestamps.length; i++) {
             let element = parsedJSON.timestamps[i];

@@ -27,7 +27,7 @@ function InitialLoad() {
 function LoadSlots() {
     let arrayLength = 1;
     if (localStorage.length > 2) {
-    // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
+        // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
         arrayLength = localStorage.length - 2;
     }
     saveSlots = new Array(arrayLength);
@@ -107,7 +107,15 @@ function DeleteCurrentSave() {
 //Deserailises data
 function Load(stringData: string) {
     if (stringData != null && stringData.length > 0) {
-        let parsedJSON = JSON.parse(stringData);
+        let parsedJSON;
+        try {
+            parsedJSON = JSON.parse(stringData);
+        } catch (e) {
+            //If can't parse, set the data as default.
+            console.error(e);
+            mainData = new TimeTrackerData("", []);
+            return;
+        }
 
         //deserialise timestamps
         let timestamps: Timespan[] = [];
