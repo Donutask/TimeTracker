@@ -126,9 +126,9 @@ function StopTimer() {
             }
         }
 
+        //Time must have actually passed
         let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
-
-        if (elapsedMinutes >= 1) {
+        if (Math.round(elapsedMinutes) >= 1) {
             //ensure it exists
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
@@ -209,6 +209,7 @@ function BeginTimeChanger(openUI: HTMLElement, changeUI: HTMLElement, timeInput:
     }
 }
 
+//Ask for new name, then show that title and save
 function RenameTracker() {
     if (mainData == null) {
         mainData = new TimeTrackerData("", []);
@@ -251,6 +252,7 @@ function CreateSaveSlotChooserDropdown() {
         slotChooserParent.appendChild(option);
     }
 
+    //Can only delete if you have more than 1 slot
     if (saveSlots.length > 0) {
         deleteSlotOption.disabled = true;
     } else {
@@ -263,14 +265,14 @@ function SaveSlotChosen() {
 
     if (v == "create") {
         CreateNewSlot();
-    } else if (v == "delete") {
-        //deleting slot breaks it all
+    } 
+    //Delete after confirmation
+    else if (v == "delete") {
         if (saveSlots.length <= 1) {
             alert("Cannot delete. Must have at least one slot.");
-        } else
-            if (confirm("Delete current save slot?")) {
-                DeleteCurrentSave();
-            }
+        } else if (confirm("Delete current save slot?")) {
+            DeleteCurrentSave();
+        }
     }
     //Load selected slot index
     else {
@@ -299,6 +301,7 @@ function UpdateCurrentSlotOption() {
     }
 }
 
+//When page loads:
 InitialLoad();
 CreateSaveSlotChooserDropdown();
 UpdateCurrentSlotOption();

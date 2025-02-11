@@ -22,12 +22,14 @@ function InitialLoad() {
     LoadSlot(loadSlotIndex);
 }
 
+//Get all save slots from local storage.
+//Ensures at least 1 valid slot exists.
 function LoadSlots() {
     let arrayLength = 1;
     if (localStorage.length > 2) {
+    // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
         arrayLength = localStorage.length - 2;
     }
-    // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
     saveSlots = new Array(arrayLength);
 
     //Legacy behaviour (they had no numbers before)
@@ -54,7 +56,7 @@ function LoadSlots() {
     //Ensure a slot exists by creating empty data if null
     if (validSaveSlots <= 0) {
         mainData = new TimeTrackerData("", []);
-        saveSlots[0] =mainData.Serialize();
+        saveSlots[0] = mainData.Serialize();
         currentSlot = 0;
         SaveData();
     }
@@ -68,6 +70,7 @@ function SaveData() {
     localStorage.setItem(saveSlotStorageKey, currentSlot.toString());
 }
 
+//Loads the save slot from local storage, applies, and updates UI.
 function LoadSlot(slotIndex: number) {
     currentSlot = slotIndex;
 
@@ -78,7 +81,7 @@ function LoadSlot(slotIndex: number) {
         ShowCorrectUI();
         UpdateCurrentSlotOption();
     } else {
-        console.error("No data for slot " +slotIndex);
+        console.error("No data for slot " + slotIndex);
     }
 }
 
@@ -95,8 +98,6 @@ function CreateNewSlot() {
 
 //Deletes and loads 0th slot
 function DeleteCurrentSave() {
-
-
     localStorage.removeItem(dataStorageKey + currentSlot);
     LoadSlots();
     LoadSlot(0);
@@ -105,7 +106,7 @@ function DeleteCurrentSave() {
 
 //Deserailises data
 function Load(stringData: string) {
-    if (stringData != null) {
+    if (stringData != null && stringData.length > 0) {
         let parsedJSON = JSON.parse(stringData);
 
         //deserialise timestamps
@@ -124,17 +125,11 @@ function Load(stringData: string) {
 function Export() {
     const text = mainData.Serialize();
 
-    let fileURL = null;
+    //Make save data into file URL
     let data = new Blob([text], { type: 'text/plain' });
+    let fileURL = window.URL.createObjectURL(data);
 
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    if (fileURL !== null) {
-        window.URL.revokeObjectURL(fileURL);
-    }
-
-    fileURL = window.URL.createObjectURL(data);
-
+    //add url to a link element and click the link
     let link = document.createElement('a');
     link.setAttribute('download', 'time-tracker-export.txt');
     link.href = fileURL;
@@ -148,6 +143,7 @@ function Export() {
     });
 }
 
+//Asks user to paste the file contents, then loads it
 function Import() {
     let text = prompt("Paste Exported Data");
 
@@ -155,13 +151,6 @@ function Import() {
         Load(text);
         SaveAndUpdate();
         alert("Success!");
-    }
-}
-
-function Clear() {
-    if (confirm("This will delete all data. Are you sure?")) {
-        mainData = new TimeTrackerData("", []);
-        SaveAndUpdate();
     }
 }
 

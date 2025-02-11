@@ -81,7 +81,7 @@ function DeleteCurrentSave() {
     CreateSaveSlotChooserDropdown();
 }
 function Load(stringData) {
-    if (stringData != null) {
+    if (stringData != null && stringData.length > 0) {
         let parsedJSON = JSON.parse(stringData);
         let timestamps = [];
         for (let i = 0; i < parsedJSON.timestamps.length; i++) {
@@ -94,12 +94,8 @@ function Load(stringData) {
 }
 function Export() {
     const text = mainData.Serialize();
-    let fileURL = null;
     let data = new Blob([text], { type: 'text/plain' });
-    if (fileURL !== null) {
-        window.URL.revokeObjectURL(fileURL);
-    }
-    fileURL = window.URL.createObjectURL(data);
+    let fileURL = window.URL.createObjectURL(data);
     let link = document.createElement('a');
     link.setAttribute('download', 'time-tracker-export.txt');
     link.href = fileURL;
@@ -116,12 +112,6 @@ function Import() {
         Load(text);
         SaveAndUpdate();
         alert("Success!");
-    }
-}
-function Clear() {
-    if (confirm("This will delete all data. Are you sure?")) {
-        mainData = new TimeTrackerData("", []);
-        SaveAndUpdate();
     }
 }
 function SaveAndUpdate() {

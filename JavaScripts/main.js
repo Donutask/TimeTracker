@@ -102,7 +102,7 @@ function StopTimer() {
             }
         }
         let elapsedMinutes = dateDiffInMinutes(startDate, endDate);
-        if (elapsedMinutes >= 1) {
+        if (Math.round(elapsedMinutes) >= 1) {
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
             }
