@@ -15,6 +15,8 @@
 </head>
 
 <body>
+    <noscript>This page requires JavaScript to work.</noscript>
+
     <div id="center-column-container">
         <header>
             <button id="rename-title" onclick="RenameTracker()">
@@ -27,84 +29,85 @@
                 <option id="delete-save-slot" value="delete">Delete</option>
             </select>
         </header>
-        <noscript>This page requires JavaScript to work.</noscript>
 
-        <div id="main-container">
-            <div id="start-ui" hidden>
-                <p id="start-time"></p>
-                <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
+        <main>
+            <div id="main-container">
+                <div id="start-ui" hidden>
+                    <p id="start-time"></p>
+                    <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
+                </div>
+                <div id="stop-ui" hidden>
+                    <p id="elapsed-time-label">Elapsed Time:</p>
+                    <p id="elapsed-time"></p>
+                    <div id="started-time-container" hidden="false">
+                        <p id="started-time"></p>
+                        <button class="subtle-button" id="change-start-time-button"
+                            onclick="BeginChangeStartedTime()">Change</button>
+                    </div>
+                    <div id="change-start-time-container" hidden>
+                        <label>Change Start Time: <input id="change-start-time" type="time"></label>
+                        <input type="submit" onclick="SubmitStartTimeChange()">
+                        <button onclick="CancelStartTimeChange()">Cancel</button>
+                    </div>
+                    <button onclick="StopTimer()" class="timer-action-button">Stop</button>
+                    <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
+                    <div id="change-stop-time-container" hidden>
+                        <label>Choose Stop Time: <input id="change-stop-time" type="time"
+                                oninput="StopTimeChanged()"></label>
+                        <button onclick="CancelSetStopTime()">Cancel</button>
+                    </div>
+                </div>
             </div>
-            <div id="stop-ui" hidden>
-                <p id="elapsed-time-label">Elapsed Time:</p>
-                <p id="elapsed-time"></p>
-                <div id="started-time-container" hidden="false">
-                    <p id="started-time"></p>
-                    <button class="subtle-button" id="change-start-time-button"
-                        onclick="BeginChangeStartedTime()">Change</button>
-                </div>
-                <div id="change-start-time-container" hidden>
-                    <label>Change Start Time: <input id="change-start-time" type="time"></label>
-                    <input type="submit" onclick="SubmitStartTimeChange()">
-                    <button onclick="CancelStartTimeChange()">Cancel</button>
-                </div>
-                <button onclick="StopTimer()" class="timer-action-button">Stop</button>
-                <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
-                <div id="change-stop-time-container" hidden>
-                    <label>Choose Stop Time: <input id="change-stop-time" type="time"
-                            oninput="StopTimeChanged()"></label>
-                    <button onclick="CancelSetStopTime()">Cancel</button>
-                </div>
-            </div>
-        </div>
 
-        <h2 id="data-heading">Data</h2>
-        <p id="no-data">No data recorded.</p>
-        <p id="month-total"></p>
-        <div id="calendar" class="calendar">
-            <div class="calendar-header">
-                <button id="prev-month">‹</button>
-                <div id="month-year"></div>
-                <button id="next-month">›</button>
-            </div>
-            <div class="calendar-body">
-                <div class="calendar-weekdays">
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
+            <h2 id="data-heading">Data</h2>
+            <p id="no-data">No data recorded.</p>
+            <p id="month-total"></p>
+            <div id="calendar" class="calendar">
+                <div class="calendar-header">
+                    <button id="prev-month">‹</button>
+                    <div id="month-year"></div>
+                    <button id="next-month">›</button>
                 </div>
-                <div class="calendar-dates">
-                    <!-- Dates will be populated here -->
+                <div class="calendar-body">
+                    <div class="calendar-weekdays">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    <div class="calendar-dates">
+                        <!-- Dates will be populated here -->
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="detailed-day-data-container">
-            <p id="no-details-availible">Click a day to view details.</p>
-            <h3 id="detailed-day-data-heading"></h3>
-            <table id="detailed-day-data">
-                <thead>
-                    <tr id="detailed-day-data-head">
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Duration</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
-                <tbody id="day-details-body">
-                    <!-- Day details generated by code -->
-                </tbody>
-            </table>
-        </div>
-        <!-- <h3>Notes</h3>
+            <div id="detailed-day-data-container">
+                <p id="no-details-availible">Click a day to view details.</p>
+                <h3 id="detailed-day-data-heading"></h3>
+                <table id="detailed-day-data">
+                    <thead>
+                        <tr id="detailed-day-data-head">
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Duration</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="day-details-body">
+                        <!-- Day details generated by code -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- <h3>Notes</h3>
         <textarea id="notes-input"></textarea> -->
 
-        <div id="data-management">
-            <button class="file-management-button" onclick="Export()">Export</button>
-            <button class="file-management-button" onclick="Import()">Import</button>
-        </div>
+            <div id="data-management">
+                <button class="file-management-button" onclick="Export()">Export</button>
+                <button class="file-management-button" onclick="Import()">Import</button>
+            </div>
+        </main>
 
         <footer class="footer">
             <a class="link" href="https://donutask.com">Created by Donutask</a>
