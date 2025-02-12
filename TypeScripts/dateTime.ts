@@ -32,8 +32,8 @@ class DateTime {
         return true;
     }
 
-    static IsNull(date : DateTime): boolean {
-        if(date == null || date == undefined){
+    static IsNull(date: DateTime): boolean {
+        if (date == null || date == undefined) {
             return true;
         }
         //All 0 = null date
@@ -41,6 +41,11 @@ class DateTime {
             return true;
         }
         return false;
+    }
+
+    //Returns new DateTime object with same properties
+    Clone(): DateTime {
+        return new DateTime(this.year, this.month, this.day, this.hour, this.minute);
     }
 
     //Formatted as all components seperated by spaces
@@ -164,4 +169,57 @@ class DateTime {
             return `${Math.floor(totalMinutes)}min`;
         }
     }
+
+    //HH:mm, with leading zeros
+    FormatForTimeInput(): string {
+        let hourString: string;
+        if (this.hour < 10) {
+            hourString = "0" + this.hour;
+        } else {
+            hourString = this.hour.toString();
+        }
+
+        let minuteString: string;
+        if (this.minute < 10) {
+            minuteString = "0" + this.minute
+        } else {
+            minuteString = this.minute.toString();
+        }
+
+        return hourString + ":" + minuteString;
+    }
+
+    //Apply HH:mm string to the current object
+    ChangeHoursMinutesFromTimeInputString(value: string) {
+        let numbers = DateTime.ReadHoursMinutesFromTimeInputString(value);
+
+        if (numbers != null) {
+            this.hour = numbers[0];
+            this.minute = numbers[1];
+        }
+    }
+
+    static ReadHoursMinutesFromTimeInputString(value: string): [number, number] | null {
+        let split = value.split(":");
+        if (split == null || split.length != 2) {
+            return null;
+        }
+
+        let numbers = [];
+        for (let i = 0; i < split.length; i++) {
+            const element = split[i];
+            const n = Number.parseInt(element);
+
+            if (!Number.isNaN(n)) {
+                numbers.push(n);
+            }
+        }
+
+        if (numbers == null || numbers.length != 2) {
+            return null;
+        }
+
+        return [numbers[0], numbers[1]]
+    }
+
 }

@@ -1,5 +1,4 @@
 //Credit to this turotial: https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
-
 const calendarParent = document.getElementById("calendar") as HTMLElement;
 
 const calendarDates = document.querySelector('.calendar-dates') as HTMLDivElement;
@@ -137,6 +136,18 @@ calendarDates.addEventListener('click', (e: any) => {
     }
 });
 
+function UpdateCalendarAndDetails() {
+    RenderCurrentCalendar();
+
+    if (showingDetailsForDay != null) {
+        ShowDayDetails(showingDetailsForDay);
+    }
+}
+
+function RenderCurrentCalendar() {
+    renderCalendar(currentMonth, currentYear);
+}
+
 
 //Creates a table that displays
 // Start | End | Duration | Edit (buttons for deleting the timeslot, or changing the times)
@@ -160,29 +171,48 @@ function ShowDayDetails(date: number) {
             const rowElement = document.createElement('tr');
             //Start time
             const fromElement = document.createElement('td');
-            fromElement.innerHTML = DateTime.formatAMPM(timespan.start);
+            const fromInput = document.createElement("input");
+            fromInput.type = "time";
+            fromInput.disabled = true;
+            fromInput.value = timespan.start.FormatForTimeInput();
+            fromInput.className = "edit-time-input";
+            fromInput.id = "edit-time-input-start-" + i;
+            fromElement.appendChild(fromInput);
             rowElement.appendChild(fromElement);
+
             //End time
             const toElement = document.createElement('td');
-            toElement.innerHTML = DateTime.formatAMPM(timespan.end);
+            const toInput = document.createElement("input");
+            toInput.type = "time";
+            toInput.disabled = true;
+            toInput.value = timespan.end.FormatForTimeInput();
+            toInput.className = "edit-time-input";
+            toInput.id = "edit-time-input-end-" + i;
+            toElement.appendChild(toInput);
             rowElement.appendChild(toElement);
+
             //Total Hours, Minutes
             const durationElement = document.createElement('td');
+            durationElement.id = "duration-" + i;
             durationElement.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
 
             const managementActionsElement = document.createElement('td');
+            const beginManagementActionsContainer = document.createElement("div");
+            beginManagementActionsContainer.id = "management-actions-" + i;
             //Change times
             const editElement = document.createElement("button");
             editElement.className = "management-button edit-button";
+            editElement.id = "edit-button-" + i;
             editElement.addEventListener("click", function () {
-                alert("Not implemented.");
+                BeginEdit(i, timespan);
             });
-            managementActionsElement.appendChild(editElement);
+            beginManagementActionsContainer.appendChild(editElement);
 
             //Delete
             const deleteElement = document.createElement("button");
             deleteElement.className = "management-button delete-button";
+            deleteElement.id = "delete-button-" + i;
             deleteElement.addEventListener("click", function () {
                 if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
                     mainData.Remove(timespan);
@@ -190,9 +220,27 @@ function ShowDayDetails(date: number) {
                     SaveData();
                 }
             });
-            managementActionsElement.appendChild(deleteElement);
-            rowElement.appendChild(managementActionsElement);
+            beginManagementActionsContainer.appendChild(deleteElement);
+            managementActionsElement.appendChild(beginManagementActionsContainer);
 
+            //Apply or cancel editing the times
+            const applyEditButton = document.createElement("button");
+            const endEditActionContainer = document.createElement("div");
+
+            applyEditButton.className = "management-button apply-edit-button";
+            applyEditButton.id = "apply-edit-button-" + i;
+            applyEditButton.style.display = "none";
+            endEditActionContainer.appendChild(applyEditButton);
+
+            const cancelEditButton = document.createElement("button");
+            cancelEditButton.className = "management-button cancel-edit-button";
+            cancelEditButton.id = "cancel-edit-button-" + i;
+            cancelEditButton.style.display = "none";
+            endEditActionContainer.appendChild(cancelEditButton);
+
+            managementActionsElement.appendChild(endEditActionContainer);
+
+            rowElement.appendChild(managementActionsElement);
             dayDetailsBody.appendChild(rowElement);
         }
     } else {
@@ -206,14 +254,108 @@ function ShowDayDetails(date: number) {
     }
 }
 
-function UpdateCalendarAndDetails() {
-    RenderCurrentCalendar();
+//Start editing the start and end times of a row. This is done by enabling the time inputs
+function BeginEdit(index: number, timespan: Timespan) {
+    //Get eleemnts
+    const start = document.getElementById("edit-time-input-start-" + index) as HTMLInputElement;
+    const end = document.getElementById("edit-time-input-end-" + index) as HTMLInputElement;
 
-    if (showingDetailsForDay != null) {
-        ShowDayDetails(showingDetailsForDay);
+    const duration = document.getElementById("duration-" + index) as HTMLElement;
+
+    const cancel = document.getElementById("cancel-edit-button-" + index) as HTMLButtonElement;
+    const apply = document.getElementById("apply-edit-button-" + index) as HTMLButtonElement;
+
+    const actions = document.getElementById("management-actions-" + index) as HTMLDivElement;
+    //Ensure exists
+    if (start == null || end == null || cancel == null || apply == null || actions == null) {
+        console.log("Something is null");
+        return;
     }
+
+    //Show 
+    start.disabled = false;
+    end.disabled = false;
+
+    cancel.style.display = "inline";
+    apply.style.display = "inline";
+
+    //Add listeners
+    //Need to make it actually apply. This is hard
+    cancel.addEventListener("click", function () {
+        CancelEdit(index, timespan);
+    });
+
+    apply.addEventListener("click", function () {
+        ApplyEdit(index, timespan);
+    });
+
+    //Change the duration shown as you edit
+    start.addEventListener("input", function () {
+        OnTimeInputShowNewDuration(start, end, duration, timespan);
+    });
+
+    end.addEventListener("input", function () {
+        OnTimeInputShowNewDuration(start, end, duration, timespan);
+    });
+
+
+    //hide previous actions
+    actions.style.display = "none";
 }
 
-function RenderCurrentCalendar() {
-    renderCalendar(currentMonth, currentYear);
+function OnTimeInputShowNewDuration(start: HTMLInputElement, end: HTMLInputElement, duration: HTMLElement, timespan: Timespan) {
+    //Clone dates so they dont effect the mainData
+    let newStart = timespan.start.Clone();
+    let newEnd = timespan.end.Clone();
+
+    //Change the time
+    newStart.ChangeHoursMinutesFromTimeInputString(start.value);
+    newEnd.ChangeHoursMinutesFromTimeInputString(end.value);
+
+    //Calculate and show duration
+    let difference = DateTime.DifferenceInMinutes(newStart, newEnd);
+    duration.innerHTML = DateTime.formatHoursMinutes(difference);
 }
+
+function ApplyEdit(index: number, timespan: Timespan) {
+    //Get elements
+    const start = document.getElementById("edit-time-input-start-" + index) as HTMLInputElement;
+    const end = document.getElementById("edit-time-input-end-" + index) as HTMLInputElement;
+
+    //Changing value refrence changes original
+    timespan.start.ChangeHoursMinutesFromTimeInputString(start.value);
+    timespan.end.ChangeHoursMinutesFromTimeInputString(end.value);
+
+    SaveData();
+    EndEdit(index);
+}
+
+function CancelEdit(index: number, timespan: Timespan) {
+    //Revert all changes
+    const start = document.getElementById("edit-time-input-start-" + index) as HTMLInputElement;
+    const end = document.getElementById("edit-time-input-end-" + index) as HTMLInputElement;
+    const duration = document.getElementById("duration-" + index) as HTMLElement;
+
+    start.value = timespan.start.FormatForTimeInput();
+    end.value = timespan.end.FormatForTimeInput();
+    duration.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+
+    EndEdit(index);
+}
+
+function EndEdit(index: number) {
+    //Get elements
+    const start = document.getElementById("edit-time-input-start-" + index) as HTMLInputElement;
+    const end = document.getElementById("edit-time-input-end-" + index) as HTMLInputElement;
+    const actions = document.getElementById("management-actions-" + index) as HTMLDivElement;
+    const cancel = document.getElementById("cancel-edit-button-" + index) as HTMLButtonElement;
+    const apply = document.getElementById("apply-edit-button-" + index) as HTMLButtonElement;
+
+    //Hide/show
+    start.disabled = true;
+    end.disabled = true;
+    cancel.style.display = "none";
+    apply.style.display = "none";
+    actions.style.display = "block";
+}
+

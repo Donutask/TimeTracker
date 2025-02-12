@@ -23,7 +23,7 @@ const createSlotOption = document.getElementById("create-save-slot") as HTMLOpti
 
 let currentInterval: number;
 let stopTime: DateTime | null;
-let startDate: DateTime ;
+let startDate: DateTime;
 
 function UpdateStartUI() {
     clearInterval(currentInterval);
@@ -59,7 +59,7 @@ function ElapsedTimeDisplay() {
         currentDate = stopTime;
     }
 
-    if (!DateTime.IsNull( startDate)) {
+    if (!DateTime.IsNull(startDate)) {
         const totalMinutes = DateTime.DifferenceInMinutes(startDate, currentDate);
         elapsedTime.innerHTML = DateTime.formatHoursMinutes(totalMinutes);
     }
@@ -68,7 +68,7 @@ function ElapsedTimeDisplay() {
 function ShowCorrectUI() {
     ShowTitle();
 
-    if (DateTime.IsNull( startDate )) {
+    if (DateTime.IsNull(startDate)) {
         //Start
         startUI.hidden = false;
         stopUI.style.display = "none";
@@ -105,7 +105,7 @@ function StartTimer() {
 function StopTimer() {
     let now = DateTime.Now();
 
-    if (!DateTime.IsNull(startDate )) {
+    if (!DateTime.IsNull(startDate)) {
 
         let endDate: DateTime;
         if (stopTime == null) {
@@ -150,21 +150,17 @@ function StopTimer() {
 //Loads the date the timer was started. Null if doesn't exist.
 function LoadStartDate() {
     let dateString = localStorage.getItem(startDateStorageKey);
-    if(dateString != null){
-    startDate =    DateTime.FromString(dateString);
-    }else{
-        startDate==DateTime.NullDate();
+    if (dateString != null) {
+        startDate = DateTime.FromString(dateString);
+    } else {
+        startDate == DateTime.NullDate();
     }
 }
 
 
 //Change when the timer was started (because you forgot or something)
 function BeginChangeStartedTime() {
-    if (DateTime.IsNull(startDate ) ) {
-        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, null);
-    } else {
-        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate.ToJsDate());
-    }
+    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
 }
 
 function SubmitStartTimeChange() {
@@ -183,8 +179,9 @@ function CancelStartTimeChange() {
 }
 
 function BeginSetStopTime() {
-    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
-    stopTime = DateTime.Now();
+    const now = DateTime.Now();
+    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, now);
+    stopTime = now;
 }
 function CancelSetStopTime() {
     setStopTimeButton.style.display = "block"
@@ -197,14 +194,13 @@ function StopTimeChanged() {
     ElapsedTimeDisplay();
 }
 
-function BeginTimeChanger(openUI: HTMLElement, changeUI: HTMLElement, timeInput: HTMLInputElement, date: Date | null) {
+function BeginTimeChanger(openUI: HTMLElement, changeUI: HTMLElement, timeInput: HTMLInputElement, date: DateTime | null) {
     openUI.style.display = "none";
     changeUI.style.display = "block";
 
-    if (date != null) {
-        //https://stackoverflow.com/a/61082536
-        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-        timeInput.value = date.toISOString().slice(0, 16);
+    if (date != null && !DateTime.IsNull(date)) {
+        timeInput.value = date.FormatForTimeInput();
+        console.log(date.FormatForTimeInput());
     }
 }
 

@@ -29,6 +29,9 @@ class DateTime {
         }
         return false;
     }
+    Clone() {
+        return new DateTime(this.year, this.month, this.day, this.hour, this.minute);
+    }
     ToString() {
         const seperator = " ";
         return this.year + seperator + this.month + seperator + this.day + seperator + this.hour + seperator + this.minute;
@@ -110,5 +113,47 @@ class DateTime {
         else {
             return `${Math.floor(totalMinutes)}min`;
         }
+    }
+    FormatForTimeInput() {
+        let hourString;
+        if (this.hour < 10) {
+            hourString = "0" + this.hour;
+        }
+        else {
+            hourString = this.hour.toString();
+        }
+        let minuteString;
+        if (this.minute < 10) {
+            minuteString = "0" + this.minute;
+        }
+        else {
+            minuteString = this.minute.toString();
+        }
+        return hourString + ":" + minuteString;
+    }
+    ChangeHoursMinutesFromTimeInputString(value) {
+        let numbers = DateTime.ReadHoursMinutesFromTimeInputString(value);
+        if (numbers != null) {
+            this.hour = numbers[0];
+            this.minute = numbers[1];
+        }
+    }
+    static ReadHoursMinutesFromTimeInputString(value) {
+        let split = value.split(":");
+        if (split == null || split.length != 2) {
+            return null;
+        }
+        let numbers = [];
+        for (let i = 0; i < split.length; i++) {
+            const element = split[i];
+            const n = Number.parseInt(element);
+            if (!Number.isNaN(n)) {
+                numbers.push(n);
+            }
+        }
+        if (numbers == null || numbers.length != 2) {
+            return null;
+        }
+        return [numbers[0], numbers[1]];
     }
 }

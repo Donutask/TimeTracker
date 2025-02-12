@@ -43,14 +43,14 @@
                         onclick="BeginChangeStartedTime()">Change</button>
                 </div>
                 <div id="change-start-time-container" hidden>
-                    <label>Change Start Time: <input id="change-start-time" type="datetime-local"></label>
+                    <label>Change Start Time: <input id="change-start-time" type="time"></label>
                     <input type="submit" onclick="SubmitStartTimeChange()">
                     <button onclick="CancelStartTimeChange()">Cancel</button>
                 </div>
                 <button onclick="StopTimer()" class="timer-action-button">Stop</button>
                 <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
                 <div id="change-stop-time-container" hidden>
-                    <label>Choose Stop Time: <input id="change-stop-time" type="datetime-local"
+                    <label>Choose Stop Time: <input id="change-stop-time" type="time"
                             oninput="StopTimeChanged()"></label>
                     <button onclick="CancelSetStopTime()">Cancel</button>
                 </div>
@@ -98,6 +98,8 @@
                 </tbody>
             </table>
         </div>
+        <!-- <h3>Notes</h3>
+        <textarea id="notes-input"></textarea> -->
 
         <div id="data-management">
             <button class="file-management-button" onclick="Export()">Export</button>

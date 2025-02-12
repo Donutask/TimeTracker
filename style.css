@@ -167,6 +167,18 @@ button {
     background-color: #eaeef3 !important;
 }
 
+.edit-time-input {
+    border: none;
+    background: none;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95em;
+}
+
+.edit-time-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 .management-button {
     width: 20px;
     height: 20px;
@@ -182,6 +194,14 @@ button {
 
 .edit-button {
     background-image: url("Icons/pencil-fill.svg");
+}
+
+.cancel-edit-button {
+    background-image: url("Icons/x-circle-fill.svg");
+}
+
+.apply-edit-button {
+    background-image: url("Icons/check-circle-fill.svg");
 }
 
 .management-button:hover {

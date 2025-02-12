@@ -99,6 +99,15 @@ calendarDates.addEventListener('click', (e) => {
         ShowDayDetails(date);
     }
 });
+function UpdateCalendarAndDetails() {
+    RenderCurrentCalendar();
+    if (showingDetailsForDay != null) {
+        ShowDayDetails(showingDetailsForDay);
+    }
+}
+function RenderCurrentCalendar() {
+    renderCalendar(currentMonth, currentYear);
+}
 let showingDetailsForDay;
 function ShowDayDetails(date) {
     showingDetailsForDay = date;
@@ -112,23 +121,40 @@ function ShowDayDetails(date) {
             const timespan = timespans[i];
             const rowElement = document.createElement('tr');
             const fromElement = document.createElement('td');
-            fromElement.innerHTML = DateTime.formatAMPM(timespan.start);
+            const fromInput = document.createElement("input");
+            fromInput.type = "time";
+            fromInput.disabled = true;
+            fromInput.value = timespan.start.FormatForTimeInput();
+            fromInput.className = "edit-time-input";
+            fromInput.id = "edit-time-input-start-" + i;
+            fromElement.appendChild(fromInput);
             rowElement.appendChild(fromElement);
             const toElement = document.createElement('td');
-            toElement.innerHTML = DateTime.formatAMPM(timespan.end);
+            const toInput = document.createElement("input");
+            toInput.type = "time";
+            toInput.disabled = true;
+            toInput.value = timespan.end.FormatForTimeInput();
+            toInput.className = "edit-time-input";
+            toInput.id = "edit-time-input-end-" + i;
+            toElement.appendChild(toInput);
             rowElement.appendChild(toElement);
             const durationElement = document.createElement('td');
+            durationElement.id = "duration-" + i;
             durationElement.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
             rowElement.appendChild(durationElement);
             const managementActionsElement = document.createElement('td');
+            const beginManagementActionsContainer = document.createElement("div");
+            beginManagementActionsContainer.id = "management-actions-" + i;
             const editElement = document.createElement("button");
             editElement.className = "management-button edit-button";
+            editElement.id = "edit-button-" + i;
             editElement.addEventListener("click", function () {
-                alert("Not implemented.");
+                BeginEdit(i, timespan);
             });
-            managementActionsElement.appendChild(editElement);
+            beginManagementActionsContainer.appendChild(editElement);
             const deleteElement = document.createElement("button");
             deleteElement.className = "management-button delete-button";
+            deleteElement.id = "delete-button-" + i;
             deleteElement.addEventListener("click", function () {
                 if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
                     mainData.Remove(timespan);
@@ -136,7 +162,20 @@ function ShowDayDetails(date) {
                     SaveData();
                 }
             });
-            managementActionsElement.appendChild(deleteElement);
+            beginManagementActionsContainer.appendChild(deleteElement);
+            managementActionsElement.appendChild(beginManagementActionsContainer);
+            const applyEditButton = document.createElement("button");
+            const endEditActionContainer = document.createElement("div");
+            applyEditButton.className = "management-button apply-edit-button";
+            applyEditButton.id = "apply-edit-button-" + i;
+            applyEditButton.style.display = "none";
+            endEditActionContainer.appendChild(applyEditButton);
+            const cancelEditButton = document.createElement("button");
+            cancelEditButton.className = "management-button cancel-edit-button";
+            cancelEditButton.id = "cancel-edit-button-" + i;
+            cancelEditButton.style.display = "none";
+            endEditActionContainer.appendChild(cancelEditButton);
+            managementActionsElement.appendChild(endEditActionContainer);
             rowElement.appendChild(managementActionsElement);
             dayDetailsBody.appendChild(rowElement);
         }
@@ -151,12 +190,69 @@ function ShowDayDetails(date) {
         }
     }
 }
-function UpdateCalendarAndDetails() {
-    RenderCurrentCalendar();
-    if (showingDetailsForDay != null) {
-        ShowDayDetails(showingDetailsForDay);
+function BeginEdit(index, timespan) {
+    const start = document.getElementById("edit-time-input-start-" + index);
+    const end = document.getElementById("edit-time-input-end-" + index);
+    const duration = document.getElementById("duration-" + index);
+    const cancel = document.getElementById("cancel-edit-button-" + index);
+    const apply = document.getElementById("apply-edit-button-" + index);
+    const actions = document.getElementById("management-actions-" + index);
+    if (start == null || end == null || cancel == null || apply == null || actions == null) {
+        console.log("Something is null");
+        return;
     }
+    start.disabled = false;
+    end.disabled = false;
+    cancel.style.display = "inline";
+    apply.style.display = "inline";
+    cancel.addEventListener("click", function () {
+        CancelEdit(index, timespan);
+    });
+    apply.addEventListener("click", function () {
+        ApplyEdit(index, timespan);
+    });
+    start.addEventListener("input", function () {
+        OnTimeInputShowNewDuration(start, end, duration, timespan);
+    });
+    end.addEventListener("input", function () {
+        OnTimeInputShowNewDuration(start, end, duration, timespan);
+    });
+    actions.style.display = "none";
 }
-function RenderCurrentCalendar() {
-    renderCalendar(currentMonth, currentYear);
+function OnTimeInputShowNewDuration(start, end, duration, timespan) {
+    let newStart = timespan.start.Clone();
+    let newEnd = timespan.end.Clone();
+    newStart.ChangeHoursMinutesFromTimeInputString(start.value);
+    newEnd.ChangeHoursMinutesFromTimeInputString(end.value);
+    let difference = DateTime.DifferenceInMinutes(newStart, newEnd);
+    duration.innerHTML = DateTime.formatHoursMinutes(difference);
+}
+function ApplyEdit(index, timespan) {
+    const start = document.getElementById("edit-time-input-start-" + index);
+    const end = document.getElementById("edit-time-input-end-" + index);
+    timespan.start.ChangeHoursMinutesFromTimeInputString(start.value);
+    timespan.end.ChangeHoursMinutesFromTimeInputString(end.value);
+    SaveData();
+    EndEdit(index);
+}
+function CancelEdit(index, timespan) {
+    const start = document.getElementById("edit-time-input-start-" + index);
+    const end = document.getElementById("edit-time-input-end-" + index);
+    const duration = document.getElementById("duration-" + index);
+    start.value = timespan.start.FormatForTimeInput();
+    end.value = timespan.end.FormatForTimeInput();
+    duration.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+    EndEdit(index);
+}
+function EndEdit(index) {
+    const start = document.getElementById("edit-time-input-start-" + index);
+    const end = document.getElementById("edit-time-input-end-" + index);
+    const actions = document.getElementById("management-actions-" + index);
+    const cancel = document.getElementById("cancel-edit-button-" + index);
+    const apply = document.getElementById("apply-edit-button-" + index);
+    start.disabled = true;
+    end.disabled = true;
+    cancel.style.display = "none";
+    apply.style.display = "none";
+    actions.style.display = "block";
 }

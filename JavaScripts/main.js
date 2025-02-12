@@ -127,12 +127,7 @@ function LoadStartDate() {
     }
 }
 function BeginChangeStartedTime() {
-    if (DateTime.IsNull(startDate)) {
-        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, null);
-    }
-    else {
-        BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate.ToJsDate());
-    }
+    BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
 }
 function SubmitStartTimeChange() {
     let date = new Date(changeStartedTimeInput.value);
@@ -146,8 +141,9 @@ function CancelStartTimeChange() {
     changeStartedTimeContainer.style.display = "none";
 }
 function BeginSetStopTime() {
-    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, new Date());
-    stopTime = DateTime.Now();
+    const now = DateTime.Now();
+    BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, now);
+    stopTime = now;
 }
 function CancelSetStopTime() {
     setStopTimeButton.style.display = "block";
@@ -162,9 +158,9 @@ function StopTimeChanged() {
 function BeginTimeChanger(openUI, changeUI, timeInput, date) {
     openUI.style.display = "none";
     changeUI.style.display = "block";
-    if (date != null) {
-        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-        timeInput.value = date.toISOString().slice(0, 16);
+    if (date != null && !DateTime.IsNull(date)) {
+        timeInput.value = date.FormatForTimeInput();
+        console.log(date.FormatForTimeInput());
     }
 }
 function RenameTracker() {
