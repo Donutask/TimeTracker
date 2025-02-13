@@ -18,7 +18,7 @@ const deleteSlotOption = document.getElementById("delete-save-slot");
 const createSlotOption = document.getElementById("create-save-slot");
 const noteInput = document.getElementById("notes-input");
 let currentInterval;
-let stopTime;
+let stopTime = null;
 let startDate;
 function UpdateStartUI() {
     clearInterval(currentInterval);
@@ -131,8 +131,7 @@ function BeginChangeStartedTime() {
     BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
 }
 function SubmitStartTimeChange() {
-    let date = new Date(changeStartedTimeInput.value);
-    startDate = DateTime.FromJsDate(date);
+    startDate.ChangeHoursMinutesFromTimeInputString(changeStartedTimeInput.value);
     localStorage.setItem("startDate", startDate.ToString());
     ShowCorrectUI();
     CancelStartTimeChange();
@@ -153,12 +152,18 @@ function CancelSetStopTime() {
     ElapsedTimeDisplay();
 }
 function StopTimeChanged() {
-    stopTime = DateTime.FromJsDate(new Date(setStopTimeInput.value));
+    if (DateTime.IsNull(stopTime)) {
+        stopTime = DateTime.Now();
+        stopTime.ChangeHoursMinutesFromTimeInputString(setStopTimeInput.value);
+    }
+    else {
+        stopTime.ChangeHoursMinutesFromTimeInputString(setStopTimeInput.value);
+    }
     ElapsedTimeDisplay();
 }
-function BeginTimeChanger(openUI, changeUI, timeInput, date) {
-    openUI.style.display = "none";
-    changeUI.style.display = "block";
+function BeginTimeChanger(hide, show, timeInput, date) {
+    hide.style.display = "none";
+    show.style.display = "block";
     if (date != null && !DateTime.IsNull(date)) {
         timeInput.value = date.FormatForTimeInput();
         console.log(date.FormatForTimeInput());

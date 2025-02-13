@@ -32,7 +32,7 @@ class DateTime {
         return true;
     }
 
-    static IsNull(date: DateTime): boolean {
+    static IsNull(date: DateTime | null): boolean {
         if (date == null || date == undefined) {
             return true;
         }

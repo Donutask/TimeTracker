@@ -24,7 +24,7 @@ const createSlotOption = document.getElementById("create-save-slot") as HTMLOpti
 const noteInput = document.getElementById("notes-input") as HTMLTextAreaElement;
 
 let currentInterval: number;
-let stopTime: DateTime | null;
+let stopTime: DateTime | null = null;
 let startDate: DateTime;
 
 function UpdateStartUI() {
@@ -160,14 +160,14 @@ function LoadStartDate() {
 }
 
 
-//Change when the timer was started (because you forgot or something)
+//Change when the timer was started, after it has already been started (because you forgot or something)
 function BeginChangeStartedTime() {
     BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
 }
 
+//Apply the change to start time.
 function SubmitStartTimeChange() {
-    let date = new Date(changeStartedTimeInput.value);
-    startDate = DateTime.FromJsDate(date);
+    startDate.ChangeHoursMinutesFromTimeInputString(changeStartedTimeInput.value);
     localStorage.setItem("startDate", startDate.ToString());
 
     ShowCorrectUI();
@@ -175,6 +175,7 @@ function SubmitStartTimeChange() {
     CancelStartTimeChange();
 }
 
+//End start time change without applying anything
 function CancelStartTimeChange() {
     startedTimeContainer.style.display = "block";
     changeStartedTimeContainer.style.display = "none";
@@ -185,24 +186,31 @@ function BeginSetStopTime() {
     BeginTimeChanger(setStopTimeButton, setStopTimeContainer, setStopTimeInput, now);
     stopTime = now;
 }
+
 function CancelSetStopTime() {
     setStopTimeButton.style.display = "block"
     setStopTimeContainer.style.display = "none";
     stopTime = null;
     ElapsedTimeDisplay();
 }
+
+//Sets the stop time to inputed value and updates elapsed time. Does not stop the timer.
 function StopTimeChanged() {
-    stopTime = DateTime.FromJsDate(new Date(setStopTimeInput.value));
+    if (DateTime.IsNull(stopTime)) {
+        stopTime = DateTime.Now();
+        stopTime.ChangeHoursMinutesFromTimeInputString(setStopTimeInput.value);
+    } else {
+        stopTime!.ChangeHoursMinutesFromTimeInputString(setStopTimeInput.value);
+    }
     ElapsedTimeDisplay();
 }
 
-function BeginTimeChanger(openUI: HTMLElement, changeUI: HTMLElement, timeInput: HTMLInputElement, date: DateTime | null) {
-    openUI.style.display = "none";
-    changeUI.style.display = "block";
+function BeginTimeChanger(hide: HTMLElement, show: HTMLElement, timeInput: HTMLInputElement, date: DateTime | null) {
+    hide.style.display = "none";
+    show.style.display = "block";
 
     if (date != null && !DateTime.IsNull(date)) {
         timeInput.value = date.FormatForTimeInput();
-        console.log(date.FormatForTimeInput());
     }
 }
 
@@ -306,11 +314,11 @@ function UpdateCurrentSlotOption() {
 }
 
 function NoteInputChanged() {
-mainData.notes = noteInput.value;
-SaveData();
+    mainData.notes = noteInput.value;
+    SaveData();
 }
 
-function UpdateNotesField(){
+function UpdateNotesField() {
     noteInput.value = mainData.notes;
 }
 
