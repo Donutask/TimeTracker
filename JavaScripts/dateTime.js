@@ -98,20 +98,21 @@ class DateTime {
         if (!Number.isFinite(totalMinutes)) {
             return "Forever";
         }
-        totalMinutes = Math.round(totalMinutes);
+        const sign = Math.sign(totalMinutes) < 0 ? "-" : "";
+        totalMinutes = Math.abs(Math.round(totalMinutes));
         if (totalMinutes >= 60 * 99) {
             let days = Math.floor(totalMinutes / (60 * 24));
             let hours = Math.floor((totalMinutes / 60) % 24);
             let minutes = totalMinutes % 60;
-            return `${days}d ${hours}h ${Math.floor(minutes)}m`;
+            return sign + `${days}d ${hours}h ${Math.floor(minutes)}m`;
         }
         if (totalMinutes >= 60) {
             let hours = Math.floor(totalMinutes / 60);
             let minutes = totalMinutes % 60;
-            return `${hours}hr ${minutes}min`;
+            return sign + `${hours}hr ${minutes}min`;
         }
         else {
-            return `${Math.floor(totalMinutes)}min`;
+            return sign + `${Math.floor(totalMinutes)}min`;
         }
     }
     FormatForTimeInput() {

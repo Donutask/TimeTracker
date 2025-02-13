@@ -145,8 +145,9 @@ class DateTime {
             return "Forever";
         }
 
+       const sign :string= Math.sign(totalMinutes) < 0 ? "-" : "";
         //Round it to hopefully avoid off-by-one errors
-        totalMinutes = Math.round(totalMinutes);
+        totalMinutes = Math.abs(Math.round(totalMinutes));
 
         //Days
         if (totalMinutes >= 60 * 99) {
@@ -154,19 +155,19 @@ class DateTime {
             let hours = Math.floor((totalMinutes / 60) % 24);
             let minutes = totalMinutes % 60;
 
-            return `${days}d ${hours}h ${Math.floor(minutes)}m`;
+            return sign+`${days}d ${hours}h ${Math.floor(minutes)}m`;
         }
         //Hours
         if (totalMinutes >= 60) {
             let hours = Math.floor(totalMinutes / 60);
             let minutes = totalMinutes % 60;
 
-            return `${hours}hr ${minutes}min`;
+            return sign+`${hours}hr ${minutes}min`;
 
         }
         //Minutes
         else {
-            return `${Math.floor(totalMinutes)}min`;
+            return sign+`${Math.floor(totalMinutes)}min`;
         }
     }
 

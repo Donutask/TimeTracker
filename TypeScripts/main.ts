@@ -64,6 +64,12 @@ function ElapsedTimeDisplay() {
     if (!DateTime.IsNull(startDate)) {
         const totalMinutes = DateTime.DifferenceInMinutes(startDate, currentDate);
         elapsedTime.innerHTML = DateTime.formatHoursMinutes(totalMinutes);
+
+        if (totalMinutes < 0) {
+            elapsedTime.classList.add("invalid-time");
+        } else {
+            elapsedTime.classList.remove("invalid-time");
+        }
     }
 }
 
