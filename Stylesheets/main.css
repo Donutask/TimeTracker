@@ -1,12 +1,8 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    color: black;
-    background-color: whitesmoke;
+    font-family: 'Lato', sans-serif;
     margin: 0px;
     text-align: center;
 }
-
-
 
 #center-column-container {
     display: flex;
@@ -20,6 +16,11 @@ main {
     flex: 1;
 }
 
+h1,
+h2,
+h3 {
+    font-family: "DM Serif Text";
+}
 
 #main-container {
     display: block;
@@ -36,10 +37,6 @@ main {
     font-size: 3em;
     line-height: 0px;
     margin: 40px;
-}
-
-.invalid-time {
-    color: #e20000;
 }
 
 #elapsed-time-label {
@@ -79,12 +76,7 @@ button {
     display: inline;
     text-decoration: underline;
     background: none;
-    color: black;
     border: none;
-}
-
-.subtle-button:hover {
-    color: rgb(0, 149, 255);
 }
 
 #stop-at {
@@ -93,8 +85,7 @@ button {
 
 
 #rename-title {
-    background-color: rgba(0, 0, 0, 0);
-    color: black;
+    background: none;
     border: none;
     outline: none;
 }
@@ -105,35 +96,19 @@ button {
     padding-right: 50px;
     height: 50px;
     font-size: 2em;
-    background-color: white;
     border-radius: 15px;
     margin-top: 20px;
     transition: 0.5s;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .timer-action-button:hover {
     scale: 107%;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.15);
 }
 
 .file-management-button {
     border-radius: 5px;
-    background-color: white;
     border-width: 1px;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
-
-.file-management-button:hover {
-    background-color: whitesmoke;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-
-#delete-file:hover {
-    background-color: red;
-    color: white;
-}
-
 
 #data-heading {
     margin-bottom: 25px;
@@ -162,27 +137,14 @@ button {
     display: none;
     margin-bottom: 25px;
     border-spacing: 0px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#detailed-day-data tr:nth-child(odd) {
-    background-color: white;
-}
-
-#detailed-day-data tr:nth-child(even) {
-    background-color: rgb(249, 249, 250);
-}
-
-#detailed-day-data-head {
-    background-color: #eaeef3 !important;
-}
 
 .edit-time-input {
     border: none;
     background: none;
     font-family: 'Roboto', sans-serif;
     font-size: 0.95em;
-    color: black;
 }
 
 /* The AM/PM indicator clips with the clock icon on chrome sometimes */
@@ -219,19 +181,19 @@ button {
 }
 
 .delete-button {
-    background-image: url("Icons/trash-fill.svg");
+    background-image: url("/Icons/trash-fill.svg");
 }
 
 .edit-button {
-    background-image: url("Icons/pencil-fill.svg");
+    background-image: url("/Icons/pencil-fill.svg");
 }
 
 .cancel-edit-button {
-    background-image: url("Icons/x-circle-fill.svg");
+    background-image: url("/Icons/x-circle-fill.svg");
 }
 
 .apply-edit-button {
-    background-image: url("Icons/check-circle-fill.svg");
+    background-image: url("/Icons/check-circle-fill.svg");
 }
 
 .management-button:hover {
@@ -254,28 +216,18 @@ footer {
 }
 
 .link {
-    color: grey;
     padding: 15px;
     padding-top: 10px;
     font-size: 0.9em;
-}
-
-.link:visited {
-    color: gray;
-}
-
-.link:hover {
-    color: rgb(0, 149, 255);
 }
 
 /* Calendar */
 .calendar {
     width: 400px;
     max-width: 90vw;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-left: auto;
     margin-right: auto;
+    border-radius: 0 0 10px 10px;
 }
 
 .calendar-header {
@@ -283,6 +235,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    border-radius: 10px 10px 0 0;
 }
 
 .calendar-header button {
@@ -309,35 +262,18 @@ footer {
     padding: 10px;
 }
 
-.calendar-weekdays {
-    background-color: #eaeef3;
-}
-
 .calendar-weekdays div {
     font-weight: bold;
 }
 
-.calendar-dates div {
-    border: 1px solid #434447;
-}
-
 .calendar-date {
     cursor: pointer;
-    font-weight: bold;
+    font-weight: normal;
     vertical-align: middle;
 }
 
 .calendar-date:hover {
-    background-color: hsl(213, 27%, 85%);
-    color: black;
-}
-
-.current-date {
-    background-color: hsl(207, 100%, 74%);
-}
-
-.current-date:hover {
-    background-color: hsl(207, 100%, 60%);
+    font-weight: 700;
 }
 
 .timespan {
@@ -346,14 +282,12 @@ footer {
     font-size: 0.75em;
 }
 
+.calendar-date:hover {
+    border-radius: 9px;
+}
 
 /* Responsiveness */
 @media (max-width: 400px) {
-    /* .calendar {
-        min-width: 0;
-        margin: 0 10px;
-    } */
-
     .calendar-weekdays div {
         padding-left: 0px;
         padding-right: 0px;
@@ -367,82 +301,5 @@ footer {
     .timer-action-button {
         padding-left: min(20vw, 50px);
         padding-right: min(20vw, 50px);
-    }
-}
-
-/* Dark Theme */
-@media (prefers-color-scheme: dark) {
-    body {
-        color: white;
-        background-color: #2B2A33;
-    }
-
-    .calendar {
-        background-color: hsl(247, 10%, 10%);
-    }
-
-    .calendar-weekdays {
-        background-color: hsl(247, 10%, 13%);
-    }
-
-    #prev-month,
-    #next-month {
-        color: white;
-    }
-
-    #rename-title {
-        color: white;
-    }
-
-    .calendar-date:hover {
-        background-color: #f1f1f1;
-        color: black;
-    }
-
-    .current-date {
-        background-color: hsl(207, 100%, 40%);
-    }
-
-    .current-date:hover {
-        background-color: hsl(207, 100%, 50%);
-    }
-
-    .subtle-button {
-        color: white;
-    }
-
-    #detailed-day-data tr:nth-child(odd) {
-        /* background-color: #434447; */
-        background-color: hsl(225, 3%, 15%)
-    }
-
-    #detailed-day-data tr:nth-child(even) {
-        background-color: hsl(225, 3%, 13%)
-    }
-
-    #detailed-day-data-head {
-        background-color: #00000047 !important;
-    }
-
-    .management-button {
-        filter: invert(100%);
-    }
-
-    .edit-time-input {
-        color: white;
-    }
-
-    .edit-time-input::-webkit-calendar-picker-indicator {
-        filter: invert(1);
-    }
-
-    #notes-input {
-        background-color: #161619;
-        border: 2px grey solid;
-        color: white;
-    }
-
-    .invalid-time {
-        color: #ff5d5d;
     }
 }
