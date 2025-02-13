@@ -80,6 +80,7 @@ function LoadSlot(slotIndex: number) {
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateCurrentSlotOption();
+        UpdateNotesField();
     } else {
         console.error("No data for slot " + slotIndex);
     }
@@ -126,6 +127,8 @@ function Load(stringData: string) {
         }
 
         mainData = new TimeTrackerData(parsedJSON.title, timestamps);
+        if (parsedJSON.notes != null)
+            mainData.notes = parsedJSON.notes;
     }
 }
 

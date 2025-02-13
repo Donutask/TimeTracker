@@ -194,6 +194,17 @@ button {
     padding: 0px;
 }
 
+#notes-input {
+    resize: vertical;
+    width: 400px;
+    max-width: 90vw;
+    min-height: 25px;
+    max-height: 95vh;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    margin-bottom: 25px;
+}
+
 .management-button {
     width: 20px;
     height: 20px;
@@ -229,18 +240,19 @@ button {
 }
 
 /* Footer */
-.footer {
+footer {
     min-height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
+    flex-direction: column;
 
 }
 
 .link {
     color: grey;
     padding: 15px;
+    padding-top: 10px;
     font-size: 0.9em;
 }
 
@@ -418,5 +430,11 @@ button {
 
     .edit-time-input::-webkit-calendar-picker-indicator {
         filter: invert(1);
+    }
+
+    #notes-input {
+        background-color: #161619;
+        border: 2px grey solid;
+        color: white;
     }
 }

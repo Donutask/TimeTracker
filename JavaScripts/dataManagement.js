@@ -61,6 +61,7 @@ function LoadSlot(slotIndex) {
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateCurrentSlotOption();
+        UpdateNotesField();
     }
     else {
         console.error("No data for slot " + slotIndex);
@@ -98,6 +99,8 @@ function Load(stringData) {
             timestamps.push(Timespan.FromJSON(element));
         }
         mainData = new TimeTrackerData(parsedJSON.title, timestamps);
+        if (parsedJSON.notes != null)
+            mainData.notes = parsedJSON.notes;
     }
 }
 function Export() {

@@ -16,6 +16,7 @@ const slotChooserDropdown = document.getElementById("select-save-slot");
 const slotChooserParent = document.getElementById("save-slot-group");
 const deleteSlotOption = document.getElementById("delete-save-slot");
 const createSlotOption = document.getElementById("create-save-slot");
+const noteInput = document.getElementById("notes-input");
 let currentInterval;
 let stopTime;
 let startDate;
@@ -244,6 +245,13 @@ function UpdateCurrentSlotOption() {
             child.disabled = false;
         }
     }
+}
+function NoteInputChanged() {
+    mainData.notes = noteInput.value;
+    SaveData();
+}
+function UpdateNotesField() {
+    noteInput.value = mainData.notes;
 }
 LoadStartDate();
 InitialLoad();

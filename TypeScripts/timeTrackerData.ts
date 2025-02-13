@@ -2,11 +2,13 @@ class TimeTrackerData {
     title: string;
     startDate: Date | null;
     timespans: Timespan[];
+    notes: string;
 
     constructor(title: string, timespans: Timespan[]) {
         this.title = title;
         this.timespans = timespans;
         this.startDate = null;
+        this.notes = "";
     }
 
     //Adds all timespans
@@ -64,7 +66,7 @@ class TimeTrackerData {
             dateString = this.startDate.getTime().toString();
         }
 
-        let json = `{"title":"${this.title}", "startDate":"${dateString}", "timestamps":[`;
+        let json = `{"title":"${this.title}", "notes":"${this.notes}", "startDate":"${dateString}", "timestamps":[`;
 
         //Only process timestamps if they exist
         if (this.timespans != null && this.timespans.length > 0) {

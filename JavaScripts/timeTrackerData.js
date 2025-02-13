@@ -4,6 +4,7 @@ class TimeTrackerData {
         this.title = title;
         this.timespans = timespans;
         this.startDate = null;
+        this.notes = "";
     }
     GetTotalMinutes() {
         let totalMinutes = 0;
@@ -48,7 +49,7 @@ class TimeTrackerData {
         else {
             dateString = this.startDate.getTime().toString();
         }
-        let json = `{"title":"${this.title}", "startDate":"${dateString}", "timestamps":[`;
+        let json = `{"title":"${this.title}", "notes":"${this.notes}", "startDate":"${dateString}", "timestamps":[`;
         if (this.timespans != null && this.timespans.length > 0) {
             for (let i = 0; i < this.timespans.length; i++) {
                 const element = this.timespans[i];
