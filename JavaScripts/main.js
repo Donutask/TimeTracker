@@ -95,7 +95,7 @@ function StopTimer() {
                 alert("Error: End time is before start time.");
                 return;
             }
-            if (DateTime.DifferenceInMinutes(startDate, endDate) >= 24) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) >= (24 * 60)) {
                 if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
                     return;
                 }
@@ -166,7 +166,6 @@ function BeginTimeChanger(hide, show, timeInput, date) {
     show.style.display = "block";
     if (date != null && !DateTime.IsNull(date)) {
         timeInput.value = date.FormatForTimeInput();
-        console.log(date.FormatForTimeInput());
     }
 }
 function RenameTracker() {

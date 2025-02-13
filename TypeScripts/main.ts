@@ -119,7 +119,7 @@ function StopTimer() {
                 alert("Error: End time is before start time.");
                 return;
             }
-            if (DateTime.DifferenceInMinutes(startDate, endDate) >= 24) {
+            if (DateTime.DifferenceInMinutes(startDate, endDate) >= (24 * 60)) {
                 if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
                     return;
                 }

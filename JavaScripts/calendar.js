@@ -230,10 +230,25 @@ function OnTimeInputShowNewDuration(start, end, duration, timespan) {
 function ApplyEdit(index, timespan) {
     const start = document.getElementById("edit-time-input-start-" + index);
     const end = document.getElementById("edit-time-input-end-" + index);
-    timespan.start.ChangeHoursMinutesFromTimeInputString(start.value);
-    timespan.end.ChangeHoursMinutesFromTimeInputString(end.value);
+    let newStart = timespan.start.Clone();
+    let newEnd = timespan.end.Clone();
+    newStart.ChangeHoursMinutesFromTimeInputString(start.value);
+    newEnd.ChangeHoursMinutesFromTimeInputString(end.value);
+    const difference = DateTime.DifferenceInMinutes(newStart, newEnd);
+    if (difference == 0) {
+        alert("Start and end times cannot be the same.");
+        return;
+    }
+    else if (difference < 0) {
+        alert("Duration cannot be negative.");
+        return;
+    }
+    timespan.start = newStart;
+    timespan.end = newEnd;
     SaveData();
     EndEdit(index);
+    RenderCurrentCalendar();
+    noDetailsMessage.innerHTML = "";
 }
 function CancelEdit(index, timespan) {
     const start = document.getElementById("edit-time-input-start-" + index);

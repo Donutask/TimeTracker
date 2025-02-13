@@ -115,6 +115,27 @@
         </footer>
     </div>
 
+    <template>
+        <!-- Todo: Use templates to create data detail rows -->
+        <tbody id="day-details-body">
+            <tr>
+                <td><input type="time" class="edit-time-input"></td>
+                <td><input type="time" class="edit-time-input"></td>
+                <td></td>
+                <td>
+                    <div id="management-actions">
+                        <button class="management-button edit-button"></button>
+                        <button class="management-button delete-button"></button>
+                    </div>
+                    <div>
+                        <button class="management-button apply-edit-button"></button>
+                        <button class="management-button cancel-edit-button"></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </template>
+
     <!-- Import all scripts -->
     <script>var exports = {};</script>
     <script src="JavaScripts/dateTime.js"></script>

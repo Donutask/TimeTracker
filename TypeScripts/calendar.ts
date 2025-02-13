@@ -322,12 +322,33 @@ function ApplyEdit(index: number, timespan: Timespan) {
     const start = document.getElementById("edit-time-input-start-" + index) as HTMLInputElement;
     const end = document.getElementById("edit-time-input-end-" + index) as HTMLInputElement;
 
-    //Changing value refrence changes original
-    timespan.start.ChangeHoursMinutesFromTimeInputString(start.value);
-    timespan.end.ChangeHoursMinutesFromTimeInputString(end.value);
+    //Clone dates so they dont effect the mainData (until we want them too)
+    let newStart = timespan.start.Clone();
+    let newEnd = timespan.end.Clone();
+
+    //Change the time
+    newStart.ChangeHoursMinutesFromTimeInputString(start.value);
+    newEnd.ChangeHoursMinutesFromTimeInputString(end.value);
+
+    //Prevent invalid durations
+    const difference = DateTime.DifferenceInMinutes(newStart, newEnd);
+    if (difference == 0) {
+        alert("Start and end times cannot be the same.");
+        return;
+    } else if (difference < 0) {
+        alert("Duration cannot be negative.");
+        return;
+    }
+
+    timespan.start = newStart;
+    timespan.end = newEnd;
 
     SaveData();
     EndEdit(index);
+
+    //Update the calendar view (the details view is fine because it updates as you change)
+    RenderCurrentCalendar();
+    noDetailsMessage.innerHTML = "";
 }
 
 function CancelEdit(index: number, timespan: Timespan) {
