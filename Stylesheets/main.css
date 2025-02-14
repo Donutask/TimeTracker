@@ -4,6 +4,22 @@ body {
     text-align: center;
 }
 
+/* Make sure ypu see the javascript message */
+noscript {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    color: white;
+    background-color: black;
+    z-index: 99;
+    font-size: 2em;
+
+}
+
 #center-column-container {
     display: flex;
     flex-direction: column;
@@ -20,6 +36,10 @@ h1,
 h2,
 h3 {
     font-family: "DM Serif Text";
+}
+
+h1 {
+    font-size: 2.1em;
 }
 
 #main-container {
@@ -46,14 +66,15 @@ h3 {
 }
 
 #elapsed-time {
-    font-size: 3em;
     line-height: 0px;
+    font-size: min(3em, 15vw);
 }
 
 #started-time-container {
     width: 100%;
     display: block;
     text-align: center;
+    font-size: min(1em, 6vw);
 }
 
 #started-time-container:hidden {
@@ -103,6 +124,7 @@ button {
 
 .timer-action-button:hover {
     scale: 107%;
+    border-radius: 18px;
 }
 
 .file-management-button {
@@ -145,6 +167,7 @@ button {
     background: none;
     font-family: 'Roboto', sans-serif;
     font-size: 0.95em;
+    max-width: 30vw;
 }
 
 /* The AM/PM indicator clips with the clock icon on chrome sometimes */
@@ -203,6 +226,7 @@ button {
 
 #month-total {
     line-height: 0px;
+    font-size: min(1em, 7vw);
 }
 
 /* Footer */
@@ -264,16 +288,20 @@ footer {
 
 .calendar-weekdays div {
     font-weight: bold;
+    font-size: min(6vw, 1em);
 }
 
 .calendar-date {
     cursor: pointer;
     font-weight: normal;
     vertical-align: middle;
+    font-size: min(1em, 7vw);
+    border-radius: 5px;
 }
 
 .calendar-date:hover {
     font-weight: 700;
+    border-radius: 9px;
 }
 
 .timespan {
@@ -282,9 +310,6 @@ footer {
     font-size: 0.75em;
 }
 
-.calendar-date:hover {
-    border-radius: 9px;
-}
 
 /* Responsiveness */
 @media (max-width: 400px) {
