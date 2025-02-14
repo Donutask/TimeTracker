@@ -15,5 +15,9 @@
     ],
     "start_url": "app/index.html",
     "display": "standalone",
-    "background_color": "#2B2A33"
+    "background_color": "#101814",
+    "categories": [
+        "productivity",
+        "utilities"
+    ]
 }
