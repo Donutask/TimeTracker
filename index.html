@@ -1,162 +1,18 @@
+<!-- Redirect to /app -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Tracker</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="Stylesheets/main.css">
-    <link rel="stylesheet" href="Stylesheets/colours.css">
-    <link rel="stylesheet" href="Stylesheets/theming.css">
-    <!-- Add to homescreen icons -->
-    <link rel="apple-touch-icon" sizes="128x128" href="icon-apple.png">
-    <link rel="icon" sizes="192x192" href="icon-android.png">
-    <!-- For web app -->
-    <link rel="manifest" href="manifest.json" />
-
+    <title>Document</title>
+    <script type="text/javascript">
+        window.location.href = "app/index.html"
+    </script>
 </head>
 
 <body>
-    <noscript>This page requires JavaScript to work.</noscript>
 
-    <div id="center-column-container">
-        <header>
-            <button id="rename-title" onclick="RenameTracker()">
-                <h1 id="title">Time Tracker</h1>
-            </button>
-            <select name="select save slot" id="select-save-slot" oninput="SaveSlotChosen()">
-                <optgroup label="Save Slots" id="save-slot-group">
-                </optgroup>
-                <option id="create-save-slot" value="create">Create</option>
-                <option id="delete-save-slot" value="delete">Delete</option>
-            </select>
-        </header>
-
-        <main>
-            <div id="main-container">
-                <div id="start-ui" hidden>
-                    <p id="start-time"></p>
-                    <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
-                </div>
-                <div id="stop-ui" hidden>
-                    <p id="elapsed-time-label">Elapsed Time:</p>
-                    <p id="elapsed-time"></p>
-                    <div id="started-time-container" hidden="false">
-                        <p id="started-time"></p>
-                        <button class="subtle-button" id="change-start-time-button"
-                            onclick="BeginChangeStartedTime()">Change</button>
-                    </div>
-                    <div id="change-start-time-container" hidden>
-                        <label>Change Start Time: <input id="change-start-time" type="time"></label>
-                        <input type="submit" onclick="SubmitStartTimeChange()">
-                        <button onclick="CancelStartTimeChange()">Cancel</button>
-                    </div>
-                    <button onclick="StopTimer()" class="timer-action-button">Stop</button>
-                    <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
-                    <div id="change-stop-time-container" hidden>
-                        <label>Choose Stop Time: <input id="change-stop-time" type="time"
-                                oninput="StopTimeChanged()"></label>
-                        <button onclick="CancelSetStopTime()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-
-            <h2 id="data-heading">Data</h2>
-            <p id="no-data">No data recorded.</p>
-            <p id="month-total"></p>
-            <div id="calendar" class="calendar">
-                <div class="calendar-header">
-                    <button id="prev-month">‹</button>
-                    <div id="month-year"></div>
-                    <button id="next-month">›</button>
-                </div>
-                <div class="calendar-body">
-                    <div class="calendar-weekdays">
-                        <div>Sun</div>
-                        <div>Mon</div>
-                        <div>Tue</div>
-                        <div>Wed</div>
-                        <div>Thu</div>
-                        <div>Fri</div>
-                        <div>Sat</div>
-                    </div>
-                    <div class="calendar-dates">
-                        <!-- Dates will be populated here -->
-                    </div>
-                </div>
-            </div>
-            <div id="detailed-day-data-container">
-                <p id="no-details-availible">Click a day to view details.</p>
-                <h3 id="detailed-day-data-heading"></h3>
-                <table id="detailed-day-data">
-                    <thead>
-                        <tr id="detailed-day-data-head">
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Duration</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody id="day-details-body">
-                        <!-- Day details generated by code -->
-                    </tbody>
-                </table>
-            </div>
-            <h2>Notes</h2>
-            <textarea id="notes-input" onchange="NoteInputChanged()"></textarea>
-
-
-        </main>
-
-        <footer>
-            <!-- Looks ugly -->
-            <!-- <div id="data-management">
-                <button class="file-management-button" onclick="Export()">Export</button>
-                <button class="file-management-button" onclick="Import()">Import</button>
-            </div> -->
-            <a class="link" href="https://donutask.com">Created by Donutask</a>
-        </footer>
-    </div>
-
-    <!--Template for the rows in the table when you click a date on the calendar-->
-    <template id="day-details-template">
-        <tr>
-            <td><input id="edit-time-input-start" disabled type="time" class="edit-time-input"></td>
-            <td><input id="edit-time-input-end" disabled type="time" class="edit-time-input"></td>
-            <td id="duration"></td>
-            <td>
-                <div id="management-actions">
-                    <button id="edit-button" class="management-button edit-button"></button>
-                    <button id="delete-button" class="management-button delete-button"></button>
-                </div>
-                <div>
-                    <button id="apply-edit-button" style="display: none;"
-                        class="management-button apply-edit-button"></button>
-                    <button id="cancel-edit-button" style="display: none;"
-                        class="management-button cancel-edit-button"></button>
-                </div>
-            </td>
-        </tr>
-    </template>
-
-    <!-- Import all scripts -->
-    <script>var exports = {};</script>
-    <script src="JavaScripts/dateTime.js"></script>
-    <script src="JavaScripts/timespan.js"></script>
-    <script src="JavaScripts/timeTrackerData.js"></script>
-    <script src="JavaScripts/dataManagement.js"></script>
-    <script src="JavaScripts/calendar.js"></script>
-    <script src="JavaScripts/dayDetailsTable.js"></script>
-    <script src="JavaScripts/main.js"></script>
-    <!-- <script src="JavaScripts/register-service-worker.js"></script> -->
 </body>
 
 </html>
