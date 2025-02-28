@@ -10,7 +10,7 @@ const monthTotalDisplay = document.getElementById('month-total') as HTMLParagrap
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
-let previouslySelected: HTMLElement;
+let previouslySelectedDate: HTMLElement;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -66,11 +66,7 @@ function renderCalendar(month: number, year: number) {
         day.dataset.date = i.toString();
 
         // Highlight today's date with circle
-        if (
-            i === today.getDate() &&
-            year === today.getFullYear() &&
-            month === today.getMonth()
-        ) {
+        if (i === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
             day.classList.add('current-date');
 
             const circle = document.createElement("div");
@@ -81,10 +77,17 @@ function renderCalendar(month: number, year: number) {
             day.textContent = i.toString();
         }
 
-        let m = minuteTotals[i];
-        if (!isNaN(m) && m != 0)
-            day.innerHTML += `<span class=timespan>${DateTime.formatHoursMinutes(m)}</span>`;
+        // Persist selection between refreshes
+        if (i == showingDetailsForDay) {
+            day.classList.add("selected-date");
+            previouslySelectedDate = day;
+        }
 
+        const m = minuteTotals[i];
+        if (!isNaN(m) && m != 0) {
+            //show hh:mm in span. If negative, show in red.
+            day.innerHTML += `<span class="timespan${m > 0 ? "" : " invalid-time"}">${DateTime.formatHoursMinutes(m)}</span>`;
+        }
 
         calendarDates.appendChild(day);
     }
@@ -131,13 +134,13 @@ calendarDates.addEventListener('click', (e: any) => {
     }
 
     //remove colour indicator
-    if (previouslySelected != null) {
-        previouslySelected.classList.remove("selected-date");
+    if (previouslySelectedDate != null) {
+        previouslySelectedDate.classList.remove("selected-date");
     }
 
     //add colour indicator
     target.classList.add("selected-date");
-    previouslySelected = target;
+    previouslySelectedDate = target;
 
     //Parse date from HTML data attribute
     const dateString = target.dataset.date;

@@ -109,7 +109,12 @@ class DateTime {
         if (totalMinutes >= 60) {
             let hours = Math.floor(totalMinutes / 60);
             let minutes = totalMinutes % 60;
-            return sign + `${hours}hr ${minutes}min`;
+            if (minutes == 0) {
+                return sign + `${hours}hr`;
+            }
+            else {
+                return sign + `${hours}hr ${minutes}min`;
+            }
         }
         else {
             return sign + `${Math.floor(totalMinutes)}min`;

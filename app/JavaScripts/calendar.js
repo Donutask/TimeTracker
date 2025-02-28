@@ -8,7 +8,7 @@ const monthTotalDisplay = document.getElementById('month-total');
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
-let previouslySelected;
+let previouslySelectedDate;
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 function renderCalendar(month, year) {
     if (calendarDates == null || monthYear == null) {
@@ -42,9 +42,7 @@ function renderCalendar(month, year) {
         const day = document.createElement('div');
         day.className = "calendar-date";
         day.dataset.date = i.toString();
-        if (i === today.getDate() &&
-            year === today.getFullYear() &&
-            month === today.getMonth()) {
+        if (i === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
             day.classList.add('current-date');
             const circle = document.createElement("div");
             circle.className = "current-date-circle";
@@ -54,9 +52,14 @@ function renderCalendar(month, year) {
         else {
             day.textContent = i.toString();
         }
-        let m = minuteTotals[i];
-        if (!isNaN(m) && m != 0)
-            day.innerHTML += `<span class=timespan>${DateTime.formatHoursMinutes(m)}</span>`;
+        if (i == showingDetailsForDay) {
+            day.classList.add("selected-date");
+            previouslySelectedDate = day;
+        }
+        const m = minuteTotals[i];
+        if (!isNaN(m) && m != 0) {
+            day.innerHTML += `<span class="timespan${m > 0 ? "" : " invalid-time"}">${DateTime.formatHoursMinutes(m)}</span>`;
+        }
         calendarDates.appendChild(day);
     }
     monthTotalDisplay.innerHTML = `Total for ${months[month]}: <b>${DateTime.formatHoursMinutes(monthTotal)}</b>`;
@@ -91,11 +94,11 @@ calendarDates.addEventListener('click', (e) => {
         }
         target = target.parentNode;
     }
-    if (previouslySelected != null) {
-        previouslySelected.classList.remove("selected-date");
+    if (previouslySelectedDate != null) {
+        previouslySelectedDate.classList.remove("selected-date");
     }
     target.classList.add("selected-date");
-    previouslySelected = target;
+    previouslySelectedDate = target;
     const dateString = target.dataset.date;
     if (dateString != null) {
         let date = Number.parseInt(dateString);

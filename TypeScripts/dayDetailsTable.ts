@@ -45,7 +45,11 @@ function ShowDayDetails(date: number) {
 
             const durationElement = rowTemplateClone.querySelector("#duration") as HTMLElement;
             durationElement.id = "duration-" + i;
-            durationElement.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
+            const durationMinutes = timespan.GetMinutes();
+            durationElement.textContent = DateTime.formatHoursMinutes(durationMinutes);
+            if (durationMinutes <= 0) {
+                durationElement.classList.add("invalid-time");
+            }
 
             //Change times
             const editElement = rowTemplateClone.querySelector("#edit-button") as HTMLElement;
@@ -58,7 +62,7 @@ function ShowDayDetails(date: number) {
             const deleteElement = rowTemplateClone.querySelector("#delete-button") as HTMLElement;
             deleteElement.id = "delete-button-" + i;
             deleteElement.addEventListener("click", function () {
-                if (timespan.GetMinutes() < 1 || confirm("Delete?")) {
+                if (durationMinutes < 1 || confirm("Delete?")) {
                     mainData.Remove(timespan);
                     UpdateCalendarAndDetails();
                     SaveData();
@@ -158,6 +162,12 @@ function OnTimeInputShowNewDuration(start: HTMLInputElement, end: HTMLInputEleme
     //Calculate and show duration
     let difference = DateTime.DifferenceInMinutes(newStart, newEnd);
     duration.textContent = DateTime.formatHoursMinutes(difference);
+
+    if (difference <= 0) {
+        duration.classList.add("invalid-time");
+    } else {
+        duration.classList.remove("invalid-time");
+    }
 }
 
 function ApplyEdit(index: number, timespan: Timespan) {
@@ -202,7 +212,15 @@ function CancelEdit(index: number, timespan: Timespan) {
 
     start.value = timespan.start.FormatForTimeInput();
     end.value = timespan.end.FormatForTimeInput();
-    duration.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
+
+    //update duration styling
+    const minutes = timespan.GetMinutes();
+    duration.textContent = DateTime.formatHoursMinutes(minutes);
+    if (minutes <= 0) {
+        duration.classList.add("invalid-time");
+    } else {
+        duration.classList.remove("invalid-time");
+    }
 
     EndEdit(index);
 }
@@ -223,27 +241,34 @@ function EndEdit(index: number) {
     actions.style.display = "block";
 }
 
-//Add time popup
+//////////////////
+//ADD TIME POPUP//
+//////////////////
 
 let addTimeStart: DateTime = DateTime.NullDate();
 let addTimeEnd: DateTime = DateTime.NullDate();
 
 function BeginAddTime() {
+    //Set start and end datetimes
+    if (showingDetailsForDay == null) {
+        throw "Cannot add time, no day selected";
+    }
+    addTimeStart = new DateTime(currentYear, currentMonth, showingDetailsForDay, 0, 0);
+    addTimeEnd = new DateTime(currentYear, currentMonth, showingDetailsForDay, 0, 0);
+
+    //Reset form element values
+    addTimeStartInput.value = "";
+    addTimeEndInput.value = "";
+    addTimeDurationDisplay.textContent = "";
+
+    //Show modal and stop scroll
     addTimeDialog.showModal();
     document.body.classList.add("stop-scroll");
-
-    addTimeStart = DateTime.Now();
-    addTimeEnd = DateTime.Now();
-    addTimeDurationDisplay.textContent = "";
 }
 
 //Stop default form behaviour, get & proccess start and end times, add timespan, save, and close
 function SubmitAddTime(event: SubmitEvent) {
     event.preventDefault();
-
-    const difference = DateTime.DifferenceInMinutes(addTimeStart, addTimeEnd);
-    console.log(difference);
-
 
     mainData.Add(new Timespan(addTimeStart, addTimeEnd));
     SaveAndUpdate();
