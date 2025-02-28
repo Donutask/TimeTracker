@@ -1,5 +1,7 @@
 const dayDetailsHeading = document.getElementById("detailed-day-data-heading") as HTMLHeadingElement;
 const noDetailsMessage = document.getElementById("no-details-availible") as HTMLParagraphElement;
+const noDateSelectedMessage = document.getElementById("no-date-selected") as HTMLParagraphElement;
+const addTimeButton = document.getElementById("add-button") as HTMLButtonElement;
 
 const dayDetailsTable = document.getElementById("detailed-day-data") as HTMLTableElement;
 
@@ -13,16 +15,17 @@ const dayDetailRowTemplate = document.getElementById("day-details-template") as 
 let showingDetailsForDay: number | null;
 function ShowDayDetails(date: number) {
     showingDetailsForDay = date;
+    noDateSelectedMessage.style.display = "none";
+    addTimeButton.style.display = "inline";
 
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
-
     if (timespans != null) {
         dayDetailsTable.style.display = "table";
         noDetailsMessage.style.display = "none";
 
-        dayDetailsHeading.innerHTML = `Details for ${date} ${months[currentMonth]}`
+        dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`
 
-        dayDetailsBody.innerHTML = "";
+        dayDetailsBody.textContent = "";
 
         for (let i = 0; i < timespans.length; i++) {
             const timespan = timespans[i];
@@ -39,7 +42,7 @@ function ShowDayDetails(date: number) {
 
             const durationElement = rowTemplateClone.querySelector("#duration") as HTMLElement;
             durationElement.id = "duration-" + i;
-            durationElement.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+            durationElement.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
 
             //Change times
             const editElement = rowTemplateClone.querySelector("#edit-button") as HTMLElement;
@@ -74,7 +77,7 @@ function ShowDayDetails(date: number) {
 
     } else {
         dayDetailsTable.style.display = "none";
-        dayDetailsHeading.innerHTML = "";
+        dayDetailsHeading.textContent = "";
         //show this message, only if there are days you could have clicked on
         if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
         } else {
@@ -143,7 +146,7 @@ function OnTimeInputShowNewDuration(start: HTMLInputElement, end: HTMLInputEleme
 
     //Calculate and show duration
     let difference = DateTime.DifferenceInMinutes(newStart, newEnd);
-    duration.innerHTML = DateTime.formatHoursMinutes(difference);
+    duration.textContent = DateTime.formatHoursMinutes(difference);
 }
 
 function ApplyEdit(index: number, timespan: Timespan) {
@@ -177,7 +180,7 @@ function ApplyEdit(index: number, timespan: Timespan) {
 
     //Update the calendar view (the details view is fine because it updates as you change)
     RenderCurrentCalendar();
-    noDetailsMessage.innerHTML = "";
+    noDetailsMessage.textContent = "";
 }
 
 function CancelEdit(index: number, timespan: Timespan) {
@@ -188,7 +191,7 @@ function CancelEdit(index: number, timespan: Timespan) {
 
     start.value = timespan.start.FormatForTimeInput();
     end.value = timespan.end.FormatForTimeInput();
-    duration.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+    duration.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
 
     EndEdit(index);
 }
@@ -209,3 +212,11 @@ function EndEdit(index: number) {
     actions.style.display = "block";
 }
 
+function BeginAddTime() {
+    alert("Not implemented.");
+}
+
+//Default appearance
+noDetailsMessage.style.display = "none";
+noDateSelectedMessage.style.display = "block";
+addTimeButton.style.display = "none";

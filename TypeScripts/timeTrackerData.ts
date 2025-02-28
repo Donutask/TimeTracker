@@ -66,7 +66,7 @@ class TimeTrackerData {
             dateString = this.startDate.getTime().toString();
         }
 
-        let json = `{"title":"${this.title}", "notes":"${this.notes}", "startDate":"${dateString}", "timestamps":[`;
+        let json = `{"title":${JSON.stringify(this.title)}, "notes":${JSON.stringify(this.notes)}, "startDate":"${dateString}", "timestamps":[`;
 
         //Only process timestamps if they exist
         if (this.timespans != null && this.timespans.length > 0) {

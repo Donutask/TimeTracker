@@ -1,16 +1,16 @@
 //Credit to this turotial: https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
 const calendarParent = document.getElementById("calendar") as HTMLElement;
 
-const calendarDates = document.querySelector('.calendar-dates') as HTMLDivElement;
+const calendarDates = document.getElementById('calendar-dates') as HTMLDivElement;
 const monthYear = document.getElementById('month-year') as HTMLDivElement;
 const prevMonthBtn = document.getElementById('prev-month') as HTMLButtonElement;
 const nextMonthBtn = document.getElementById('next-month') as HTMLButtonElement;
 const monthTotalDisplay = document.getElementById('month-total') as HTMLParagraphElement;
-const noDataMessage = document.getElementById("no-data") as HTMLParagraphElement;
 
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
+let previouslySelected: HTMLElement;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -18,20 +18,8 @@ function renderCalendar(month: number, year: number) {
     if (calendarDates == null || monthYear == null) {
         return;
     }
-    //A fresh file has no data, so don't bother rendering anything
-    if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
-        noDataMessage.hidden = false;
-        calendarParent.hidden = true;
-        monthTotalDisplay.innerHTML = "";
-        noDetailsMessage.style.display = "none";
-        return;
-    } else {
-        noDataMessage.hidden = true;
-        calendarParent.hidden = false;
-        noDetailsMessage.style.display = "block";
-    }
 
-    calendarDates.innerHTML = '';
+    calendarDates.textContent = '';
     monthYear.textContent = `${months[month]} ${year}`;
 
     // Get the first day of the month
@@ -73,7 +61,6 @@ function renderCalendar(month: number, year: number) {
     for (let i = 1; i <= daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = "calendar-date";
-        day.textContent = i.toString();
 
         // Highlight today's date
         if (
@@ -82,6 +69,13 @@ function renderCalendar(month: number, year: number) {
             month === today.getMonth()
         ) {
             day.classList.add('current-date');
+
+            const circle = document.createElement("div");
+            circle.className = "current-date-circle";
+            circle.textContent = i.toString();
+            day.appendChild(circle);
+        } else {
+            day.textContent = i.toString();
         }
 
         let m = minuteTotals[i];
@@ -117,12 +111,36 @@ nextMonthBtn.addEventListener('click', () => {
 //Click on a date to get info for all logged timespans on that date
 //So much for TypeScript types lol
 calendarDates.addEventListener('click', (e: any) => {
-    let content: string;
-    if (e.target.className == "timespan") {
-        content = e.target.parentNode.innerHTML;
-    } else {
-        content = e.target.innerHTML;
+    //Don't select the element
+    if (e.target.id == "calendar-dates") {
+        return;
     }
+
+    //remove colour indication
+    if (previouslySelected != null) {
+        previouslySelected.classList.remove("selected-date");
+    }
+
+    //Mess because the date is stored in different places
+    let content: string;
+    if (e.target.className == "current-date-circle") {
+        content = e.target.textContent;
+        previouslySelected = e.target.parentNode;
+    }
+    if (e.target.className == "timespan") {
+        const parent = e.target.parentNode;
+        if (parent.className = "current-date") {
+            content = parent.querySelector(".current-date-circle").textContent;
+        } else {
+            content = parent.textContent;
+        }
+        previouslySelected = e.target.parentNode;
+    } else {
+        content = e.target.textContent;
+        previouslySelected = e.target;
+    }
+
+    previouslySelected.classList.add("selected-date");
 
     if (content != null) {
         let date = Number.parseInt(content);

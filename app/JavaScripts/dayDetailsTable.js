@@ -1,18 +1,22 @@
 "use strict";
 const dayDetailsHeading = document.getElementById("detailed-day-data-heading");
 const noDetailsMessage = document.getElementById("no-details-availible");
+const noDateSelectedMessage = document.getElementById("no-date-selected");
+const addTimeButton = document.getElementById("add-button");
 const dayDetailsTable = document.getElementById("detailed-day-data");
 const dayDetailsBody = document.getElementById("day-details-body");
 const dayDetailRowTemplate = document.getElementById("day-details-template");
 let showingDetailsForDay;
 function ShowDayDetails(date) {
     showingDetailsForDay = date;
+    noDateSelectedMessage.style.display = "none";
+    addTimeButton.style.display = "inline";
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
     if (timespans != null) {
         dayDetailsTable.style.display = "table";
         noDetailsMessage.style.display = "none";
-        dayDetailsHeading.innerHTML = `Details for ${date} ${months[currentMonth]}`;
-        dayDetailsBody.innerHTML = "";
+        dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`;
+        dayDetailsBody.textContent = "";
         for (let i = 0; i < timespans.length; i++) {
             const timespan = timespans[i];
             const rowTemplateClone = dayDetailRowTemplate.content.cloneNode(true);
@@ -24,7 +28,7 @@ function ShowDayDetails(date) {
             toInput.id = "edit-time-input-end-" + i;
             const durationElement = rowTemplateClone.querySelector("#duration");
             durationElement.id = "duration-" + i;
-            durationElement.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+            durationElement.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
             const editElement = rowTemplateClone.querySelector("#edit-button");
             editElement.id = "edit-button-" + i;
             editElement.addEventListener("click", function () {
@@ -50,7 +54,7 @@ function ShowDayDetails(date) {
     }
     else {
         dayDetailsTable.style.display = "none";
-        dayDetailsHeading.innerHTML = "";
+        dayDetailsHeading.textContent = "";
         if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
         }
         else {
@@ -93,7 +97,7 @@ function OnTimeInputShowNewDuration(start, end, duration, timespan) {
     newStart.ChangeHoursMinutesFromTimeInputString(start.value);
     newEnd.ChangeHoursMinutesFromTimeInputString(end.value);
     let difference = DateTime.DifferenceInMinutes(newStart, newEnd);
-    duration.innerHTML = DateTime.formatHoursMinutes(difference);
+    duration.textContent = DateTime.formatHoursMinutes(difference);
 }
 function ApplyEdit(index, timespan) {
     const start = document.getElementById("edit-time-input-start-" + index);
@@ -116,7 +120,7 @@ function ApplyEdit(index, timespan) {
     SaveData();
     EndEdit(index);
     RenderCurrentCalendar();
-    noDetailsMessage.innerHTML = "";
+    noDetailsMessage.textContent = "";
 }
 function CancelEdit(index, timespan) {
     const start = document.getElementById("edit-time-input-start-" + index);
@@ -124,7 +128,7 @@ function CancelEdit(index, timespan) {
     const duration = document.getElementById("duration-" + index);
     start.value = timespan.start.FormatForTimeInput();
     end.value = timespan.end.FormatForTimeInput();
-    duration.innerHTML = DateTime.formatHoursMinutes(timespan.GetMinutes());
+    duration.textContent = DateTime.formatHoursMinutes(timespan.GetMinutes());
     EndEdit(index);
 }
 function EndEdit(index) {
@@ -139,3 +143,9 @@ function EndEdit(index) {
     apply.style.display = "none";
     actions.style.display = "block";
 }
+function BeginAddTime() {
+    alert("Not implemented.");
+}
+noDetailsMessage.style.display = "none";
+noDateSelectedMessage.style.display = "block";
+addTimeButton.style.display = "none";

@@ -171,8 +171,14 @@ button {
     width: 175px;
     height: 50%;
     margin-top: 10px;
-    font-size: 1.5em;
-    padding: 5px;
+    font-size: 1.4em;
+    padding: 4px;
+    border-radius: 14px;
+    transition: 0.4s;
+}
+
+#add-button:hover {
+    scale: 105%;
 }
 
 .file-management-button {
@@ -189,10 +195,15 @@ button {
 
 #no-details-availible {
     font-style: italic;
+    margin-bottom: 0px;
 }
 
 #no-data {
     font-style: italic;
+}
+
+#detailed-day-data-container {
+    margin-bottom: 25px;
 }
 
 #detailed-day-data-heading {
@@ -205,7 +216,6 @@ button {
     margin-left: auto;
     margin-right: auto;
     display: none;
-    margin-bottom: 25px;
     border-spacing: 0px;
 }
 
@@ -369,13 +379,13 @@ footer {
 }
 
 .calendar-weekdays,
-.calendar-dates {
+#calendar-dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
 }
 
 .calendar-weekdays div,
-.calendar-dates div {
+#calendar-dates div {
     text-align: center;
     padding: 10px;
 }
@@ -409,13 +419,28 @@ footer {
     color: var(--color-text);
 }
 
-.current-date {
+.selected-date {
     background-color: var(--color-primary-container);
     font-weight: 999;
 }
 
-.current-date:hover {
+.selected-date:hover {
     background-color: var(--color-primary-container-hover);
+}
+
+.current-date {
+    font-weight: bold;
+    padding-top: 1px !important;
+}
+
+.current-date-circle {
+    border-radius: 50%;
+    background-color: var(--color-tertiary);
+    color: var(--color-on-tertiary);
+}
+
+.current-date-circle:hober {
+    background-color: var(--color-tertiary);
 }
 
 .timespan {
@@ -432,7 +457,7 @@ footer {
         padding-right: 0px;
     }
 
-    .calendar-dates div {
+    #calendar-dates div {
         padding-left: 0px;
         padding-right: 0px;
     }

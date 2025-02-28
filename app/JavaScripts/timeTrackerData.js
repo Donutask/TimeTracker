@@ -49,7 +49,7 @@ class TimeTrackerData {
         else {
             dateString = this.startDate.getTime().toString();
         }
-        let json = `{"title":"${this.title}", "notes":"${this.notes}", "startDate":"${dateString}", "timestamps":[`;
+        let json = `{"title":${JSON.stringify(this.title)}, "notes":${JSON.stringify(this.notes)}, "startDate":"${dateString}", "timestamps":[`;
         if (this.timespans != null && this.timespans.length > 0) {
             for (let i = 0; i < this.timespans.length; i++) {
                 const element = this.timespans[i];

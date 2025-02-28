@@ -26,16 +26,16 @@ function UpdateStartUI() {
     currentInterval = setInterval(UpdateCurrentTimeDisplay, 1000);
 }
 function UpdateCurrentTimeDisplay() {
-    startTime.innerHTML = DateTime.formatAMPM(DateTime.Now());
+    startTime.textContent = DateTime.formatAMPM(DateTime.Now());
 }
 function UpdateStopUI() {
     const currentDate = DateTime.Now();
     if (startDate != null) {
         if (DateTime.IsSameDate(startDate, currentDate)) {
-            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate);
+            startedTime.textContent = "Started at " + DateTime.formatAMPM(startDate);
         }
         else {
-            startedTime.innerHTML = "Started at " + DateTime.formatAMPM(startDate) + " on " + startDate.ToDateString();
+            startedTime.textContent = "Started at " + DateTime.formatAMPM(startDate) + " on " + startDate.ToDateString();
         }
         clearInterval(currentInterval);
         ElapsedTimeDisplay();
@@ -52,7 +52,7 @@ function ElapsedTimeDisplay() {
     }
     if (!DateTime.IsNull(startDate)) {
         const totalMinutes = DateTime.DifferenceInMinutes(startDate, currentDate);
-        elapsedTime.innerHTML = DateTime.formatHoursMinutes(totalMinutes);
+        elapsedTime.textContent = DateTime.formatHoursMinutes(totalMinutes);
         if (totalMinutes < 0) {
             elapsedTime.classList.add("invalid-time");
         }
@@ -64,22 +64,22 @@ function ElapsedTimeDisplay() {
 function ShowCorrectUI() {
     ShowTitle();
     if (DateTime.IsNull(startDate)) {
-        startUI.hidden = false;
+        startUI.style.display = "flex";
         stopUI.style.display = "none";
         UpdateStartUI();
     }
     else {
-        startUI.hidden = true;
+        startUI.style.display = "none";
         stopUI.style.display = "flex";
         UpdateStopUI();
     }
 }
 function ShowTitle() {
     if (mainData != null && mainData.title != null && mainData.title.length > 0) {
-        titleDisplay.innerHTML = mainData.title;
+        titleDisplay.textContent = mainData.title;
     }
     else {
-        titleDisplay.innerHTML = "Time Tracker";
+        titleDisplay.textContent = "Time Tracker";
     }
 }
 function StartTimer() {
@@ -186,7 +186,7 @@ function RenameTracker() {
     }
 }
 function CreateSaveSlotChooserDropdown() {
-    slotChooserParent.innerHTML = "";
+    slotChooserParent.textContent = "";
     for (let i = 0; i < saveSlots.length; i++) {
         const saveSlot = saveSlots[i];
         if (saveSlot == null || saveSlot.length <= 0) {
@@ -203,7 +203,7 @@ function CreateSaveSlotChooserDropdown() {
             console.error(error);
         }
         const option = document.createElement("option");
-        option.innerHTML = label;
+        option.textContent = label;
         option.title = label;
         option.value = i.toString();
         if (currentSlot == i) {
@@ -245,12 +245,12 @@ function UpdateCurrentSlotOption() {
     for (let i = 0; i < children.length; i++) {
         const child = children[i];
         if (child.value == currentSlot.toString()) {
-            child.innerHTML = "Change";
+            child.textContent = "Change";
             child.selected = true;
             child.disabled = true;
         }
         else {
-            child.innerHTML = child.title;
+            child.textContent = child.title;
             child.selected = false;
             child.disabled = false;
         }

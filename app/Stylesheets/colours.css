@@ -16,6 +16,7 @@ body {
     --color-secondary-container: rgb(213 228 247);
     --color-on-secondary-container: rgb(58 72 87);
     --color-tertiary: rgb(104 87 122);
+    --color-tertiary-hover: hsl(269, 17%, 50%);
     --color-on-tertiary: rgb(255 255 255);
     --color-tertiary-container: rgb(239 219 255);
     --color-on-tertiary-container: rgb(80 64 97);

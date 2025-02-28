@@ -1,32 +1,20 @@
 "use strict";
 const calendarParent = document.getElementById("calendar");
-const calendarDates = document.querySelector('.calendar-dates');
+const calendarDates = document.getElementById('calendar-dates');
 const monthYear = document.getElementById('month-year');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
 const monthTotalDisplay = document.getElementById('month-total');
-const noDataMessage = document.getElementById("no-data");
 const currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
+let previouslySelected;
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 function renderCalendar(month, year) {
     if (calendarDates == null || monthYear == null) {
         return;
     }
-    if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
-        noDataMessage.hidden = false;
-        calendarParent.hidden = true;
-        monthTotalDisplay.innerHTML = "";
-        noDetailsMessage.style.display = "none";
-        return;
-    }
-    else {
-        noDataMessage.hidden = true;
-        calendarParent.hidden = false;
-        noDetailsMessage.style.display = "block";
-    }
-    calendarDates.innerHTML = '';
+    calendarDates.textContent = '';
     monthYear.textContent = `${months[month]} ${year}`;
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -53,11 +41,17 @@ function renderCalendar(month, year) {
     for (let i = 1; i <= daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = "calendar-date";
-        day.textContent = i.toString();
         if (i === today.getDate() &&
             year === today.getFullYear() &&
             month === today.getMonth()) {
             day.classList.add('current-date');
+            const circle = document.createElement("div");
+            circle.className = "current-date-circle";
+            circle.textContent = i.toString();
+            day.appendChild(circle);
+        }
+        else {
+            day.textContent = i.toString();
         }
         let m = minuteTotals[i];
         if (!isNaN(m) && m > 0)
@@ -83,13 +77,32 @@ nextMonthBtn.addEventListener('click', () => {
     renderCalendar(currentMonth, currentYear);
 });
 calendarDates.addEventListener('click', (e) => {
+    if (e.target.id == "calendar-dates") {
+        return;
+    }
+    if (previouslySelected != null) {
+        previouslySelected.classList.remove("selected-date");
+    }
     let content;
+    if (e.target.className == "current-date-circle") {
+        content = e.target.textContent;
+        previouslySelected = e.target.parentNode;
+    }
     if (e.target.className == "timespan") {
-        content = e.target.parentNode.innerHTML;
+        const parent = e.target.parentNode;
+        if (parent.className = "current-date") {
+            content = parent.querySelector(".current-date-circle").textContent;
+        }
+        else {
+            content = parent.textContent;
+        }
+        previouslySelected = e.target.parentNode;
     }
     else {
-        content = e.target.innerHTML;
+        content = e.target.textContent;
+        previouslySelected = e.target;
     }
+    previouslySelected.classList.add("selected-date");
     if (content != null) {
         let date = Number.parseInt(content);
         ShowDayDetails(date);
