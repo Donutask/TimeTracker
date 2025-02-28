@@ -85,6 +85,7 @@ nextMonthBtn.addEventListener('click', () => {
 calendarDates.addEventListener('click', (e) => {
     var _a;
     if (e.target.id == "calendar-dates") {
+        ShowNoDetails();
         return;
     }
     let target = e.target;

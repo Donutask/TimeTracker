@@ -136,18 +136,13 @@
 
 
             </main>
-
             <footer>
-                <!-- Looks ugly -->
-                <!-- <div id="data-management">
-                <button class="file-management-button" onclick="Export()">Export</button>
-                <button class="file-management-button" onclick="Import()">Import</button>
-            </div> -->
                 <a class="link" href="https://donutask.com">Created by Donutask</a>
             </footer>
         </div>
     </div>
 
+    <!-- Modal that allows you to enter custom time -->
     <dialog id="add-time-modal">
         <h2>Add Time</h2>
         <form id="add-time-form">
@@ -156,7 +151,7 @@
                         required></label>
                 <label>End: <input id="add-time-input-end" type="time" class="add-time-input" name="add-time-end"
                         required></label>
-                <p id="add-time-duration">Duration: 1hr, 3min</p>
+                <p id="add-time-duration"></p>
             </div>
             <div id="add-time-modal-buttons">
                 <input class="add-time-modal-button" type="submit" value="Confirm">

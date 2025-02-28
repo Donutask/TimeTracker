@@ -87,12 +87,24 @@ class DateTime {
             }
         }
 
-        //Must have exactly 5 numbers to be valid
-        if (numbers == null || numbers.length != 5) {
+        if (numbers == null) {
             return DateTime.NullDate();
         }
 
-        return new DateTime(numbers[0], numbers[1], numbers[2], numbers[3], numbers[4]);
+        //Should have exactly 5 numbers, but will try to read dates with different amounts.
+        if (numbers.length >= 5) {
+            return new DateTime(numbers[0], numbers[1], numbers[2], numbers[3], numbers[4]);
+        } else if (numbers.length == 4) {
+            return new DateTime(numbers[0], numbers[1], numbers[2], numbers[3], 0);
+        } else if (numbers.length == 3) {
+            return new DateTime(numbers[0], numbers[1], numbers[2], 0, 0);
+        } else if (numbers.length == 2) {
+            return new DateTime(numbers[0], numbers[1], 0, 0, 0);
+        } else if (numbers.length == 1) {
+            return new DateTime(numbers[0], 0, 0, 0, 0);
+        } else {
+            return DateTime.NullDate();
+        }
     }
 
     ToJsDate(): Date {

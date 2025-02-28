@@ -74,6 +74,7 @@ function ShowNoDetails() {
     noDetailsMessage.style.display = "none";
     noDateSelectedMessage.style.display = "block";
     addTimeButton.style.display = "none";
+    dayDetailsTable.style.display = "none";
     dayDetailsHeading.textContent = "";
     showingDetailsForDay = null;
 }

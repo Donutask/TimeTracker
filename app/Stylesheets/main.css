@@ -250,13 +250,9 @@ button {
 }
 
 
-#no-details-availible {
+#no-details-availible, #no-date-selected {
     font-style: italic;
     margin-bottom: 0px;
-}
-
-#no-data {
-    font-style: italic;
 }
 
 #detailed-day-data-container {

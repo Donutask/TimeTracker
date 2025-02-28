@@ -121,6 +121,7 @@ nextMonthBtn.addEventListener('click', () => {
 calendarDates.addEventListener('click', (e: any) => {
     //Don't select the element
     if (e.target.id == "calendar-dates") {
+        ShowNoDetails();
         return;
     }
 
