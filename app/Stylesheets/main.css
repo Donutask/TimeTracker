@@ -265,8 +265,9 @@ button {
     margin-bottom: 25px;
 }
 
+#no-details-availible,
 #detailed-day-data-heading {
-    line-height: 0px;
+    margin: 5px;
 }
 
 #detailed-day-data {
@@ -340,19 +341,19 @@ button {
 }
 
 .delete-button {
-    background-image: url("/app/Icons/trash-fill.svg");
+    background-image: url("../Icons/trash-fill.svg");
 }
 
 .edit-button {
-    background-image: url("/app/Icons/pencil-fill.svg");
+    background-image: url("../Icons/pencil-fill.svg");
 }
 
 .cancel-edit-button {
-    background-image: url("/app/Icons/x-circle-fill.svg");
+    background-image: url("../Icons/x-circle-fill.svg");
 }
 
 .apply-edit-button {
-    background-image: url("/app/Icons/check-circle-fill.svg");
+    background-image: url("../Icons/check-circle-fill.svg");
 }
 
 #open-sidebar {
@@ -362,7 +363,7 @@ button {
     border: none;
     background-size: contain;
     background-position: center;
-    background-image: url("/app/Icons/sidebar.svg");
+    background-image: url("../app/Icons/sidebar.svg");
 }
 
 .management-button:hover {
@@ -519,6 +520,12 @@ footer {
     #calendar-dates div {
         padding-left: 0px;
         padding-right: 0px;
+    }
+
+    /* To still somewhat resemble a circle */
+    .current-date-circle {
+        width: min(40px, 20vw);
+        margin: auto;
     }
 
     .timer-action-button {
