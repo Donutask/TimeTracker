@@ -41,6 +41,7 @@ function renderCalendar(month, year) {
     for (let i = 1; i <= daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = "calendar-date";
+        day.dataset.date = i.toString();
         if (i === today.getDate() &&
             year === today.getFullYear() &&
             month === today.getMonth()) {
@@ -54,7 +55,7 @@ function renderCalendar(month, year) {
             day.textContent = i.toString();
         }
         let m = minuteTotals[i];
-        if (!isNaN(m) && m > 0)
+        if (!isNaN(m) && m != 0)
             day.innerHTML += `<span class=timespan>${DateTime.formatHoursMinutes(m)}</span>`;
         calendarDates.appendChild(day);
     }
@@ -67,6 +68,7 @@ prevMonthBtn.addEventListener('click', () => {
         currentYear--;
     }
     renderCalendar(currentMonth, currentYear);
+    ShowNoDetails();
 });
 nextMonthBtn.addEventListener('click', () => {
     currentMonth++;
@@ -75,36 +77,28 @@ nextMonthBtn.addEventListener('click', () => {
         currentYear++;
     }
     renderCalendar(currentMonth, currentYear);
+    ShowNoDetails();
 });
 calendarDates.addEventListener('click', (e) => {
+    var _a;
     if (e.target.id == "calendar-dates") {
         return;
+    }
+    let target = e.target;
+    while (!((_a = target.classList) === null || _a === void 0 ? void 0 : _a.contains("calendar-date"))) {
+        if (target.parentNode == null) {
+            return;
+        }
+        target = target.parentNode;
     }
     if (previouslySelected != null) {
         previouslySelected.classList.remove("selected-date");
     }
-    let content;
-    if (e.target.className == "current-date-circle") {
-        content = e.target.textContent;
-        previouslySelected = e.target.parentNode;
-    }
-    if (e.target.className == "timespan") {
-        const parent = e.target.parentNode;
-        if (parent.className = "current-date") {
-            content = parent.querySelector(".current-date-circle").textContent;
-        }
-        else {
-            content = parent.textContent;
-        }
-        previouslySelected = e.target.parentNode;
-    }
-    else {
-        content = e.target.textContent;
-        previouslySelected = e.target;
-    }
-    previouslySelected.classList.add("selected-date");
-    if (content != null) {
-        let date = Number.parseInt(content);
+    target.classList.add("selected-date");
+    previouslySelected = target;
+    const dateString = target.dataset.date;
+    if (dateString != null) {
+        let date = Number.parseInt(dateString);
         ShowDayDetails(date);
     }
 });

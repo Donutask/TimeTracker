@@ -114,8 +114,8 @@
                 </div>
                 <div id="detailed-day-data-container">
                     <p id="no-date-selected">Click a day to view details.</p>
-                    <p id="no-details-availible">No data for this day.</p>
                     <h3 id="detailed-day-data-heading"></h3>
+                    <p id="no-details-availible">No data for this day.</p>
                     <table id="detailed-day-data">
                         <thead>
                             <tr id="detailed-day-data-head">
@@ -147,6 +147,23 @@
             </footer>
         </div>
     </div>
+
+    <dialog id="add-time-modal">
+        <h2>Add Time</h2>
+        <form id="add-time-form">
+            <div id="add-time-modal-inputs">
+                <label>Start: <input id="add-time-input-start" type="time" class="add-time-input" name="add-time-start"
+                        required></label>
+                <label>End: <input id="add-time-input-end" type="time" class="add-time-input" name="add-time-end"
+                        required></label>
+                <p id="add-time-duration">Duration: 1hr, 3min</p>
+            </div>
+            <div id="add-time-modal-buttons">
+                <input class="add-time-modal-button" type="submit" value="Confirm">
+                <button type="button" class="add-time-modal-button" onclick="CloseAddTime()">Cancel</button>
+            </div>
+        </form>
+    </dialog>
     <!--Template for the rows in the table when you click a date on the calendar-->
     <template id="day-details-template">
         <tr>

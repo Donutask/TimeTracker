@@ -3,19 +3,24 @@ const dayDetailsHeading = document.getElementById("detailed-day-data-heading");
 const noDetailsMessage = document.getElementById("no-details-availible");
 const noDateSelectedMessage = document.getElementById("no-date-selected");
 const addTimeButton = document.getElementById("add-button");
-const dayDetailsTable = document.getElementById("detailed-day-data");
+const addTimeDialog = document.getElementById("add-time-modal");
+const addTimeForm = document.getElementById("add-time-form");
+const addTimeStartInput = document.getElementById("add-time-input-start");
+const addTimeEndInput = document.getElementById("add-time-input-end");
+const addTimeDurationDisplay = document.getElementById("add-time-duration");
 const dayDetailsBody = document.getElementById("day-details-body");
+const dayDetailsTable = document.getElementById("detailed-day-data");
 const dayDetailRowTemplate = document.getElementById("day-details-template");
 let showingDetailsForDay;
 function ShowDayDetails(date) {
     showingDetailsForDay = date;
     noDateSelectedMessage.style.display = "none";
     addTimeButton.style.display = "inline";
+    dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`;
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
     if (timespans != null) {
         dayDetailsTable.style.display = "table";
         noDetailsMessage.style.display = "none";
-        dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`;
         dayDetailsBody.textContent = "";
         for (let i = 0; i < timespans.length; i++) {
             const timespan = timespans[i];
@@ -54,13 +59,19 @@ function ShowDayDetails(date) {
     }
     else {
         dayDetailsTable.style.display = "none";
-        dayDetailsHeading.textContent = "";
         if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
         }
         else {
             noDetailsMessage.style.display = "block";
         }
     }
+}
+function ShowNoDetails() {
+    noDetailsMessage.style.display = "none";
+    noDateSelectedMessage.style.display = "block";
+    addTimeButton.style.display = "none";
+    dayDetailsHeading.textContent = "";
+    showingDetailsForDay = null;
 }
 function BeginEdit(index, timespan) {
     const start = document.getElementById("edit-time-input-start-" + index);
@@ -143,9 +154,45 @@ function EndEdit(index) {
     apply.style.display = "none";
     actions.style.display = "block";
 }
+let addTimeStart = DateTime.NullDate();
+let addTimeEnd = DateTime.NullDate();
 function BeginAddTime() {
-    alert("Not implemented.");
+    addTimeDialog.showModal();
+    document.body.classList.add("stop-scroll");
+    addTimeStart = DateTime.Now();
+    addTimeEnd = DateTime.Now();
+    addTimeDurationDisplay.textContent = "";
 }
-noDetailsMessage.style.display = "none";
-noDateSelectedMessage.style.display = "block";
-addTimeButton.style.display = "none";
+function SubmitAddTime(event) {
+    event.preventDefault();
+    const difference = DateTime.DifferenceInMinutes(addTimeStart, addTimeEnd);
+    console.log(difference);
+    mainData.Add(new Timespan(addTimeStart, addTimeEnd));
+    SaveAndUpdate();
+    CloseAddTime();
+}
+function CloseAddTime() {
+    addTimeDialog.close();
+    document.body.classList.remove("stop-scroll");
+}
+function UpdateAddTimeDuration() {
+    addTimeStart.ChangeHoursMinutesFromTimeInputString(addTimeStartInput.value);
+    addTimeEnd.ChangeHoursMinutesFromTimeInputString(addTimeEndInput.value);
+    if (addTimeStartInput.value != "" && addTimeEndInput.value != "") {
+        const duration = new Timespan(addTimeStart, addTimeEnd).GetMinutes();
+        addTimeDurationDisplay.innerHTML = `Duration: <b class=${duration > 0 ? "" : "invalid-time"}>${DateTime.formatHoursMinutes(duration)}</b>`;
+        if (duration == 0) {
+            addTimeStartInput.setCustomValidity("Start and end time cannot be the same.");
+        }
+        else if (duration < 0) {
+            addTimeStartInput.setCustomValidity("Start time must be before end time.");
+        }
+        else {
+            addTimeStartInput.setCustomValidity("");
+        }
+    }
+}
+addTimeForm.addEventListener("submit", SubmitAddTime);
+addTimeStartInput.addEventListener("change", UpdateAddTimeDuration);
+addTimeEndInput.addEventListener("change", UpdateAddTimeDuration);
+ShowNoDetails();

@@ -1,12 +1,16 @@
 const dayDetailsHeading = document.getElementById("detailed-day-data-heading") as HTMLHeadingElement;
 const noDetailsMessage = document.getElementById("no-details-availible") as HTMLParagraphElement;
 const noDateSelectedMessage = document.getElementById("no-date-selected") as HTMLParagraphElement;
-const addTimeButton = document.getElementById("add-button") as HTMLButtonElement;
 
-const dayDetailsTable = document.getElementById("detailed-day-data") as HTMLTableElement;
+const addTimeButton = document.getElementById("add-button") as HTMLButtonElement;
+const addTimeDialog = document.getElementById("add-time-modal") as HTMLDialogElement;
+const addTimeForm = document.getElementById("add-time-form") as HTMLFormElement;
+const addTimeStartInput = document.getElementById("add-time-input-start") as HTMLInputElement;
+const addTimeEndInput = document.getElementById("add-time-input-end") as HTMLInputElement;
+const addTimeDurationDisplay = document.getElementById("add-time-duration") as HTMLElement;
 
 const dayDetailsBody = document.getElementById("day-details-body") as HTMLTableSectionElement;
-
+const dayDetailsTable = document.getElementById("detailed-day-data") as HTMLTableElement;
 const dayDetailRowTemplate = document.getElementById("day-details-template") as HTMLTemplateElement;
 
 
@@ -17,13 +21,12 @@ function ShowDayDetails(date: number) {
     showingDetailsForDay = date;
     noDateSelectedMessage.style.display = "none";
     addTimeButton.style.display = "inline";
+    dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`
 
     let timespans = mainData.GetAllSpansForDate(currentYear, currentMonth, date);
     if (timespans != null) {
         dayDetailsTable.style.display = "table";
         noDetailsMessage.style.display = "none";
-
-        dayDetailsHeading.textContent = `Details for ${date} ${months[currentMonth]}`
 
         dayDetailsBody.textContent = "";
 
@@ -77,13 +80,21 @@ function ShowDayDetails(date: number) {
 
     } else {
         dayDetailsTable.style.display = "none";
-        dayDetailsHeading.textContent = "";
+        // dayDetailsHeading.textContent = "";
         //show this message, only if there are days you could have clicked on
         if (mainData == null || mainData.timespans == null || mainData.timespans.length <= 0) {
         } else {
             noDetailsMessage.style.display = "block";
         }
     }
+}
+
+function ShowNoDetails() {
+    noDetailsMessage.style.display = "none";
+    noDateSelectedMessage.style.display = "block";
+    addTimeButton.style.display = "none";
+    dayDetailsHeading.textContent = "";
+    showingDetailsForDay = null;
 }
 
 //Start editing the start and end times of a row. This is done by enabling the time inputs
@@ -212,11 +223,63 @@ function EndEdit(index: number) {
     actions.style.display = "block";
 }
 
+//Add time popup
+
+let addTimeStart: DateTime = DateTime.NullDate();
+let addTimeEnd: DateTime = DateTime.NullDate();
+
 function BeginAddTime() {
-    alert("Not implemented.");
+    addTimeDialog.showModal();
+    document.body.classList.add("stop-scroll");
+
+    addTimeStart = DateTime.Now();
+    addTimeEnd = DateTime.Now();
+    addTimeDurationDisplay.textContent = "";
 }
 
+//Stop default form behaviour, get & proccess start and end times, add timespan, save, and close
+function SubmitAddTime(event: SubmitEvent) {
+    event.preventDefault();
+
+    const difference = DateTime.DifferenceInMinutes(addTimeStart, addTimeEnd);
+    console.log(difference);
+
+
+    mainData.Add(new Timespan(addTimeStart, addTimeEnd));
+    SaveAndUpdate();
+
+    CloseAddTime();
+}
+
+function CloseAddTime() {
+    addTimeDialog.close();
+    document.body.classList.remove("stop-scroll");
+}
+
+//Changes the start and end date variables, calculates duration, and displays it
+function UpdateAddTimeDuration() {
+    addTimeStart.ChangeHoursMinutesFromTimeInputString(addTimeStartInput.value);
+    addTimeEnd.ChangeHoursMinutesFromTimeInputString(addTimeEndInput.value);
+
+    //show duration, if both inputs have a time
+    if (addTimeStartInput.value != "" && addTimeEndInput.value != "") {
+        const duration = new Timespan(addTimeStart, addTimeEnd).GetMinutes();
+        addTimeDurationDisplay.innerHTML = `Duration: <b class=${duration > 0 ? "" : "invalid-time"}>${DateTime.formatHoursMinutes(duration)}</b>`;
+
+        if (duration == 0) {
+            addTimeStartInput.setCustomValidity("Start and end time cannot be the same.");
+        } else if (duration < 0) {
+            addTimeStartInput.setCustomValidity("Start time must be before end time.");
+        } else {
+            addTimeStartInput.setCustomValidity("");
+        }
+    }
+}
+
+//Add time popup events
+addTimeForm.addEventListener("submit", SubmitAddTime);
+addTimeStartInput.addEventListener("change", UpdateAddTimeDuration);
+addTimeEndInput.addEventListener("change", UpdateAddTimeDuration);
+
 //Default appearance
-noDetailsMessage.style.display = "none";
-noDateSelectedMessage.style.display = "block";
-addTimeButton.style.display = "none";
+ShowNoDetails();

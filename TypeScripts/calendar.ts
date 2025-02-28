@@ -62,7 +62,10 @@ function renderCalendar(month: number, year: number) {
         const day = document.createElement('div');
         day.className = "calendar-date";
 
-        // Highlight today's date
+        //Set custom data- attribute
+        day.dataset.date = i.toString();
+
+        // Highlight today's date with circle
         if (
             i === today.getDate() &&
             year === today.getFullYear() &&
@@ -79,7 +82,7 @@ function renderCalendar(month: number, year: number) {
         }
 
         let m = minuteTotals[i];
-        if (!isNaN(m) && m > 0)
+        if (!isNaN(m) && m != 0)
             day.innerHTML += `<span class=timespan>${DateTime.formatHoursMinutes(m)}</span>`;
 
 
@@ -97,6 +100,7 @@ prevMonthBtn.addEventListener('click', () => {
         currentYear--;
     }
     renderCalendar(currentMonth, currentYear);
+    ShowNoDetails();
 });
 //Go forward a month
 nextMonthBtn.addEventListener('click', () => {
@@ -106,6 +110,7 @@ nextMonthBtn.addEventListener('click', () => {
         currentYear++;
     }
     renderCalendar(currentMonth, currentYear);
+    ShowNoDetails();
 });
 
 //Click on a date to get info for all logged timespans on that date
@@ -116,34 +121,28 @@ calendarDates.addEventListener('click', (e: any) => {
         return;
     }
 
-    //remove colour indication
+    //Sometimes you click on the timespan or current date circle thingy. This finds the parent calendar-date element;
+    let target = e.target as HTMLElement;
+    while (!target.classList?.contains("calendar-date")) {
+        if (target.parentNode == null) {
+            return;
+        }
+        target = target.parentNode as HTMLElement;
+    }
+
+    //remove colour indicator
     if (previouslySelected != null) {
         previouslySelected.classList.remove("selected-date");
     }
 
-    //Mess because the date is stored in different places
-    let content: string;
-    if (e.target.className == "current-date-circle") {
-        content = e.target.textContent;
-        previouslySelected = e.target.parentNode;
-    }
-    if (e.target.className == "timespan") {
-        const parent = e.target.parentNode;
-        if (parent.className = "current-date") {
-            content = parent.querySelector(".current-date-circle").textContent;
-        } else {
-            content = parent.textContent;
-        }
-        previouslySelected = e.target.parentNode;
-    } else {
-        content = e.target.textContent;
-        previouslySelected = e.target;
-    }
+    //add colour indicator
+    target.classList.add("selected-date");
+    previouslySelected = target;
 
-    previouslySelected.classList.add("selected-date");
-
-    if (content != null) {
-        let date = Number.parseInt(content);
+    //Parse date from HTML data attribute
+    const dateString = target.dataset.date;
+    if (dateString != null) {
+        let date = Number.parseInt(dateString);
         ShowDayDetails(date);
     }
 });
