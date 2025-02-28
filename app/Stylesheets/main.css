@@ -2,6 +2,8 @@ body {
     font-family: 'Lato', sans-serif;
     margin: 0px;
     text-align: center;
+    color: var(--color-on-background);
+    background-color: var(--color-background);
 }
 
 /* Make sure ypu see the javascript message */
@@ -50,14 +52,29 @@ h3 {
     font-family: "DM Serif Text";
 }
 
+h1,
+h2 {
+    color: var(--color-primary);
+}
+
 h1 {
     font-size: 2.1em;
+}
+
+h3 {
+    color: var(--color-secondary);
 }
 
 #main-container {
     display: block;
 }
 
+
+#start-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 #stop-ui {
     display: flex;
@@ -100,6 +117,9 @@ h1 {
     margin: 0px;
 }
 
+.invalid-time {
+    color: var(--color-error);
+}
 
 button {
     cursor: pointer;
@@ -110,6 +130,7 @@ button {
     text-decoration: underline;
     background: none;
     border: none;
+    color: var(--color-text);
 }
 
 #stop-at {
@@ -121,6 +142,7 @@ button {
     background: none;
     border: none;
     outline: none;
+    color: var(--color-text);
 }
 
 .timer-action-button {
@@ -132,11 +154,25 @@ button {
     border-radius: 15px;
     margin-top: 20px;
     transition: 0.5s;
+    background-color: var(--color-tertiary-container);
+    color: var(--color-on-tertiary-container);
 }
 
 .timer-action-button:hover {
     scale: 107%;
     border-radius: 18px;
+}
+
+#start-button {
+    width: 175px;
+}
+
+#add-button {
+    width: 175px;
+    height: 50%;
+    margin-top: 10px;
+    font-size: 1.5em;
+    padding: 5px;
 }
 
 .file-management-button {
@@ -174,12 +210,27 @@ button {
 }
 
 
+#detailed-day-data tr:nth-child(odd) {
+    background-color: var(--color-surface-container-lowest);
+
+}
+
+#detailed-day-data tr:nth-child(even) {
+    background-color: var(--color-surface-container-low);
+}
+
+#detailed-day-data-head {
+    background-color: var(--color-surface-container) ! important;
+}
+
+
 .edit-time-input {
     border: none;
     background: none;
     font-family: 'Roboto', sans-serif;
     font-size: 0.95em;
     max-width: 30vw;
+    color: var(--color-text);
 }
 
 /* The AM/PM indicator clips with the clock icon on chrome sometimes */
@@ -193,6 +244,7 @@ button {
 
 .edit-time-input::-webkit-calendar-picker-indicator {
     padding: 0px;
+    filter: invert(1);
 }
 
 #notes-input {
@@ -204,6 +256,9 @@ button {
     font-family: 'Roboto', sans-serif;
     border-radius: 5px;
     margin-bottom: 25px;
+    background-color: var(--color-surface-container-low);
+    border: 2px var(--color-outline) solid;
+    color: var(--color-text);
 }
 
 .management-button {
@@ -269,6 +324,18 @@ footer {
     font-size: 0.9em;
 }
 
+.subtle-button:hover,
+.link:hover,
+.link:visited:hover {
+    color: var(--color-link-hover);
+}
+
+.link,
+.link:visited {
+    color: var(--color-on-surface-variant);
+}
+
+
 /* Calendar */
 .calendar {
     width: 400px;
@@ -276,6 +343,8 @@ footer {
     margin-left: auto;
     margin-right: auto;
     border-radius: 0 0 10px 10px;
+    background-color: var(--color-surface-container);
+    box-shadow: var(--color-shadow) 4px 3px 4px;
 }
 
 .calendar-header {
@@ -284,6 +353,7 @@ footer {
     align-items: center;
     padding: 10px;
     border-radius: 10px 10px 0 0;
+    background-color: var(--color-surface-container-highest);
 }
 
 .calendar-header button {
@@ -310,6 +380,15 @@ footer {
     padding: 10px;
 }
 
+#prev-month,
+#next-month {
+    color: var(--color-text);
+}
+
+.calendar-weekdays {
+    background-color: var(--color-surface-container-high);
+}
+
 .calendar-weekdays div {
     font-weight: bold;
     font-size: min(6vw, 1em);
@@ -326,6 +405,17 @@ footer {
 .calendar-date:hover {
     font-weight: 700;
     border-radius: 9px;
+    background-color: var(--color-surface-container-highest);
+    color: var(--color-text);
+}
+
+.current-date {
+    background-color: var(--color-primary-container);
+    font-weight: 999;
+}
+
+.current-date:hover {
+    background-color: var(--color-primary-container-hover);
 }
 
 .timespan {
@@ -350,5 +440,16 @@ footer {
     .timer-action-button {
         padding-left: min(20vw, 50px);
         padding-right: min(20vw, 50px);
+    }
+}
+
+/* Change images to fit dark theme */
+@media (prefers-color-scheme: dark) {
+    .management-button {
+        filter: invert(100%);
+    }
+
+    #open-sidebar {
+        filter: invert(100%);
     }
 }
