@@ -192,6 +192,7 @@ button {
     border: none;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.5);
     color: var(--color-text);
+    overflow: hidden;
 }
 
 #add-time-modal h2 {
@@ -523,6 +524,13 @@ footer {
     .timer-action-button {
         padding-left: min(20vw, 50px);
         padding-right: min(20vw, 50px);
+    }
+}
+
+@media (max-width: 175px) {
+    #add-time-modal-buttons {
+        gap: 0px;
+        justify-content: center;
     }
 }
 
