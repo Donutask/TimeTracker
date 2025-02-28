@@ -110,4 +110,8 @@ h3 {
     .management-button {
         filter: invert(100%);
     }
+
+    #open-sidebar {
+        filter: invert(100%);
+    }
 }

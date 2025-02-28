@@ -20,12 +20,24 @@ noscript {
 
 }
 
+#container-for-sidebar-and-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
 #center-column-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
-    min-height: 100vh;
+    /* width: 100%;
+    min-height: 100vh; */
+}
+
+#sidebar {
+    text-align: right;
 }
 
 main {
@@ -204,19 +216,29 @@ button {
 }
 
 .delete-button {
-    background-image: url("/Icons/trash-fill.svg");
+    background-image: url("/app/Icons/trash-fill.svg");
 }
 
 .edit-button {
-    background-image: url("/Icons/pencil-fill.svg");
+    background-image: url("/app/Icons/pencil-fill.svg");
 }
 
 .cancel-edit-button {
-    background-image: url("/Icons/x-circle-fill.svg");
+    background-image: url("/app/Icons/x-circle-fill.svg");
 }
 
 .apply-edit-button {
-    background-image: url("/Icons/check-circle-fill.svg");
+    background-image: url("/app/Icons/check-circle-fill.svg");
+}
+
+#open-sidebar {
+    width: 50px;
+    height: 50px;
+    background: none;
+    border: none;
+    background-size: contain;
+    background-position: center;
+    background-image: url("/app/Icons/sidebar.svg");
 }
 
 .management-button:hover {
@@ -228,6 +250,8 @@ button {
     line-height: 0px;
     font-size: min(1em, 7vw);
 }
+
+
 
 /* Footer */
 footer {
