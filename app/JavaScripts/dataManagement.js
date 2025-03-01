@@ -6,7 +6,7 @@ const startDateStorageKey = "startDate";
 const saveSlotStorageKey = "currentSaveSlot";
 const dataStorageKey = "timeTrackerData";
 function InitialLoad() {
-    LoadSlots();
+    LoadSlotList();
     let loadSlotIndex = 0;
     const storedSlot = localStorage.getItem(saveSlotStorageKey);
     if (storedSlot != null) {
@@ -17,7 +17,7 @@ function InitialLoad() {
     }
     LoadSlot(loadSlotIndex);
 }
-function LoadSlots() {
+function LoadSlotList() {
     let arrayLength = 1;
     if (localStorage.length > 2) {
         arrayLength = localStorage.length - 2;
@@ -51,10 +51,14 @@ function SaveData() {
     const serialised = mainData.Serialize();
     saveSlots[currentSlot] = serialised;
     localStorage.setItem(dataStorageKey + currentSlot, serialised);
+    SaveSelectedSlotIndex();
+}
+function SaveSelectedSlotIndex() {
     localStorage.setItem(saveSlotStorageKey, currentSlot.toString());
 }
 function LoadSlot(slotIndex) {
     currentSlot = slotIndex;
+    SaveSelectedSlotIndex();
     let stringData = saveSlots[slotIndex];
     if (stringData != null) {
         Load(stringData);
@@ -71,13 +75,15 @@ function CreateNewSlot() {
     mainData = new TimeTrackerData("", []);
     currentSlot = saveSlots.length;
     SaveAndUpdate();
-    LoadSlots();
+    LoadSlotList();
     GenerateSidebarList();
 }
 function DeleteCurrentSave() {
     localStorage.removeItem(dataStorageKey + currentSlot);
-    LoadSlots();
+    LoadSlotList();
+    currentSlot = 0;
     LoadSlot(0);
+    SaveSelectedSlotIndex();
     GenerateSidebarList();
 }
 function Load(stringData) {

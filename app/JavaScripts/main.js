@@ -186,7 +186,8 @@ function NoteInputChanged() {
     SaveData();
 }
 function UpdateNotesField() {
-    noteInput.value = mainData.notes;
+    if (mainData != null)
+        noteInput.value = mainData.notes;
 }
 LoadStartDate();
 InitialLoad();

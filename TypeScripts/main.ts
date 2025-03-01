@@ -235,7 +235,8 @@ function NoteInputChanged() {
 }
 
 function UpdateNotesField() {
-    noteInput.value = mainData.notes;
+    if (mainData != null)
+        noteInput.value = mainData.notes;
 }
 
 //When page loads:

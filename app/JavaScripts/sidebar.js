@@ -36,6 +36,10 @@ function CloseSidebar() {
 }
 function GenerateSidebarList() {
     sidebarList.innerHTML = "";
+    saveSlotElements = [];
+    if (saveSlots == null || saveSlots.length <= 0) {
+        return;
+    }
     for (let i = 0; i < saveSlots.length; i++) {
         const slot = saveSlots[i];
         if (slot != null && slot.length > 0) {
@@ -70,7 +74,13 @@ function UpdateSelectedSlotIndicator() {
     let cur = saveSlotElements[currentSlot];
     if (cur != null) {
         cur.classList.add("selected-save-slot");
+        console.log(cur);
     }
     previousSaveSlot = currentSlot;
+}
+function DeleteCurrentSlot() {
+    if (confirm("Are you sure you want to delete the current save slot?")) {
+        DeleteCurrentSave();
+    }
 }
 CloseSidebar();

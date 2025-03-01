@@ -9,7 +9,7 @@ const saveSlotStorageKey = "currentSaveSlot";
 const dataStorageKey = "timeTrackerData";
 
 function InitialLoad() {
-    LoadSlots();
+    LoadSlotList();
 
     let loadSlotIndex = 0;
     const storedSlot = localStorage.getItem(saveSlotStorageKey);
@@ -24,7 +24,7 @@ function InitialLoad() {
 
 //Get all save slots from local storage.
 //Ensures at least 1 valid slot exists.
-function LoadSlots() {
+function LoadSlotList() {
     let arrayLength = 1;
     if (localStorage.length > 2) {
         // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
@@ -67,12 +67,18 @@ function SaveData() {
     const serialised = mainData.Serialize();
     saveSlots[currentSlot] = serialised;
     localStorage.setItem(dataStorageKey + currentSlot, serialised);
+    SaveSelectedSlotIndex();
+}
+
+//Just writes the slot
+function SaveSelectedSlotIndex() {
     localStorage.setItem(saveSlotStorageKey, currentSlot.toString());
 }
 
 //Loads the save slot from local storage, applies, and updates UI.
 function LoadSlot(slotIndex: number) {
     currentSlot = slotIndex;
+    SaveSelectedSlotIndex();
 
     let stringData = saveSlots[slotIndex];
     if (stringData != null) {
@@ -91,15 +97,20 @@ function CreateNewSlot() {
     mainData = new TimeTrackerData("", []);
     currentSlot = saveSlots.length;
     SaveAndUpdate();
-    LoadSlots();
+    LoadSlotList();
     GenerateSidebarList();
 }
 
 //Deletes and loads 0th slot
 function DeleteCurrentSave() {
     localStorage.removeItem(dataStorageKey + currentSlot);
-    LoadSlots();
+    LoadSlotList();
+
+    //this breaks if the 0th save slot just doesn't exist
+    currentSlot = 0;
     LoadSlot(0);
+    SaveSelectedSlotIndex();
+
     GenerateSidebarList();
 }
 
