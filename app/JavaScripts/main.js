@@ -12,10 +12,6 @@ const changeStartedTimeInput = document.getElementById("change-start-time");
 const setStopTimeButton = document.getElementById("stop-at");
 const setStopTimeContainer = document.getElementById("change-stop-time-container");
 const setStopTimeInput = document.getElementById("change-stop-time");
-const slotChooserDropdown = document.getElementById("select-save-slot");
-const slotChooserParent = document.getElementById("save-slot-group");
-const deleteSlotOption = document.getElementById("delete-save-slot");
-const createSlotOption = document.getElementById("create-save-slot");
 const noteInput = document.getElementById("notes-input");
 let currentInterval;
 let stopTime = null;
@@ -185,77 +181,6 @@ function RenameTracker() {
         SaveData();
     }
 }
-function CreateSaveSlotChooserDropdown() {
-    slotChooserParent.textContent = "";
-    for (let i = 0; i < saveSlots.length; i++) {
-        const saveSlot = saveSlots[i];
-        if (saveSlot == null || saveSlot.length <= 0) {
-            continue;
-        }
-        let label = "Slot " + i;
-        try {
-            let parsedJSON = JSON.parse(saveSlot);
-            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-                label = parsedJSON.title;
-            }
-        }
-        catch (error) {
-            console.error(error);
-        }
-        const option = document.createElement("option");
-        option.textContent = label;
-        option.title = label;
-        option.value = i.toString();
-        if (currentSlot == i) {
-            option.selected = true;
-        }
-        slotChooserParent.appendChild(option);
-    }
-    if (saveSlots.length > 0) {
-        deleteSlotOption.disabled = false;
-    }
-    else {
-        deleteSlotOption.disabled = true;
-    }
-}
-function SaveSlotChosen() {
-    const v = slotChooserDropdown.value;
-    if (v == "create") {
-        CreateNewSlot();
-    }
-    else if (v == "delete") {
-        if (saveSlots.length <= 1) {
-            alert("Cannot delete. Must have at least one slot.");
-        }
-        else if (confirm("Delete current save slot?")) {
-            DeleteCurrentSave();
-        }
-        deleteSlotOption.selected = false;
-        createSlotOption.selected = false;
-    }
-    else {
-        const n = Number.parseInt(v);
-        if (!isNaN(n)) {
-            LoadSlot(n);
-        }
-    }
-}
-function UpdateCurrentSlotOption() {
-    const children = slotChooserParent.childNodes;
-    for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        if (child.value == currentSlot.toString()) {
-            child.textContent = "Change";
-            child.selected = true;
-            child.disabled = true;
-        }
-        else {
-            child.textContent = child.title;
-            child.selected = false;
-            child.disabled = false;
-        }
-    }
-}
 function NoteInputChanged() {
     mainData.notes = noteInput.value;
     SaveData();
@@ -265,5 +190,3 @@ function UpdateNotesField() {
 }
 LoadStartDate();
 InitialLoad();
-CreateSaveSlotChooserDropdown();
-UpdateCurrentSlotOption();

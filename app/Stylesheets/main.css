@@ -26,24 +26,102 @@ noscript {
 
 }
 
-#container-for-sidebar-and-center {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    min-height: 100vh;
-}
-
 #center-column-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* width: 100%;
-    min-height: 100vh; */
+    min-height: 100vh;
+    transition: 0.5s;
+}
+
+.main-column-sidebar-offset {
+    margin-left: 150px;
+}
+
+#scrim {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    z-index: 1;
 }
 
 #sidebar {
-    text-align: right;
+    text-align: left;
+    background: var(--color-surface-container);
+    height: 100vh;
+    /* overflow: hidden; */
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 150px;
+    padding-top: 50px;
+    transition: 0.5s;
+    z-index: 2;
+}
+
+#sidebar-list {
+    list-style: none;
+    padding: 0;
+}
+
+.save-slot-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.4em;
+    text-align: left;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    color: var(--color-text);
+}
+
+.save-slot-button:hover {
+    background: var(--color-surface-container-high);
+    text-decoration: underline dotted;
+}
+
+.selected-save-slot button {
+    background: var(--color-surface-container-highest);
+    text-decoration: underline;
+}
+
+#create-slot-button {
+    width: 100%;
+    background: none;
+    color: var(--color-primary);
+    text-align: center;
+    padding: 10px;
+    font-size: 1.4em;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+#create-slot-button:hover {
+    text-decoration: underline dotted;
+    background: var(--color-surface-container-high);
+}
+
+#open-sidebar {
+    width: 45px;
+    height: 45px;
+    background: none;
+    border: none;
+    background-size: contain;
+    background-position: center;
+    background-image: url("../Icons/sidebar.svg");
+    position: fixed;
+    left: 5px;
+    top: 5px;
+    z-index: 3;
 }
 
 main {
@@ -356,15 +434,7 @@ button {
     background-image: url("../Icons/check-circle-fill.svg");
 }
 
-#open-sidebar {
-    width: 50px;
-    height: 50px;
-    background: none;
-    border: none;
-    background-size: contain;
-    background-position: center;
-    background-image: url("../app/Icons/sidebar.svg");
-}
+
 
 .management-button:hover {
     rotate: 15deg;
@@ -381,15 +451,18 @@ button {
 /* Footer */
 footer {
     min-height: 50px;
+    width: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
+    position: fixed;
+    bottom: 0;
+    transition: 0.5s;
 }
 
 .link {
-    padding: 15px;
+    padding: 5px;
     padding-top: 10px;
     font-size: 0.9em;
 }
@@ -538,6 +611,33 @@ footer {
     #add-time-modal-buttons {
         gap: 0px;
         justify-content: center;
+    }
+}
+
+/* Mobile sidebar */
+@media (max-width: 600px) {
+    .main-column-sidebar-offset {
+        margin-left: 0px;
+    }
+
+    #sidebar {
+        width: 200px;
+    }
+
+    #scrim {
+        visibility: visible;
+    }
+
+    .stop-mobile-scroll {
+        overflow: hidden;
+    }
+
+    footer {
+        width: 200px;
+    }
+
+    .save-slot-button {
+        font-size: 1.5em;
     }
 }
 

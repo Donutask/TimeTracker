@@ -32,115 +32,105 @@
 <body>
     <noscript>This page requires JavaScript to work.</noscript>
 
-    <div id="container-for-sidebar-and-center">
-        <!-- Todo: replace save slot dropdown with proper sidebar -->
-        <!-- 
-        <button id="open-sidebar"></button>
-        <div id="sidebar">
-            <ul>
-                <li>Item</li>
-                <li>Item</li>
-                <li>Item</li>
-                <li>Item</li>
-                <li>Item</li>
-                <li>Item</li>
+    <div id="scrim"></div>
 
-            </ul>
-        </div> -->
-        <div id="center-column-container">
-            <header>
-                <button id="rename-title" onclick="RenameTracker()">
-                    <h1 id="title">Time Tracker</h1>
-                </button>
-                <select name="select save slot" id="select-save-slot" oninput="SaveSlotChosen()">
-                    <optgroup label="Save Slots" id="save-slot-group">
-                    </optgroup>
-                    <option id="create-save-slot" value="create">Create</option>
-                    <option id="delete-save-slot" value="delete">Delete</option>
-                </select>
-            </header>
+    <button id="open-sidebar" onclick="ToggleSidebar()" title="Sidebar"></button>
 
-            <main>
-                <div id="main-container">
-                    <div id="start-ui" hidden>
-                        <p id="start-time"></p>
-                        <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
+    <div id="sidebar" style="left: -250px;">
+        <ul id="sidebar-list">
+        </ul>
+        <button id="create-slot-button" onclick="CreateNewSlot()">New</button>
+
+        <footer>
+            <a class="link" href="https://donutask.com">Created by Donutask</a>
+        </footer>
+    </div>
+
+
+    <div id="center-column-container">
+        <header>
+            <button id="rename-title" onclick="RenameTracker()">
+                <h1 id="title">Time Tracker</h1>
+            </button>
+        </header>
+
+        <main>
+            <div id="main-container">
+                <div id="start-ui" hidden>
+                    <p id="start-time"></p>
+                    <button id="start-button" onclick="StartTimer()" class="timer-action-button">Start</button>
+                </div>
+                <div id="stop-ui" hidden>
+                    <p id="elapsed-time-label">Elapsed Time:</p>
+                    <p id="elapsed-time"></p>
+                    <div id="started-time-container" hidden="false">
+                        <p id="started-time"></p>
+                        <button class="subtle-button" id="change-start-time-button"
+                            onclick="BeginChangeStartedTime()">Change</button>
                     </div>
-                    <div id="stop-ui" hidden>
-                        <p id="elapsed-time-label">Elapsed Time:</p>
-                        <p id="elapsed-time"></p>
-                        <div id="started-time-container" hidden="false">
-                            <p id="started-time"></p>
-                            <button class="subtle-button" id="change-start-time-button"
-                                onclick="BeginChangeStartedTime()">Change</button>
-                        </div>
-                        <div id="change-start-time-container" hidden>
-                            <label>Change Start Time: <input id="change-start-time" type="time"></label>
-                            <input type="submit" onclick="SubmitStartTimeChange()">
-                            <button onclick="CancelStartTimeChange()">Cancel</button>
-                        </div>
-                        <button onclick="StopTimer()" class="timer-action-button">Stop</button>
-                        <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
-                        <div id="change-stop-time-container" hidden>
-                            <label>Choose Stop Time: <input id="change-stop-time" type="time"
-                                    oninput="StopTimeChanged()"></label>
-                            <button onclick="CancelSetStopTime()">Cancel</button>
-                        </div>
+                    <div id="change-start-time-container" hidden>
+                        <label>Change Start Time: <input id="change-start-time" type="time"></label>
+                        <input type="submit" onclick="SubmitStartTimeChange()">
+                        <button onclick="CancelStartTimeChange()">Cancel</button>
+                    </div>
+                    <button onclick="StopTimer()" class="timer-action-button">Stop</button>
+                    <button id="stop-at" class="subtle-button" onclick="BeginSetStopTime()">Stop At</button>
+                    <div id="change-stop-time-container" hidden>
+                        <label>Choose Stop Time: <input id="change-stop-time" type="time"
+                                oninput="StopTimeChanged()"></label>
+                        <button onclick="CancelSetStopTime()">Cancel</button>
                     </div>
                 </div>
+            </div>
 
-                <h2 id="data-heading">Data</h2>
-                <p id="month-total"></p>
-                <div id="calendar" class="calendar">
-                    <div class="calendar-header">
-                        <button id="prev-month">‹</button>
-                        <div id="month-year"></div>
-                        <button id="next-month">›</button>
+            <h2 id="data-heading">Data</h2>
+            <p id="month-total"></p>
+            <div id="calendar" class="calendar">
+                <div class="calendar-header">
+                    <button id="prev-month">‹</button>
+                    <div id="month-year"></div>
+                    <button id="next-month">›</button>
+                </div>
+                <div class="calendar-body">
+                    <div class="calendar-weekdays">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
                     </div>
-                    <div class="calendar-body">
-                        <div class="calendar-weekdays">
-                            <div>Sun</div>
-                            <div>Mon</div>
-                            <div>Tue</div>
-                            <div>Wed</div>
-                            <div>Thu</div>
-                            <div>Fri</div>
-                            <div>Sat</div>
-                        </div>
-                        <div id="calendar-dates">
-                            <!-- Dates will be populated here -->
-                        </div>
+                    <div id="calendar-dates">
+                        <!-- Dates will be populated here -->
                     </div>
                 </div>
-                <div id="detailed-day-data-container">
-                    <p id="no-date-selected">Click a day to view details.</p>
-                    <h3 id="detailed-day-data-heading"></h3>
-                    <p id="no-details-availible">No data for this day.</p>
-                    <table id="detailed-day-data">
-                        <thead>
-                            <tr id="detailed-day-data-head">
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Duration</th>
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                        <tbody id="day-details-body">
-                            <!-- Day details generated by code -->
-                        </tbody>
-                    </table>
-                    <button id="add-button" onclick="BeginAddTime()" class="timer-action-button">Add Time</button>
-                </div>
-                <label for="notes-input">
-                    <h2>Notes</h2>
-                </label>
-                <textarea id="notes-input" onchange="NoteInputChanged()"></textarea>
+            </div>
+            <div id="detailed-day-data-container">
+                <p id="no-date-selected">Click a day to view details.</p>
+                <h3 id="detailed-day-data-heading"></h3>
+                <p id="no-details-availible">No data for this day.</p>
+                <table id="detailed-day-data">
+                    <thead>
+                        <tr id="detailed-day-data-head">
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Duration</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="day-details-body">
+                        <!-- Day details generated by code -->
+                    </tbody>
+                </table>
+                <button id="add-button" onclick="BeginAddTime()" class="timer-action-button">Add Time</button>
+            </div>
+            <label for="notes-input">
+                <h2>Notes</h2>
+            </label>
+            <textarea id="notes-input" onchange="NoteInputChanged()"></textarea>
 
-            </main>
-            <footer>
-                <a class="link" href="https://donutask.com">Created by Donutask</a>
-            </footer>
-        </div>
+        </main>
     </div>
 
     <!-- Modal that allows you to enter custom time -->
@@ -189,6 +179,7 @@
     <script src="JavaScripts/dataManagement.js"></script>
     <script src="JavaScripts/calendar.js"></script>
     <script src="JavaScripts/dayDetailsTable.js"></script>
+    <script src="JavaScripts/sidebar.js"></script>
     <script src="JavaScripts/main.js"></script>
     <script src="JavaScripts/debug.js"></script>
 </body>

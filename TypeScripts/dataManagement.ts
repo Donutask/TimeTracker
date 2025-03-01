@@ -79,8 +79,8 @@ function LoadSlot(slotIndex: number) {
         Load(stringData);
         UpdateCalendarAndDetails();
         ShowCorrectUI();
-        UpdateCurrentSlotOption();
         UpdateNotesField();
+        UpdateSelectedSlotIndicator();
     } else {
         console.error("No data for slot " + slotIndex);
     }
@@ -92,9 +92,7 @@ function CreateNewSlot() {
     currentSlot = saveSlots.length;
     SaveAndUpdate();
     LoadSlots();
-    CreateSaveSlotChooserDropdown();
-
-    console.log("Made slot");
+    GenerateSidebarList();
 }
 
 //Deletes and loads 0th slot
@@ -102,7 +100,7 @@ function DeleteCurrentSave() {
     localStorage.removeItem(dataStorageKey + currentSlot);
     LoadSlots();
     LoadSlot(0);
-    CreateSaveSlotChooserDropdown();
+    GenerateSidebarList();
 }
 
 //Deserailises data

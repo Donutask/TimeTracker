@@ -60,8 +60,8 @@ function LoadSlot(slotIndex) {
         Load(stringData);
         UpdateCalendarAndDetails();
         ShowCorrectUI();
-        UpdateCurrentSlotOption();
         UpdateNotesField();
+        UpdateSelectedSlotIndicator();
     }
     else {
         console.error("No data for slot " + slotIndex);
@@ -72,14 +72,13 @@ function CreateNewSlot() {
     currentSlot = saveSlots.length;
     SaveAndUpdate();
     LoadSlots();
-    CreateSaveSlotChooserDropdown();
-    console.log("Made slot");
+    GenerateSidebarList();
 }
 function DeleteCurrentSave() {
     localStorage.removeItem(dataStorageKey + currentSlot);
     LoadSlots();
     LoadSlot(0);
-    CreateSaveSlotChooserDropdown();
+    GenerateSidebarList();
 }
 function Load(stringData) {
     if (stringData != null && stringData.length > 0) {

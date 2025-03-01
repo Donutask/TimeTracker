@@ -16,11 +16,6 @@ const setStopTimeButton = document.getElementById("stop-at") as HTMLElement;
 const setStopTimeContainer = document.getElementById("change-stop-time-container") as HTMLElement;
 const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-time") as HTMLInputElement;
 
-const slotChooserDropdown = document.getElementById("select-save-slot") as HTMLSelectElement;
-const slotChooserParent = document.getElementById("save-slot-group") as HTMLElement;
-const deleteSlotOption = document.getElementById("delete-save-slot") as HTMLOptionElement;
-const createSlotOption = document.getElementById("create-save-slot") as HTMLOptionElement;
-
 const noteInput = document.getElementById("notes-input") as HTMLTextAreaElement;
 
 let currentInterval: number;
@@ -234,91 +229,6 @@ function RenameTracker() {
     }
 }
 
-//Resets and makes select options for dropdown to choose which save slot to use.
-function CreateSaveSlotChooserDropdown() {
-    slotChooserParent.textContent = "";
-
-    for (let i = 0; i < saveSlots.length; i++) {
-        const saveSlot = saveSlots[i];
-        if (saveSlot == null || saveSlot.length <= 0) {
-            continue;
-        }
-
-        let label = "Slot " + i;
-        //Custom name by reading JSON title property, if it exists
-        try {
-            let parsedJSON = JSON.parse(saveSlot);
-            if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-                label = parsedJSON.title;
-            }
-        } catch (error) {
-            console.error(error);
-        }
-
-        //Create HTML element
-        const option = document.createElement("option") as HTMLOptionElement;
-        option.textContent = label;
-        option.title = label;
-        option.value = i.toString();
-
-        if (currentSlot == i) {
-            option.selected = true;
-        }
-        slotChooserParent.appendChild(option);
-    }
-
-    //Can only delete if you have more than 1 slot
-    if (saveSlots.length > 0) {
-        deleteSlotOption.disabled = false;
-    } else {
-        deleteSlotOption.disabled = true;
-    }
-}
-
-function SaveSlotChosen() {
-    const v = slotChooserDropdown.value;
-
-    if (v == "create") {
-        CreateNewSlot();
-    }
-    //Delete after confirmation
-    else if (v == "delete") {
-        if (saveSlots.length <= 1) {
-            alert("Cannot delete. Must have at least one slot.");
-        } else if (confirm("Delete current save slot?")) {
-            DeleteCurrentSave();
-        }
-        //putting the delete option in a drop down was kinda silly
-        deleteSlotOption.selected = false;
-        createSlotOption.selected = false;
-    }
-    //Load selected slot index
-    else {
-        const n = Number.parseInt(v);
-        if (!isNaN(n)) {
-            LoadSlot(n);
-        }
-    }
-}
-
-//Show the option to select the currently selected save slot as "Change", to avoid duplicating the title in the dropdown
-function UpdateCurrentSlotOption() {
-    const children = slotChooserParent.childNodes;
-    for (let i = 0; i < children.length; i++) {
-        const child = children[i] as HTMLOptionElement;
-
-        if (child.value == currentSlot.toString()) {
-            child.textContent = "Change";
-            child.selected = true;
-            child.disabled = true;
-        } else {
-            child.textContent = child.title;
-            child.selected = false;
-            child.disabled = false;
-        }
-    }
-}
-
 function NoteInputChanged() {
     mainData.notes = noteInput.value;
     SaveData();
@@ -331,5 +241,3 @@ function UpdateNotesField() {
 //When page loads:
 LoadStartDate();
 InitialLoad();
-CreateSaveSlotChooserDropdown();
-UpdateCurrentSlotOption();
