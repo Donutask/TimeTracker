@@ -56,7 +56,6 @@ noscript {
     text-align: left;
     background: var(--color-surface-container);
     height: 100vh;
-    /* overflow: hidden; */
     position: fixed;
     left: 0;
     right: 0;
@@ -113,15 +112,22 @@ noscript {
 #open-sidebar {
     width: 45px;
     height: 45px;
-    background: none;
-    border: none;
-    background-size: contain;
-    background-position: center;
-    background-image: url("../Icons/sidebar.svg");
+    padding: 5px;
     position: fixed;
     left: 5px;
     top: 5px;
     z-index: 3;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-surface-container);
+    background-size: contain;
+    background-position: center;
+    background-image: url("../Icons/menu-black.svg");
+}
+
+#open-sidebar:hover {
+    background-color: var(--color-surface-container-high);
+    border-radius: 7px;
 }
 
 main {
@@ -648,6 +654,6 @@ footer {
     }
 
     #open-sidebar {
-        filter: invert(100%);
+        background-image: url("../Icons/menu-white.svg");
     }
 }
