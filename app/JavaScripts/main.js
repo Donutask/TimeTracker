@@ -100,17 +100,17 @@ function StopTimer() {
         }
         else {
             endDate = stopTime;
-            if (DateTime.DifferenceInMinutes(startDate, endDate) < 0) {
-                alert("Error: End time is before start time.");
-                return;
-            }
-            if (DateTime.DifferenceInMinutes(startDate, endDate) >= (24 * 60)) {
-                if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
-                    return;
-                }
-            }
         }
         let elapsedMinutes = DateTime.DifferenceInMinutes(startDate, endDate);
+        if (elapsedMinutes < 0) {
+            alert("Error: End time is before start time.");
+            return;
+        }
+        else if (elapsedMinutes >= (24 * 60)) {
+            if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
+                return;
+            }
+        }
         if (Math.round(elapsedMinutes) >= 1) {
             if (mainData == null) {
                 mainData = new TimeTrackerData("", []);
@@ -139,13 +139,14 @@ function LoadStartDate() {
 function BeginChangeStartedTime() {
     BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
 }
-function SubmitStartTimeChange() {
+function SubmitStartTimeChange(e) {
+    e.preventDefault();
     startDate.ChangeHoursMinutesFromTimeInputString(changeStartedTimeInput.value);
     localStorage.setItem("startDate", startDate.ToString());
     ShowCorrectUI();
-    CancelStartTimeChange();
+    CloseStartTimeChange();
 }
-function CancelStartTimeChange() {
+function CloseStartTimeChange() {
     startedTimeContainer.style.display = "block";
     changeStartedTimeContainer.style.display = "none";
 }
@@ -196,5 +197,6 @@ function UpdateNotesField() {
     if (mainData != null)
         noteInput.value = mainData.notes;
 }
+changeStartedTimeContainer.addEventListener("submit", SubmitStartTimeChange);
 LoadStartDate();
 InitialLoad();

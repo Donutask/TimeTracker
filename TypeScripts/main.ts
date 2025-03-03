@@ -11,7 +11,7 @@ const startedTime = document.getElementById("started-time") as HTMLElement;
 const dataErrorUI = document.getElementById("null-data-ui") as HTMLElement;
 
 const startedTimeContainer = document.getElementById("started-time-container") as HTMLElement;
-const changeStartedTimeContainer = document.getElementById("change-start-time-container") as HTMLElement;
+const changeStartedTimeContainer = document.getElementById("change-start-time-container") as HTMLFormElement;
 const changeStartedTimeInput: HTMLInputElement = document.getElementById("change-start-time") as HTMLInputElement;
 
 const setStopTimeButton = document.getElementById("stop-at") as HTMLElement;
@@ -126,20 +126,22 @@ function StopTimer() {
             endDate = now;
         } else {
             endDate = stopTime;
+        }
 
-            if (DateTime.DifferenceInMinutes(startDate, endDate) < 0) {
-                alert("Error: End time is before start time.");
+        let elapsedMinutes = DateTime.DifferenceInMinutes(startDate, endDate);
+
+        //Time must have actually passed
+        if (elapsedMinutes < 0) {
+            alert("Error: End time is before start time.");
+            return;
+        }
+        //Ask for confirmation if longer than day
+        else if (elapsedMinutes >= (24 * 60)) {
+            if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
                 return;
-            }
-            if (DateTime.DifferenceInMinutes(startDate, endDate) >= (24 * 60)) {
-                if (!confirm("Elapsed time is greater than 24 hours, continue?")) {
-                    return;
-                }
             }
         }
 
-        //Time must have actually passed
-        let elapsedMinutes = DateTime.DifferenceInMinutes(startDate, endDate);
         if (Math.round(elapsedMinutes) >= 1) {
             //ensure it exists
             if (mainData == null) {
@@ -178,17 +180,19 @@ function BeginChangeStartedTime() {
 }
 
 //Apply the change to start time.
-function SubmitStartTimeChange() {
+function SubmitStartTimeChange(e: SubmitEvent) {
+    e.preventDefault();
+
     startDate.ChangeHoursMinutesFromTimeInputString(changeStartedTimeInput.value);
     localStorage.setItem("startDate", startDate.ToString());
 
     ShowCorrectUI();
 
-    CancelStartTimeChange();
+    CloseStartTimeChange();
 }
 
 //End start time change without applying anything
-function CancelStartTimeChange() {
+function CloseStartTimeChange() {
     startedTimeContainer.style.display = "block";
     changeStartedTimeContainer.style.display = "none";
 }
@@ -251,5 +255,6 @@ function UpdateNotesField() {
 }
 
 //When page loads:
+changeStartedTimeContainer.addEventListener("submit", SubmitStartTimeChange);
 LoadStartDate();
 InitialLoad();

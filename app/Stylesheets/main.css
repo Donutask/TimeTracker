@@ -181,21 +181,11 @@ h3 {
     align-items: center;
 }
 
-#start-time {
-    font-size: 3em;
+#start-time,
+#elapsed-time {
+    font-size: min(3em, 15vw);
     line-height: 0px;
     margin: 40px;
-}
-
-#elapsed-time-label {
-    line-height: 0px;
-    opacity: 90%;
-    margin-bottom: 0px;
-}
-
-#elapsed-time {
-    line-height: 0px;
-    font-size: min(3em, 15vw);
 }
 
 #started-time-container {
