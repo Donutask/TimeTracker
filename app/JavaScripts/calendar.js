@@ -16,7 +16,7 @@ function renderCalendar(month, year) {
     }
     calendarDates.textContent = '';
     monthYear.textContent = `${months[month]} ${year}`;
-    const firstDay = new Date(year, month, 1).getDay();
+    const firstDay = new Date(year, month, 1).getDay() - 1;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     for (let i = 0; i < firstDay; i++) {
         const blank = document.createElement('div');

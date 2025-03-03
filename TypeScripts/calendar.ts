@@ -23,7 +23,7 @@ function renderCalendar(month: number, year: number) {
     monthYear.textContent = `${months[month]} ${year}`;
 
     // Get the first day of the month
-    const firstDay = new Date(year, month, 1).getDay();
+    const firstDay = new Date(year, month, 1).getDay() - 1;
 
     // Get the number of days in the month
     const daysInMonth = new Date(year, month + 1, 0).getDate();
