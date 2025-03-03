@@ -4,6 +4,7 @@ body {
     text-align: center;
     color: var(--color-on-background);
     background-color: var(--color-background);
+    --sidebar-width: 150px;
 }
 
 .stop-scroll {
@@ -59,7 +60,7 @@ noscript {
     position: fixed;
     left: 0;
     top: 0;
-    width: 150px;
+    width: var(--sidebar-width);
     transition: 0.5s;
     z-index: 2;
 }
@@ -126,7 +127,7 @@ noscript {
     width: 45px;
     height: 45px;
     padding: 5px;
-    position: fixed;
+    position: absolute;
     left: 5px;
     top: 5px;
     z-index: 3;
@@ -145,10 +146,11 @@ noscript {
 
 #slot-actions {
     height: 50px;
-    width: 150px;
+    width: var(--sidebar-width);
     position: fixed;
     bottom: 50px;
     text-align: center;
+    transition: 0.5s;
 }
 
 #slot-actions h3 {
@@ -159,7 +161,7 @@ noscript {
 /* Footer */
 footer {
     min-height: 50px;
-    width: 150px;
+    width: var(--sidebar-width);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -203,6 +205,7 @@ h2 {
 
 h1 {
     font-size: 2.1em;
+    margin: 10px;
 }
 
 h3 {
@@ -639,12 +642,12 @@ button {
 
 /* Mobile sidebar */
 @media (max-width: 600px) {
-    .main-column-sidebar-offset {
-        margin-left: 0px;
+    body {
+        --sidebar-width: 200px;
     }
 
-    #sidebar {
-        width: 200px;
+    .main-column-sidebar-offset {
+        margin-left: 0px;
     }
 
     #scrim {
@@ -653,10 +656,6 @@ button {
 
     .stop-mobile-scroll {
         overflow: hidden;
-    }
-
-    footer {
-        width: 200px;
     }
 
     .save-slot-button {

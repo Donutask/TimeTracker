@@ -23,6 +23,7 @@ function OpenSidebar() {
     }
     sidebarElement.style.left = "0px";
     mainColumn.classList.add("main-column-sidebar-offset");
+    sidebarButton.style.position = "fixed";
     document.body.classList.add("stop-mobile-scroll");
     scrimElement.hidden = false;
     isSidebarOpen = true;
@@ -30,6 +31,7 @@ function OpenSidebar() {
 function CloseSidebar() {
     sidebarElement.style.left = "-200px";
     mainColumn.classList.remove("main-column-sidebar-offset");
+    sidebarButton.style.position = "absolute";
     document.body.classList.remove("stop-mobile-scroll");
     scrimElement.hidden = true;
     isSidebarOpen = false;
