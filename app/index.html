@@ -37,16 +37,23 @@
     <button id="open-sidebar" onclick="ToggleSidebar()" title="Sidebar"></button>
 
     <div id="sidebar" style="left: -250px;">
-        <ul id="sidebar-list">
-        </ul>
-        <button id="create-slot-button" onclick="CreateNewSlot()">New</button>
-        <button id="delete-slot-button" onclick="DeleteCurrentSlot()">Delete</button>
+        <div id="sidebar-scrollable-area">
+            <ul id="sidebar-list">
+            </ul>
+            <button id="create-slot-button" onclick="CreateNewSlot()">New</button>
+            <button id="delete-slot-button" onclick="DeleteCurrentSlot()">Delete</button>
+        </div>
 
         <footer>
             <a class="link" href="https://donutask.com">Created by Donutask</a>
         </footer>
     </div>
 
+
+    <div id="null-data-ui">
+        <p>No data.</p>
+        <button onclick="CreateNewSlot()" class="timer-action-button">Create New</button>
+    </div>
 
     <div id="center-column-container">
         <header>
@@ -177,6 +184,7 @@
     <script src="JavaScripts/dateTime.js"></script>
     <script src="JavaScripts/timespan.js"></script>
     <script src="JavaScripts/timeTrackerData.js"></script>
+    <script src="JavaScripts/saveSlot.js"></script>
     <script src="JavaScripts/dataManagement.js"></script>
     <script src="JavaScripts/calendar.js"></script>
     <script src="JavaScripts/dayDetailsTable.js"></script>

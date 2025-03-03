@@ -8,6 +8,8 @@ const stopUI = document.getElementById("stop-ui") as HTMLElement;
 const elapsedTime = document.getElementById("elapsed-time") as HTMLElement;
 const startedTime = document.getElementById("started-time") as HTMLElement;
 
+const dataErrorUI = document.getElementById("null-data-ui") as HTMLElement;
+
 const startedTimeContainer = document.getElementById("started-time-container") as HTMLElement;
 const changeStartedTimeContainer = document.getElementById("change-start-time-container") as HTMLElement;
 const changeStartedTimeInput: HTMLInputElement = document.getElementById("change-start-time") as HTMLInputElement;
@@ -71,6 +73,9 @@ function ElapsedTimeDisplay() {
 function ShowCorrectUI() {
     ShowTitle();
 
+    dataErrorUI.style.display = "none";
+    mainColumn.style.display = "flex";
+
     if (DateTime.IsNull(startDate)) {
         //Start
         startUI.style.display = "flex";
@@ -84,6 +89,12 @@ function ShowCorrectUI() {
 
         UpdateStopUI();
     }
+}
+
+//if there is an error loading data, this screen will allow a new save slot to be created
+function ShowNullDataUI() {
+    mainColumn.style.display = "none";
+    dataErrorUI.style.display = "block";
 }
 
 function ShowTitle() {

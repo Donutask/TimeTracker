@@ -15,42 +15,33 @@ function InitialLoad() {
             loadSlotIndex = storedSlotNumber;
         }
     }
+    if (loadSlotIndex >= saveSlots.length) {
+        loadSlotIndex = saveSlots.length - 1;
+    }
     LoadSlot(loadSlotIndex);
 }
 function LoadSlotList() {
-    let arrayLength = 1;
-    if (localStorage.length > 2) {
-        arrayLength = localStorage.length - 2;
-    }
-    saveSlots = new Array(arrayLength);
-    const noSuffix = localStorage.getItem(dataStorageKey);
-    if (noSuffix != null) {
-        saveSlots[0] = noSuffix;
-        localStorage.setItem(dataStorageKey + "0", noSuffix);
-        localStorage.removeItem(dataStorageKey);
-    }
-    let validSaveSlots = 0;
+    saveSlots = [];
     for (let i = 0; i < localStorage.length; i++) {
-        const item = localStorage.getItem(dataStorageKey + i);
-        if (item != null && item.length > 1) {
-            saveSlots[i] = item;
-            validSaveSlots++;
-        }
-        else {
-            saveSlots[i] = "";
-        }
+        const key = localStorage.key(i);
+        if (key == null)
+            continue;
+        if (!key.startsWith(dataStorageKey))
+            continue;
+        saveSlots.push(new SaveSlot(key));
     }
-    if (validSaveSlots <= 0) {
-        mainData = new TimeTrackerData("", []);
-        saveSlots[0] = mainData.Serialize();
-        currentSlot = 0;
-        SaveData();
+    if (saveSlots.length <= 0) {
+        let firstSlot = new SaveSlot(dataStorageKey + "0");
+        firstSlot.SaveData(new TimeTrackerData("", []));
+        saveSlots.push(firstSlot);
     }
 }
 function SaveData() {
-    const serialised = mainData.Serialize();
-    saveSlots[currentSlot] = serialised;
-    localStorage.setItem(dataStorageKey + currentSlot, serialised);
+    if (currentSlot < 0 || currentSlot >= saveSlots.length) {
+        console.error("Cannot save, slot index out of bounds!");
+        return;
+    }
+    saveSlots[currentSlot].SaveData(mainData);
     SaveSelectedSlotIndex();
 }
 function SaveSelectedSlotIndex() {
@@ -59,32 +50,48 @@ function SaveSelectedSlotIndex() {
 function LoadSlot(slotIndex) {
     currentSlot = slotIndex;
     SaveSelectedSlotIndex();
-    let stringData = saveSlots[slotIndex];
-    if (stringData != null) {
-        Load(stringData);
+    let saveSlot = saveSlots[slotIndex];
+    let dataToLoad = null;
+    if (saveSlot != null) {
+        const saveSlotData = saveSlot.GetData();
+        if (saveSlotData != null) {
+            dataToLoad = saveSlotData;
+        }
+    }
+    if (dataToLoad == null) {
+        console.error("Null data");
+        mainData = new TimeTrackerData("", []);
+        ShowNullDataUI();
+    }
+    else {
+        mainData = dataToLoad;
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateNotesField();
-        UpdateSelectedSlotIndicator();
     }
-    else {
-        console.error("No data for slot " + slotIndex);
-    }
+    UpdateSelectedSlotIndicator();
 }
 function CreateNewSlot() {
-    mainData = new TimeTrackerData("", []);
-    currentSlot = saveSlots.length;
-    SaveAndUpdate();
-    LoadSlotList();
+    let keyIndex = saveSlots.length;
+    let keyName = dataStorageKey + keyIndex;
+    while (localStorage.getItem(keyName) != null) {
+        keyIndex++;
+        keyName = dataStorageKey + keyIndex;
+    }
+    let newSlot = new SaveSlot(keyName);
+    newSlot.SaveData(new TimeTrackerData("", []));
+    saveSlots.push(newSlot);
+    currentSlot = saveSlots.length - 1;
+    ShowCorrectUI();
+    UpdateCalendarAndDetails();
+    UpdateNotesField();
     GenerateSidebarList();
 }
 function DeleteCurrentSave() {
+    saveSlots.splice(currentSlot, 1);
     localStorage.removeItem(dataStorageKey + currentSlot);
-    LoadSlotList();
-    currentSlot = 0;
-    LoadSlot(0);
-    SaveSelectedSlotIndex();
     GenerateSidebarList();
+    LoadSlot(currentSlot - 1);
 }
 function Load(stringData) {
     if (stringData != null && stringData.length > 0) {
@@ -126,12 +133,8 @@ function Import() {
     let text = prompt("Paste Exported Data");
     if (text != null && text.length > 0) {
         Load(text);
-        SaveAndUpdate();
+        ShowCorrectUI();
+        UpdateCalendarAndDetails();
         alert("Success!");
     }
-}
-function SaveAndUpdate() {
-    SaveData();
-    ShowCorrectUI();
-    UpdateCalendarAndDetails();
 }

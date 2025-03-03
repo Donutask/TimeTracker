@@ -53,17 +53,12 @@ function GenerateSidebarList() {
     }
     for (let i = 0; i < saveSlots.length; i++) {
         const slot = saveSlots[i];
-        if (slot != null && slot.length > 0) {
+        if (slot != null) {
             //Try to get the title from the save data
             let label = "Slot " + i;
-
-            try {
-                let parsedJSON = JSON.parse(slot);
-                if (parsedJSON.title != null && parsedJSON.title.length > 0) {
-                    label = parsedJSON.title;
-                }
-            } catch (error) {
-                console.error(error);
+            const slotTitle = slot.GetTitle();
+            if (slotTitle != null && slotTitle.length > 0) {
+                label = slotTitle;
             }
 
             //Add button to the list
@@ -92,7 +87,6 @@ function UpdateSelectedSlotIndicator() {
     let cur = saveSlotElements[currentSlot];
     if (cur != null) {
         cur.classList.add("selected-save-slot");
-        console.log(cur);
     }
 
     previousSaveSlot = currentSlot;

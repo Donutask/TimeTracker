@@ -189,7 +189,8 @@ function BeginAddTime() {
 function SubmitAddTime(event) {
     event.preventDefault();
     mainData.Add(new Timespan(addTimeStart, addTimeEnd));
-    SaveAndUpdate();
+    SaveData();
+    UpdateCalendarAndDetails();
     CloseAddTime();
 }
 function CloseAddTime() {

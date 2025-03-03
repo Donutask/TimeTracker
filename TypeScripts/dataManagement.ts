@@ -2,7 +2,7 @@
 var mainData: TimeTrackerData;
 let currentSlot: number = 0;
 
-let saveSlots: string[] = [];
+let saveSlots: SaveSlot[] = [];
 
 const startDateStorageKey = "startDate"; //todo: change so that each slot stores different start date
 const saveSlotStorageKey = "currentSaveSlot";
@@ -19,54 +19,45 @@ function InitialLoad() {
             loadSlotIndex = storedSlotNumber;
         }
     }
+    //Make sure it actually loads one of the slots
+    if (loadSlotIndex >= saveSlots.length) {
+        loadSlotIndex = saveSlots.length - 1;
+    }
+
     LoadSlot(loadSlotIndex);
 }
 
-//Get all save slots from local storage.
-//Ensures at least 1 valid slot exists.
+//New algorithm gets all local storage keys and filters to find ones that could be valid save slots.
 function LoadSlotList() {
-    let arrayLength = 1;
-    if (localStorage.length > 2) {
-        // Array index for each slot. The startDate and slot number is seperate storage entry, so subtract 2
-        arrayLength = localStorage.length - 2;
-    }
-    saveSlots = new Array(arrayLength);
+    saveSlots = [];
 
-    //Legacy behaviour (they had no numbers before)
-    const noSuffix = localStorage.getItem(dataStorageKey);
-    if (noSuffix != null) {
-        saveSlots[0] = noSuffix;
-        localStorage.setItem(dataStorageKey + "0", noSuffix);
-        localStorage.removeItem(dataStorageKey);
-    }
-
-    let validSaveSlots = 0;
-    //if item with key exists, add save slot
+    //Get all keys from localStroage
     for (let i = 0; i < localStorage.length; i++) {
-        const item = localStorage.getItem(dataStorageKey + i);
+        const key = localStorage.key(i);
 
-        if (item != null && item.length > 1) {
-            saveSlots[i] = item;
-            validSaveSlots++;
-        } else {
-            saveSlots[i] = "";
-        }
+        //Must exist and be a valid data storage key
+        if (key == null) continue;
+        if (!key.startsWith(dataStorageKey)) continue;
+
+        //Simply add key to list. The class handles the rest
+        saveSlots.push(new SaveSlot(key));
     }
 
-    //Ensure a slot exists by creating empty data if null
-    if (validSaveSlots <= 0) {
-        mainData = new TimeTrackerData("", []);
-        saveSlots[0] = mainData.Serialize();
-        currentSlot = 0;
-        SaveData();
+    //Ensure there is always one slot
+    if (saveSlots.length <= 0) {
+        let firstSlot = new SaveSlot(dataStorageKey + "0");
+        firstSlot.SaveData(new TimeTrackerData("", []));
+        saveSlots.push(firstSlot);
     }
 }
 
 //Serialises data, writes to save slot array and to local storage. Also writes current slot index to local storage.
 function SaveData() {
-    const serialised = mainData.Serialize();
-    saveSlots[currentSlot] = serialised;
-    localStorage.setItem(dataStorageKey + currentSlot, serialised);
+    if (currentSlot < 0 || currentSlot >= saveSlots.length) {
+        console.error("Cannot save, slot index out of bounds!");
+        return;
+    }
+    saveSlots[currentSlot].SaveData(mainData);
     SaveSelectedSlotIndex();
 }
 
@@ -80,38 +71,66 @@ function LoadSlot(slotIndex: number) {
     currentSlot = slotIndex;
     SaveSelectedSlotIndex();
 
-    let stringData = saveSlots[slotIndex];
-    if (stringData != null) {
-        Load(stringData);
+    //Get data from the save slot
+    let saveSlot = saveSlots[slotIndex];
+
+    let dataToLoad: TimeTrackerData | null = null; //data will default to null, then be replaced if exists.
+    if (saveSlot != null) {
+        const saveSlotData = saveSlot.GetData();
+        if (saveSlotData != null) {
+            dataToLoad = saveSlotData;
+        }
+    }
+
+    if (dataToLoad == null) {
+        console.error("Null data");
+        mainData = new TimeTrackerData("", []); //data will default to null, then be replaced if exists.
+
+        ShowNullDataUI();
+    } else {
+        mainData = dataToLoad;
+        //Update everything
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateNotesField();
-        UpdateSelectedSlotIndicator();
-    } else {
-        console.error("No data for slot " + slotIndex);
     }
+
+    UpdateSelectedSlotIndicator();
 }
 
 //Creates empty save slot and updates UI
 function CreateNewSlot() {
-    mainData = new TimeTrackerData("", []);
-    currentSlot = saveSlots.length;
-    SaveAndUpdate();
-    LoadSlotList();
+    //Ensure unique key name
+    let keyIndex = saveSlots.length;
+    let keyName = dataStorageKey + keyIndex;
+    while (localStorage.getItem(keyName) != null) {
+        keyIndex++;
+        keyName = dataStorageKey + keyIndex;
+    }
+
+    //Create slot object
+    let newSlot = new SaveSlot(keyName);
+    newSlot.SaveData(new TimeTrackerData("", []));
+    //Add to list
+    saveSlots.push(newSlot);
+    //Since it is last added, it should be the length-1
+    currentSlot = saveSlots.length - 1;
+
+    //Update everything
+    ShowCorrectUI();
+    UpdateCalendarAndDetails();
+    UpdateNotesField();
     GenerateSidebarList();
 }
 
 //Deletes and loads 0th slot
 function DeleteCurrentSave() {
-    localStorage.removeItem(dataStorageKey + currentSlot);
-    LoadSlotList();
 
-    //this breaks if the 0th save slot just doesn't exist
-    currentSlot = 0;
-    LoadSlot(0);
-    SaveSelectedSlotIndex();
+    saveSlots.splice(currentSlot, 1);
+    localStorage.removeItem(dataStorageKey + currentSlot);
 
     GenerateSidebarList();
+    LoadSlot(currentSlot - 1);
 }
 
 //Deserailises data
@@ -169,14 +188,15 @@ function Import() {
 
     if (text != null && text.length > 0) {
         Load(text);
-        SaveAndUpdate();
+        ShowCorrectUI();
+        UpdateCalendarAndDetails();
         alert("Success!");
     }
 }
 
-//Saves, shows start/stop screen, updates calendar and date details.
-function SaveAndUpdate() {
-    SaveData();
-    ShowCorrectUI();
-    UpdateCalendarAndDetails();
-}
+// //Saves, shows start/stop screen, updates calendar and date details.
+// function SaveAndUpdate() {
+//     SaveData();
+//     ShowCorrectUI();
+//     UpdateCalendarAndDetails();
+// }

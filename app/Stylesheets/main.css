@@ -58,11 +58,22 @@ noscript {
     height: 100vh;
     position: fixed;
     left: 0;
-    right: 0;
+    top: 0;
     width: 150px;
-    padding-top: 50px;
     transition: 0.5s;
     z-index: 2;
+}
+
+#sidebar-scrollable-area {
+    max-height: calc(100vh - 100px);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    overflow-y: auto;
+    scrollbar-color: var(--color-scrollbar) var(--color-surface-container);
+}
+
+#sidebar-scrollable-area:hover {
+    scrollbar-color: var(--color-scrollbar-hover) var(--color-surface-container);
 }
 
 #sidebar-list {
@@ -255,7 +266,7 @@ button {
 }
 
 #add-button {
-    width: 150px;
+    width: min(150px, 70vw);
     height: 50%;
     margin-top: 10px;
     font-size: 1.35em;

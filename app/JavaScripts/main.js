@@ -6,6 +6,7 @@ const startButton = document.getElementById("start-button");
 const stopUI = document.getElementById("stop-ui");
 const elapsedTime = document.getElementById("elapsed-time");
 const startedTime = document.getElementById("started-time");
+const dataErrorUI = document.getElementById("null-data-ui");
 const startedTimeContainer = document.getElementById("started-time-container");
 const changeStartedTimeContainer = document.getElementById("change-start-time-container");
 const changeStartedTimeInput = document.getElementById("change-start-time");
@@ -59,6 +60,8 @@ function ElapsedTimeDisplay() {
 }
 function ShowCorrectUI() {
     ShowTitle();
+    dataErrorUI.style.display = "none";
+    mainColumn.style.display = "flex";
     if (DateTime.IsNull(startDate)) {
         startUI.style.display = "flex";
         stopUI.style.display = "none";
@@ -69,6 +72,10 @@ function ShowCorrectUI() {
         stopUI.style.display = "flex";
         UpdateStopUI();
     }
+}
+function ShowNullDataUI() {
+    mainColumn.style.display = "none";
+    dataErrorUI.style.display = "block";
 }
 function ShowTitle() {
     if (mainData != null && mainData.title != null && mainData.title.length > 0) {

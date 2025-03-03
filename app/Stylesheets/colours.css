@@ -56,6 +56,8 @@ body {
     --color-surface-container: rgb(236 238 244);
     --color-surface-container-high: rgb(230 232 238);
     --color-surface-container-highest: rgb(224 226 232);
+    --color-scrollbar: rgb(130, 130, 130);
+    --color-scrollbar-hover: rgb(140 140 140);
 }
 
 @media (prefers-color-scheme: dark) {
