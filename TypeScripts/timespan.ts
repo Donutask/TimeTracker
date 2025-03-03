@@ -2,12 +2,10 @@
 class Timespan {
     start: DateTime;
     end: DateTime;
-    note: string; //not used
 
     constructor(start: DateTime, end: DateTime) {
         this.start = start;
         this.end = end;
-        this.note = "";
     }
 
     //Minutes

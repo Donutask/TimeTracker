@@ -31,6 +31,7 @@ function renderCalendar(month: number, year: number) {
     // Create blanks for days of the week before the first day
     for (let i = 0; i < firstDay; i++) {
         const blank = document.createElement('div');
+        blank.classList.add("blank-date");
         calendarDates.appendChild(blank);
     }
 
@@ -120,7 +121,7 @@ nextMonthBtn.addEventListener('click', () => {
 //So much for TypeScript types lol
 calendarDates.addEventListener('click', (e: any) => {
     //Don't select the element
-    if (e.target.id == "calendar-dates") {
+    if (e.target.id == "calendar-dates" || e.target.classList?.contains("blank-date")) {
         ShowNoDetails();
         return;
     }

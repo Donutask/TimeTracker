@@ -4,9 +4,9 @@ class TimeTrackerData {
     timespans: Timespan[];
     notes: string;
 
-    constructor(title: string, timespans: Timespan[]) {
-        this.title = title;
-        this.timespans = timespans;
+    constructor() {
+        this.title = "";
+        this.timespans = [];
         this.startDate = null;
         this.notes = "";
     }

@@ -145,7 +145,7 @@ function StopTimer() {
         if (Math.round(elapsedMinutes) >= 1) {
             //ensure it exists
             if (mainData == null) {
-                mainData = new TimeTrackerData("", []);
+                mainData = new TimeTrackerData();
             }
             //save it
             mainData.Add(new Timespan(startDate, endDate));
@@ -233,7 +233,7 @@ function BeginTimeChanger(hide: HTMLElement, show: HTMLElement, timeInput: HTMLI
 //Ask for new name, then show that title and save
 function RenameTracker() {
     if (mainData == null) {
-        mainData = new TimeTrackerData("", []);
+        mainData = new TimeTrackerData();
     }
     let response = prompt("Rename", mainData.title);
 

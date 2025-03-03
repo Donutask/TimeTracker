@@ -1,3 +1,4 @@
+// Object that handles saving and loading TimeTrackerData from a storage key string.
 class SaveSlot {
     storageKey: string;
     private title: string | null = null;
@@ -17,6 +18,7 @@ class SaveSlot {
         return this.title;
     }
 
+    //Loads TimeTrackerData from localStorage. If already loaded, will return previously loaded value
     GetData(): TimeTrackerData | null {
         if (this.data == null) {
             const stringContent = localStorage.getItem(this.storageKey);
@@ -39,7 +41,11 @@ class SaveSlot {
                     timestamps.push(Timespan.FromJSON(element));
                 }
 
-                this.data = new TimeTrackerData(parsedJSON.title, timestamps);
+                this.data = new TimeTrackerData();
+                if (parsedJSON.title != null)
+                    this.data.title = parsedJSON.title;
+                if (timestamps != null)
+                    this.data.timespans = timestamps;
                 if (parsedJSON.notes != null)
                     this.data.notes = parsedJSON.notes;
             }

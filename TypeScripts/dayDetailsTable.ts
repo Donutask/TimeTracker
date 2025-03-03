@@ -100,6 +100,11 @@ function ShowNoDetails() {
     addTimeButton.style.display = "none";
     dayDetailsTable.style.display = "none";
     dayDetailsHeading.textContent = "";
+
+    if (previouslySelectedDate != null) {
+        previouslySelectedDate.classList.remove("selected-date");
+    }
+    
     showingDetailsForDay = null;
 }
 

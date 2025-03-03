@@ -46,7 +46,7 @@ function LoadSlotList() {
     //Ensure there is always one slot
     if (saveSlots.length <= 0) {
         let firstSlot = new SaveSlot(dataStorageKey + "0");
-        firstSlot.SaveData(new TimeTrackerData("", []));
+        firstSlot.SaveData(new TimeTrackerData());
         saveSlots.push(firstSlot);
     }
 }
@@ -84,7 +84,7 @@ function LoadSlot(slotIndex: number) {
 
     if (dataToLoad == null) {
         console.error("Attempting to load null data");
-        mainData = new TimeTrackerData("", []); //data will default to null, then be replaced if exists.
+        mainData = new TimeTrackerData(); //data will default to null, then be replaced if exists.
 
         ShowNullDataUI();
     } else {
@@ -110,7 +110,7 @@ function CreateNewSlot() {
 
     //Create slot object
     let newSlot = new SaveSlot(keyName);
-    newSlot.SaveData(new TimeTrackerData("", []));
+    newSlot.SaveData(new TimeTrackerData());
     //Add to list
     saveSlots.push(newSlot);
     //Since it is last added, it should be the length-1

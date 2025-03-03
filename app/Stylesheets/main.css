@@ -94,6 +94,7 @@ noscript {
     box-shadow: none;
     outline: none;
     color: var(--color-text);
+    word-wrap: break-word;
 }
 
 .save-slot-button:hover {

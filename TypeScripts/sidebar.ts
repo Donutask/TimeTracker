@@ -57,7 +57,7 @@ function GenerateSidebarList() {
         const slot = saveSlots[i];
         if (slot != null) {
             //Try to get the title from the save data
-            let label = "Slot " + i;
+            let label: string = "Slot " + i;
             const slotTitle = slot.GetTitle();
             if (slotTitle != null && slotTitle.length > 0) {
                 label = slotTitle;
@@ -67,9 +67,12 @@ function GenerateSidebarList() {
             const element = document.createElement("li");
             const button = document.createElement("button");
             button.className = "save-slot-button";
-            if (label == "CLEAR CACHE") {
-                //temporary debug command option
-                button.addEventListener("click", function () { ClearCache(); alert("Cleared cache.") });
+            //Debug commands. Has to start with special string
+            if (label.startsWith("$DEBUG=")) {
+                //remove prefix and get the command
+                const command: string = label.replace("$DEBUG=", "").trim();
+                //run when you click it
+                button.addEventListener("click", function () { Debug.runDebugTool(command); });
             }
             button.addEventListener("click", () => LoadSlot(i));
             button.textContent = label;
