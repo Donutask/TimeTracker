@@ -51,6 +51,9 @@ function GenerateSidebarList() {
             const element = document.createElement("li");
             const button = document.createElement("button");
             button.className = "save-slot-button";
+            if (label == "CLEAR CACHE") {
+                button.addEventListener("click", function () { ClearCache(); alert("Cleared cache."); });
+            }
             button.addEventListener("click", () => LoadSlot(i));
             button.textContent = label;
             element.appendChild(button);

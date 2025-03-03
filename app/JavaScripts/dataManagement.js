@@ -59,7 +59,7 @@ function LoadSlot(slotIndex) {
         }
     }
     if (dataToLoad == null) {
-        console.error("Null data");
+        console.error("Attempting to load null data");
         mainData = new TimeTrackerData("", []);
         ShowNullDataUI();
     }
@@ -92,49 +92,4 @@ function DeleteCurrentSave() {
     localStorage.removeItem(dataStorageKey + currentSlot);
     GenerateSidebarList();
     LoadSlot(currentSlot - 1);
-}
-function Load(stringData) {
-    if (stringData != null && stringData.length > 0) {
-        let parsedJSON;
-        try {
-            parsedJSON = JSON.parse(stringData);
-        }
-        catch (e) {
-            console.error(e);
-            mainData = new TimeTrackerData("", []);
-            return;
-        }
-        let timestamps = [];
-        for (let i = 0; i < parsedJSON.timestamps.length; i++) {
-            let element = parsedJSON.timestamps[i];
-            element = JSON.stringify(element);
-            timestamps.push(Timespan.FromJSON(element));
-        }
-        mainData = new TimeTrackerData(parsedJSON.title, timestamps);
-        if (parsedJSON.notes != null)
-            mainData.notes = parsedJSON.notes;
-    }
-}
-function Export() {
-    const text = mainData.Serialize();
-    let data = new Blob([text], { type: 'text/plain' });
-    let fileURL = window.URL.createObjectURL(data);
-    let link = document.createElement('a');
-    link.setAttribute('download', 'time-tracker-export.txt');
-    link.href = fileURL;
-    document.body.appendChild(link);
-    window.requestAnimationFrame(function () {
-        let event = new MouseEvent('click');
-        link.dispatchEvent(event);
-        document.body.removeChild(link);
-    });
-}
-function Import() {
-    let text = prompt("Paste Exported Data");
-    if (text != null && text.length > 0) {
-        Load(text);
-        ShowCorrectUI();
-        UpdateCalendarAndDetails();
-        alert("Success!");
-    }
 }

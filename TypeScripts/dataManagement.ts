@@ -83,7 +83,7 @@ function LoadSlot(slotIndex: number) {
     }
 
     if (dataToLoad == null) {
-        console.error("Null data");
+        console.error("Attempting to load null data");
         mainData = new TimeTrackerData("", []); //data will default to null, then be replaced if exists.
 
         ShowNullDataUI();
@@ -123,7 +123,8 @@ function CreateNewSlot() {
     GenerateSidebarList();
 }
 
-//Deletes and loads 0th slot
+//Deletes save slot from list, local storage
+//Loads the slot before it
 function DeleteCurrentSave() {
 
     saveSlots.splice(currentSlot, 1);
@@ -133,70 +134,66 @@ function DeleteCurrentSave() {
     LoadSlot(currentSlot - 1);
 }
 
+//Replaced with SaveSlot.Load
 //Deserailises data
-function Load(stringData: string) {
-    if (stringData != null && stringData.length > 0) {
-        let parsedJSON;
-        try {
-            parsedJSON = JSON.parse(stringData);
-        } catch (e) {
-            //If can't parse, set the data as default.
-            console.error(e);
-            mainData = new TimeTrackerData("", []);
-            return;
-        }
+// function Load(stringData: string) {
+//     if (stringData != null && stringData.length > 0) {
+//         let parsedJSON;
+//         try {
+//             parsedJSON = JSON.parse(stringData);
+//         } catch (e) {
+//             //If can't parse, set the data as default.
+//             console.error(e);
+//             mainData = new TimeTrackerData("", []);
+//             return;
+//         }
 
-        //deserialise timestamps
-        let timestamps: Timespan[] = [];
-        for (let i = 0; i < parsedJSON.timestamps.length; i++) {
-            let element = parsedJSON.timestamps[i];
-            element = JSON.stringify(element);
-            timestamps.push(Timespan.FromJSON(element));
-        }
+//         //deserialise timestamps
+//         let timestamps: Timespan[] = [];
+//         for (let i = 0; i < parsedJSON.timestamps.length; i++) {
+//             let element = parsedJSON.timestamps[i];
+//             element = JSON.stringify(element);
+//             timestamps.push(Timespan.FromJSON(element));
+//         }
 
-        mainData = new TimeTrackerData(parsedJSON.title, timestamps);
-        if (parsedJSON.notes != null)
-            mainData.notes = parsedJSON.notes;
-    }
-}
+//         mainData = new TimeTrackerData(parsedJSON.title, timestamps);
+//         if (parsedJSON.notes != null)
+//             mainData.notes = parsedJSON.notes;
+//     }
+// }
 
+//These are unused and need to be updated with new slot system
 //Credit: https://stackoverflow.com/a/21016088
-function Export() {
-    const text = mainData.Serialize();
+// function Export() {
+//     const text = mainData.Serialize();
 
-    //Make save data into file URL
-    let data = new Blob([text], { type: 'text/plain' });
-    let fileURL = window.URL.createObjectURL(data);
+//     //Make save data into file URL
+//     let data = new Blob([text], { type: 'text/plain' });
+//     let fileURL = window.URL.createObjectURL(data);
+ 
+//     //add url to a link element and click the link
+//     let link = document.createElement('a');
+//     link.setAttribute('download', 'time-tracker-export.txt');
+//     link.href = fileURL;
+//     document.body.appendChild(link);
 
-    //add url to a link element and click the link
-    let link = document.createElement('a');
-    link.setAttribute('download', 'time-tracker-export.txt');
-    link.href = fileURL;
-    document.body.appendChild(link);
+//     // wait for the link to be added to the document
+//     window.requestAnimationFrame(function () {
+//         let event = new MouseEvent('click');
+//         link.dispatchEvent(event);
+//         document.body.removeChild(link);
+//     });
+// }
 
-    // wait for the link to be added to the document
-    window.requestAnimationFrame(function () {
-        let event = new MouseEvent('click');
-        link.dispatchEvent(event);
-        document.body.removeChild(link);
-    });
-}
+// //Asks user to paste the file contents, then loads it
+// function Import() {
+//     let text = prompt("Paste Exported Data");
 
-//Asks user to paste the file contents, then loads it
-function Import() {
-    let text = prompt("Paste Exported Data");
-
-    if (text != null && text.length > 0) {
-        Load(text);
-        ShowCorrectUI();
-        UpdateCalendarAndDetails();
-        alert("Success!");
-    }
-}
-
-// //Saves, shows start/stop screen, updates calendar and date details.
-// function SaveAndUpdate() {
-//     SaveData();
-//     ShowCorrectUI();
-//     UpdateCalendarAndDetails();
+//     if (text != null && text.length > 0) {
+        
+//         Load(text);
+//         ShowCorrectUI();
+//         UpdateCalendarAndDetails();
+//         alert("Success!");
+//     }
 // }
