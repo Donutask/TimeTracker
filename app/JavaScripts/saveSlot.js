@@ -43,6 +43,15 @@ class SaveSlot {
         return this.data;
     }
     SaveData(data) {
+        this.data = data;
         localStorage.setItem(this.storageKey, data.Serialize());
+    }
+    Rename(newName) {
+        this.title = newName;
+        this.data = null;
+    }
+    ClearCache() {
+        this.title = null;
+        this.data = null;
     }
 }

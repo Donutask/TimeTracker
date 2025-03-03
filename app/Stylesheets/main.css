@@ -69,6 +69,7 @@ noscript {
     margin-top: 50px;
     margin-bottom: 50px;
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-color: var(--color-scrollbar) var(--color-surface-container);
 }
 

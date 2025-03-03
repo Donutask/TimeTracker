@@ -185,8 +185,11 @@ function RenameTracker() {
     let response = prompt("Rename", mainData.title);
     if (response != null && response.length > 0) {
         mainData.title = response;
-        ShowTitle();
         SaveData();
+        const slot = saveSlots[currentSlot];
+        slot.Rename(response);
+        ShowTitle();
+        GenerateSidebarList();
     }
 }
 function NoteInputChanged() {

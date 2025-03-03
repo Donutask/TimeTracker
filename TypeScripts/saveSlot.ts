@@ -49,6 +49,18 @@ class SaveSlot {
     }
 
     SaveData(data: TimeTrackerData) {
+        this.data = data;
         localStorage.setItem(this.storageKey, data.Serialize());
+    }
+
+    Rename(newName: string) {
+        this.title = newName;
+        this.data = null; //to load correct data after
+    }
+
+    // Deletes the title and data stored. Do this when chanign the data
+    ClearCache() {
+        this.title = null;
+        this.data = null;
     }
 }
