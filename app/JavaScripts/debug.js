@@ -1,16 +1,1 @@
-"use strict";
-function GenerateGibberishData() {
-    let times = [];
-    for (let i = 0; i < 100; i++) {
-        let start = randomDate(new Date(2025, 0, 1), new Date());
-        let end = new Date(start.getTime() + (Math.random() * 60 * 60 * 1000));
-        times.push(new Timespan(DateTime.FromJsDate(start), DateTime.FromJsDate(end)));
-    }
-    mainData = new TimeTrackerData("Test Data", times);
-}
-function randomDate(start, end) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
-function ClearCache() {
-    caches.keys().then((keyList) => Promise.all(keyList.map((key) => caches.delete(key))));
-}
+"use strict";function GenerateGibberishData(){let e=[];for(let a=0;a<100;a++){let a=randomDate(new Date(2025,0,1),new Date),t=new Date(a.getTime()+60*Math.random()*60*1e3);e.push(new Timespan(DateTime.FromJsDate(a),DateTime.FromJsDate(t)))}mainData=new TimeTrackerData("Test Data",e)}function randomDate(e,a){return new Date(e.getTime()+Math.random()*(a.getTime()-e.getTime()))}function ClearCache(){caches.keys().then((e=>Promise.all(e.map((e=>caches.delete(e))))))}
