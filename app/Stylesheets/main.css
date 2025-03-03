@@ -65,7 +65,7 @@ noscript {
 }
 
 #sidebar-scrollable-area {
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 150px);
     margin-top: 50px;
     margin-bottom: 50px;
     overflow-y: auto;
@@ -80,6 +80,7 @@ noscript {
 #sidebar-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .save-slot-button {
@@ -140,6 +141,49 @@ noscript {
 #open-sidebar:hover {
     background-color: var(--color-surface-container-high);
     border-radius: 7px;
+}
+
+#slot-actions {
+    height: 50px;
+    width: 150px;
+    position: fixed;
+    bottom: 50px;
+    text-align: center;
+}
+
+#slot-actions h3 {
+    margin: 0;
+}
+
+
+/* Footer */
+footer {
+    min-height: 50px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    transition: 0.5s;
+}
+
+.link {
+    padding: 5px;
+    padding-top: 10px;
+    font-size: 0.9em;
+}
+
+.subtle-button:hover,
+.link:hover,
+.link:visited:hover {
+    color: var(--color-link-hover);
+}
+
+.link,
+.link:visited {
+    color: var(--color-on-surface-variant);
 }
 
 main {
@@ -456,35 +500,6 @@ button {
 
 
 
-/* Footer */
-footer {
-    min-height: 50px;
-    width: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: fixed;
-    bottom: 0;
-    transition: 0.5s;
-}
-
-.link {
-    padding: 5px;
-    padding-top: 10px;
-    font-size: 0.9em;
-}
-
-.subtle-button:hover,
-.link:hover,
-.link:visited:hover {
-    color: var(--color-link-hover);
-}
-
-.link,
-.link:visited {
-    color: var(--color-on-surface-variant);
-}
 
 
 /* Calendar */

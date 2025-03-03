@@ -184,6 +184,10 @@ function RenameTracker() {
     }
     let response = prompt("Rename", mainData.title);
     if (response != null && response.length > 0) {
+        if (response.length >= 1024) {
+            alert("Please choose a shorter title.");
+            return;
+        }
         mainData.title = response;
         SaveData();
         const slot = saveSlots[currentSlot];
