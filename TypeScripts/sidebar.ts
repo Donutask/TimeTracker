@@ -45,7 +45,7 @@ function CloseSidebar() {
 
 //Gets all the save slots and make a link to switch them
 function GenerateSidebarList() {
-    sidebarList.innerHTML = "";
+    sidebarList.textContent = "";
     saveSlotElements = [];
 
     if (saveSlots == null || saveSlots.length <= 0) {
@@ -63,7 +63,11 @@ function GenerateSidebarList() {
 
             //Add button to the list
             const element = document.createElement("li");
-            element.innerHTML = `<button class="save-slot-button" onclick="LoadSlot(${i})">${label}</button>`
+            const button = document.createElement("button");
+            button.className = "save-slot-button";
+            button.addEventListener("click", () => LoadSlot(i));
+            button.textContent = label;
+            element.appendChild(button);
             sidebarList.appendChild(element);
 
             saveSlotElements.push(element);
