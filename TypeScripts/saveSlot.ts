@@ -48,6 +48,8 @@ class SaveSlot {
                     this.data.timespans = timestamps;
                 if (parsedJSON.notes != null)
                     this.data.notes = parsedJSON.notes;
+                if (parsedJSON.goal != null)
+                    this.data.hourGoal = parsedJSON.goal;
             }
         }
 

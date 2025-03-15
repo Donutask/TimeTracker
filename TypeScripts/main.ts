@@ -20,6 +20,12 @@ const setStopTimeInput: HTMLInputElement = document.getElementById("change-stop-
 
 const noteInput = document.getElementById("notes-input") as HTMLTextAreaElement;
 
+const goalContainer = document.getElementById('goal-display') as HTMLElement;
+const noGoalContainer = document.getElementById('no-goal-display') as HTMLElement;
+
+const goalButton = document.getElementById("change-goal-button") as HTMLButtonElement;
+const goalPercentageDisplay = document.getElementById('percentage-to-goal') as HTMLParagraphElement;
+
 let currentInterval: number;
 let stopTime: DateTime | null = null;
 let startDate: DateTime;
@@ -173,7 +179,6 @@ function LoadStartDate() {
     }
 }
 
-
 //Change when the timer was started, after it has already been started (because you forgot or something)
 function BeginChangeStartedTime() {
     BeginTimeChanger(startedTimeContainer, changeStartedTimeContainer, changeStartedTimeInput, startDate);
@@ -264,6 +269,65 @@ function NoteInputChanged() {
 function UpdateNotesField() {
     if (mainData != null)
         noteInput.value = mainData.notes;
+}
+
+//Simple browser alert box for choosing hour goal
+function ChangeGoal() {
+    const response = prompt("Set new monthly hour goal");
+    if (response == null) {
+        return;
+    }
+    const number = Number.parseFloat(response);
+    if (isNaN(number)) {
+        return;
+    } else if (number < 0) {
+        alert("Must be postive number");
+    } else {
+        mainData.hourGoal = number;
+        SaveData();
+        UpdateGoalButtonAndPercentage();
+    }
+}
+
+function UpdateGoalButtonAndPercentage() {
+    if (UpdateGoalContainerVisibility()) {
+        UpdateGoalButton();
+
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        UpdateGoalPercentage(daysInMonth, mainData.GetTotalMinutesForMonth(currentMonth, currentYear));
+    }
+}
+
+//If goal is decimal it shows hr min, otherwise just the word hours
+function UpdateGoalButton() {
+    const hours = mainData.hourGoal;
+    if (Number.isInteger(hours)) {
+        goalButton.textContent = hours + " hours";
+    } else {
+        goalButton.textContent = DateTime.formatHoursMinutes(hours * 60).toString();
+    }
+}
+
+//true if it has goal
+function UpdateGoalContainerVisibility(): Boolean {
+    if (Number.isNaN(mainData.hourGoal) || mainData.hourGoal <= 0) {
+        goalContainer.hidden = true;
+        noGoalContainer.hidden = false;
+        return false;
+    } else {
+        goalContainer.hidden = false;
+        noGoalContainer.hidden = true;
+        return true;
+    }
+}
+
+function UpdateGoalPercentage(daysInMonth: number, monthTotal: number) {
+    //Show goal info
+    const monthPercentage = Math.round(currentDate.getDate() / daysInMonth * 100);
+    const goalPercentage = Math.round((monthTotal / 60) / mainData.hourGoal * 100);
+
+    goalPercentageDisplay.textContent = goalPercentage + "%";
+    goalPercentageDisplay.className = goalPercentage >= monthPercentage ? "goal-on-target" : "goal-not-on-target";
 }
 
 //When page loads:

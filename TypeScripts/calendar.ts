@@ -5,6 +5,7 @@ const calendarDates = document.getElementById('calendar-dates') as HTMLDivElemen
 const monthYear = document.getElementById('month-year') as HTMLDivElement;
 const prevMonthBtn = document.getElementById('prev-month') as HTMLButtonElement;
 const nextMonthBtn = document.getElementById('next-month') as HTMLButtonElement;
+
 const monthTotalDisplay = document.getElementById('month-total') as HTMLParagraphElement;
 
 const currentDate = new Date();
@@ -93,6 +94,10 @@ function renderCalendar(month: number, year: number) {
         calendarDates.appendChild(day);
     }
 
+    UpdateGoalContainerVisibility();
+    UpdateGoalPercentage(daysInMonth, monthTotal);
+
+    //Moth total hours
     monthTotalDisplay.innerHTML = `Total for ${months[month]}: <b>${DateTime.formatHoursMinutes(monthTotal)}</b>`;
 }
 
@@ -118,16 +123,19 @@ nextMonthBtn.addEventListener('click', () => {
 });
 
 //Click on a date to get info for all logged timespans on that date
-//So much for TypeScript types lol
-calendarDates.addEventListener('click', (e: any) => {
+calendarDates.addEventListener('click', (e: MouseEvent) => {
+    if (e.target == null) {
+        return;
+    }
+
+    let target = e.target as HTMLElement;
     //Don't select the element
-    if (e.target.id == "calendar-dates" || e.target.classList?.contains("blank-date")) {
+    if (target.id == "calendar-dates" || target.classList?.contains("blank-date")) {
         ShowNoDetails();
         return;
     }
 
     //Sometimes you click on the timespan or current date circle thingy. This finds the parent calendar-date element;
-    let target = e.target as HTMLElement;
     while (!target.classList?.contains("calendar-date")) {
         if (target.parentNode == null) {
             return;

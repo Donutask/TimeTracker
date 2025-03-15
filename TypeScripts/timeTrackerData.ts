@@ -3,12 +3,14 @@ class TimeTrackerData {
     startDate: Date | null;
     timespans: Timespan[];
     notes: string;
+    hourGoal: number;
 
     constructor() {
         this.title = "";
         this.timespans = [];
         this.startDate = null;
         this.notes = "";
+        this.hourGoal = 0;
     }
 
     //Adds all timespans
@@ -22,6 +24,20 @@ class TimeTrackerData {
         }
 
         return totalMinutes;
+    }
+
+    GetTotalMinutesForMonth(month: number, year: number): number {
+        let monthTotal = 0;
+        for (let i = 0; i < this.timespans.length; i++) {
+            const element = this.timespans[i];
+
+            if (element.start.year == year && element.start.month == month) {
+                let m = element.GetMinutes();
+                monthTotal += m;
+            }
+        }
+        return monthTotal;
+
     }
 
     //Push to list
@@ -66,7 +82,7 @@ class TimeTrackerData {
             dateString = this.startDate.getTime().toString();
         }
 
-        let json = `{"title":${JSON.stringify(this.title)}, "notes":${JSON.stringify(this.notes)}, "startDate":"${dateString}", "timestamps":[`;
+        let json = `{"title":${JSON.stringify(this.title)}, "notes":${JSON.stringify(this.notes)}, "startDate":"${dateString}", "goal":${JSON.stringify(this.hourGoal)}, "timestamps":[`;
 
         //Only process timestamps if they exist
         if (this.timespans != null && this.timespans.length > 0) {

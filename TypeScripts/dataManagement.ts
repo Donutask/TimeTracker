@@ -90,6 +90,7 @@ function LoadSlot(slotIndex: number) {
     } else {
         mainData = dataToLoad;
         //Update everything
+        UpdateGoalButton();
         UpdateCalendarAndDetails();
         ShowCorrectUI();
         UpdateNotesField();

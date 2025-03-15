@@ -502,9 +502,23 @@ button {
     font-size: min(1em, 7vw);
 }
 
+#change-goal-button {
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
+}
 
+#percentage-to-goal {
+    display: inline;
+}
 
+.goal-not-on-target {
+    color: var(--color-error);
+}
 
+.goal-on-target {
+    color: rgb(171 255 189);
+}
 
 /* Calendar */
 .calendar {
@@ -512,6 +526,7 @@ button {
     max-width: 90vw;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 7px;
     border-radius: 0 0 10px 10px;
     background-color: var(--color-surface-container);
     box-shadow: var(--color-shadow) 4px 3px 4px;

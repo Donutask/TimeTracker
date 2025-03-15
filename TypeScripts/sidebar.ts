@@ -5,9 +5,6 @@ const sidebarList = document.getElementById("sidebar-list") as HTMLUListElement;
 const mainColumn = document.getElementById("center-column-container") as HTMLElement;
 const scrimElement = document.getElementById("scrim") as HTMLElement;
 
-// const sidebarWidth: number = 150;
-// const windowWidthForOverlaySidebar: number = 500;
-
 let isSidebarOpen: boolean = false;
 let hasSidebarBeenCreated: boolean = false;
 let saveSlotElements: (HTMLElement | null)[] = [];
