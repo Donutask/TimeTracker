@@ -451,6 +451,11 @@ button {
     filter: invert(1);
 }
 
+#notes-heading {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
 #notes-input {
     resize: vertical;
     width: 400px;

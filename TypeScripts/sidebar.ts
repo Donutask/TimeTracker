@@ -108,4 +108,8 @@ function DeleteCurrentSlot() {
     }
 }
 
+scrimElement.addEventListener("click", function () {
+    CloseSidebar();
+})
+
 CloseSidebar();

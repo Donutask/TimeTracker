@@ -298,9 +298,10 @@ function UpdateGoalButtonAndPercentage() {
     }
 }
 
-//If goal is decimal it shows hr min, otherwise just the word hours
+//If goal is decimal it shows hr min, otherwise just the hours
 function UpdateGoalButton() {
     const hours = mainData.hourGoal;
+
     if (Number.isInteger(hours)) {
         goalButton.textContent = hours + " hours";
     } else {
@@ -308,7 +309,7 @@ function UpdateGoalButton() {
     }
 }
 
-//true if it has goal
+// Returns true if it has goal, otherwise will hide and show 'set goal' button
 function UpdateGoalContainerVisibility(): Boolean {
     if (Number.isNaN(mainData.hourGoal) || mainData.hourGoal <= 0) {
         goalContainer.hidden = true;
@@ -323,10 +324,12 @@ function UpdateGoalContainerVisibility(): Boolean {
 
 function UpdateGoalPercentage(daysInMonth: number, monthTotal: number) {
     //Show goal info
-    const monthPercentage = Math.round(currentDate.getDate() / daysInMonth * 100);
     const goalPercentage = Math.round((monthTotal / 60) / mainData.hourGoal * 100);
 
     goalPercentageDisplay.textContent = goalPercentage + "%";
+
+    //Calculate how far in the month you are. Colour the percentage text depending on if on track.
+    const monthPercentage = Math.round(currentDate.getDate() / daysInMonth * 100);
     goalPercentageDisplay.className = goalPercentage >= monthPercentage ? "goal-on-target" : "goal-not-on-target";
 }
 

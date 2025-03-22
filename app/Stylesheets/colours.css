@@ -76,9 +76,6 @@ body {
         --color-on-secondary: rgb(36 50 64);
         --color-secondary-container: rgb(58 72 87);
         --color-on-secondary-container: rgb(213 228 247);
-        /* I changed the container to be same as normal tertiary because look better */
-        /* --color-tertiary: rgb(211 191 230);
-        --color-on-tertiary: rgb(57 42 73); */
         --color-tertiary-container: rgb(211 191 230);
         --color-on-tertiary-container: rgb(57 42 73);
         --color-success: rgb(171 255 189);
